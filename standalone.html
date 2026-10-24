@@ -1,0 +1,3340 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyberpunk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OS-ArchLab: DMA Modes & Multicore vs Multiprocessor Visualizer</title>
+  <!-- Clean, highly legible typography with robust fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+:root {
+  /* Clean Academic Minimalist (Stanford/MIT Educational Lab Portal) */
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f1f5f9;
+  --bg-surface-active: #e2e8f0;
+  
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-focus: #93c5fd;
+
+  --accent-blue: #2563eb;       /* Stanford/MIT Royal Blue */
+  --accent-blue-hover: #1d4ed8;
+  --accent-blue-light: #eff6ff;
+  
+  --accent-cyan: #0284c7;       /* Technical Sky Blue */
+  --accent-green: #059669;      /* Emerald Bus Grant / IRQ */
+  --accent-green-light: #ecfdf5;
+  
+  --accent-amber: #d97706;      /* Academic Amber Arbiter / Warning */
+  --accent-amber-light: #fffbeb;
+  
+  --accent-red: #e11d48;        /* Crimson CPU Stall / Thermal Fault */
+  --accent-red-light: #fff1f2;
+  
+  --accent-purple: #7c3aed;     /* Multiprocessor Violet */
+  --accent-purple-light: #f5f3ff;
+
+  --text-primary: #0f172a;      /* High-contrast Slate 900 */
+  --text-secondary: #334155;    /* Clear Slate 700 */
+  --text-muted: #64748b;        /* Subtle Slate 500 */
+  --text-inverse: #ffffff;
+
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-elevated: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  --shadow-hover: 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-base);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 40%),
+    radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.04) 0px, transparent 40%),
+    linear-gradient(rgba(226, 232, 240, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(226, 232, 240, 0.5) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* HEADER - Clean Academic Portal Bar */
+header {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1rem 2.2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.brand-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.brand-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.75rem;
+  background: var(--accent-blue-light);
+  color: var(--accent-blue);
+  border: 1px solid #bfdbfe;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* REAL-TIME THEME SWITCHER */
+.theme-switcher-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  padding: 0.22rem 0.55rem;
+  border-radius: 9999px;
+  margin-left: 0.4rem;
+}
+
+.theme-switcher-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.theme-pills-row {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.theme-pill {
+  border: none;
+  background: transparent;
+  font-family: var(--font-main);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.theme-pill:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.theme-pill.active {
+  background: var(--accent-blue);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.3);
+}
+
+.brand-subtitle {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* NAVIGATION TABS - Clean Segmented Control */
+.nav-tabs {
+  display: flex;
+  gap: 0.35rem;
+  background: var(--bg-surface-elevated);
+  padding: 0.3rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-main);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.tab-btn.active {
+  background: var(--accent-blue);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+}
+
+/* MAIN CONTENT */
+main {
+  flex: 1;
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 2rem 2.2rem;
+  width: 100%;
+}
+
+/* CONTROLS CARD */
+.controls-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.75rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+.control-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.control-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.select-dropdown, .range-input {
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.select-dropdown:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.btn {
+  font-family: var(--font-main);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-primary {
+  background: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue-hover);
+  box-shadow: 0 2px 5px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary:hover {
+  background: var(--accent-blue-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border-color: var(--accent-blue);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: var(--accent-red);
+  color: white;
+  border-color: #be123c;
+  box-shadow: 0 2px 5px rgba(225, 29, 72, 0.25);
+}
+
+.btn-danger:hover {
+  background: #be123c;
+  transform: translateY(-1px);
+}
+
+/* PEDAGOGICAL NARRATION BANNER */
+.narration-banner {
+  background: #f0f7ff;
+  border: 1px solid #bfdbfe;
+  border-left: 5px solid var(--accent-blue);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.6rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.05);
+}
+
+.narration-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.narration-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--accent-blue);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
+}
+
+.narration-message {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* CARDS & GRIDS */
+.glass-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.card-heading {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr;
+  gap: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.schematic-box-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.hardware-node {
+  background: #ffffff;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: all 0.25s ease;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.hardware-node.node-master {
+  border-color: var(--accent-green);
+  background: #f0fdf4;
+  box-shadow: 0 0 16px rgba(5, 150, 105, 0.12);
+}
+
+.hardware-node.node-stalled {
+  border-color: var(--accent-red);
+  background: var(--accent-red-light);
+}
+
+.node-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.node-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.badge-status {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-green { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+.badge-red { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+.badge-amber { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.badge-blue { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+
+/* REGISTERS */
+.register-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.register-table td {
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed #f1f5f9;
+}
+
+.reg-label {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.reg-value {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent-blue);
+  text-align: right;
+}
+
+/* BUSES */
+.bus-system-container {
+  background: #f8fafc;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.bus-track {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.bus-name-badge {
+  width: 140px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.bus-physical-line {
+  flex: 1;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bus-physical-line.active-data::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), #ffffff, var(--accent-cyan), transparent);
+  animation: busSignalPulse 1s infinite linear;
+}
+
+.bus-physical-line.active-ctrl::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, var(--accent-green), #ffffff, var(--accent-green), transparent);
+  animation: busSignalPulse 1s infinite linear;
+}
+
+@keyframes busSignalPulse {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.bus-state-display {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  width: 240px;
+  text-align: right;
+}
+
+/* RAM CELLS */
+.ram-container {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.ram-cells-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.memory-cell {
+  height: 38px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
+}
+
+.memory-cell.written {
+  background: #ecfdf5;
+  border-color: var(--accent-green);
+  color: #047857;
+  font-weight: 700;
+}
+
+.memory-cell.pulse-write {
+  background: #fef3c7;
+  border-color: var(--accent-amber);
+  color: #92400e;
+  font-weight: 800;
+  transform: scale(1.08);
+}
+
+/* STATS */
+.metrics-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.stat-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.stat-explanation {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* GANTT */
+.timeline-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-card);
+  margin-top: 1.75rem;
+}
+
+.gantt-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.gantt-title {
+  width: 170px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.gantt-blocks-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 4px;
+}
+
+.gantt-slot {
+  height: 38px;
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.slot-cpu-running { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.slot-cpu-stalled { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
+.slot-dma-transfer { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.slot-idle-gray { color: #94a3b8; background: #f8fafc; }
+
+/* MULTICORE / MULTIPROCESSOR */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.arch-spec-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chip-silicon-boundary {
+  border: 2px dashed var(--accent-blue);
+  background: rgba(37, 99, 235, 0.03);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  position: relative;
+  transition: border-color 0.3s;
+}
+
+.chip-boundary-label {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--accent-blue);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.8rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.motherboard-boundary {
+  border: 2px dashed var(--accent-purple);
+  background: rgba(124, 58, 237, 0.03);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  position: relative;
+}
+
+.motherboard-boundary-label {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--accent-purple);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.8rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 4px rgba(124, 58, 237, 0.2);
+}
+
+.cores-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.processing-unit {
+  background: #ffffff;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.processing-unit.active-work {
+  border-color: var(--accent-green);
+  background: #f0fdf4;
+  box-shadow: 0 0 15px rgba(5, 150, 105, 0.12);
+}
+
+.processing-unit.crashed-unit {
+  border-color: var(--accent-red);
+  background: var(--accent-red-light);
+  opacity: 0.65;
+}
+
+.cache-hierarchy-pill {
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-amber);
+  margin-top: 0.6rem;
+}
+
+.on-chip-l3-cache {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+  font-weight: 800;
+  color: var(--accent-blue);
+  font-size: 0.95rem;
+}
+
+.system-bus-arbiter {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+  font-weight: 800;
+  color: var(--accent-amber);
+  font-size: 0.95rem;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.trace-highlight-green {
+  border-color: var(--accent-green) !important;
+  box-shadow: 0 0 20px rgba(5, 150, 105, 0.4) !important;
+  transform: scale(1.02);
+}
+
+.trace-highlight-amber {
+  border-color: var(--accent-amber) !important;
+  box-shadow: 0 0 20px rgba(217, 119, 6, 0.4) !important;
+  transform: scale(1.02);
+}
+
+.distributed-ram-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.distributed-ram-node {
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-purple);
+  box-shadow: var(--shadow-sm);
+}
+
+.analogy-box {
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-card);
+}
+
+.analogy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.analogy-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.meta-tag-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* TAB 3 UNIFIED STYLES */
+.syn-highway-card {
+  background: #f8fafc;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.syn-radar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.turnstile-box {
+  background: #ffffff;
+  border: 2px solid var(--accent-amber);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(217, 119, 6, 0.1);
+  position: relative;
+}
+
+.turnstile-queue {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 0.85rem;
+}
+
+.turnstile-slot {
+  background: #f8fafc;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 130px;
+  transition: all 0.3s ease;
+}
+
+.turnstile-slot.slot-active {
+  border-color: var(--accent-green);
+  background: #ecfdf5;
+  color: #047857;
+  transform: scale(1.04);
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+}
+
+.turnstile-slot.slot-queued {
+  border-color: var(--accent-amber);
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.wire-connector-line {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+  margin: 0.85rem 0;
+}
+
+.wire-connector-line.wire-flowing::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-blue), var(--accent-cyan), transparent);
+  animation: busSignalPulse 0.9s infinite linear;
+}
+
+.wire-connector-line.wire-dma-flow::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, var(--accent-green), #34d399, var(--accent-green), transparent);
+  animation: busSignalPulse 0.9s infinite linear;
+}
+
+/* OS EVOLUTION TIME MACHINE STYLES */
+.era-stepper-container {
+  display: flex;
+  justify-content: space-between;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.75rem;
+  gap: 0.75rem;
+  overflow-x: auto;
+  box-shadow: var(--shadow-card);
+}
+
+.era-step-btn {
+  background: #f8fafc;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  min-width: 180px;
+  flex: 1;
+  transition: all 0.2s ease;
+  font-family: var(--font-main);
+}
+
+.era-step-btn:hover {
+  background: #ffffff;
+  border-color: var(--accent-blue);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+  transform: translateY(-2px);
+}
+
+.era-step-btn.era-active {
+  border-color: var(--accent-blue);
+  background: #eff6ff;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.15);
+}
+
+.era-year-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.era-name-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.era-tech-tag {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.era-showcase-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.era-visual-box {
+  background: #f8fafc;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.era-telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+
+/* =====================================================================
+   THEME 2: DEEP CYBERPUNK / NEON SCI-FI
+   ===================================================================== */
+[data-theme="cyberpunk"] {
+  --bg-base: #070b14;
+  --bg-surface: #0f172a;
+  --bg-surface-elevated: #1e293b;
+  --bg-surface-active: #334155;
+  --border-subtle: #1e293b;
+  --border-strong: #334155;
+  --border-focus: #38bdf8;
+
+  --accent-blue: #38bdf8;
+  --accent-blue-hover: #0284c7;
+  --accent-blue-light: rgba(56, 189, 248, 0.15);
+  --accent-cyan: #06b6d4;
+  --accent-green: #10b981;
+  --accent-green-light: rgba(16, 185, 129, 0.15);
+  --accent-amber: #f59e0b;
+  --accent-amber-light: rgba(245, 158, 11, 0.15);
+  --accent-red: #f43f5e;
+  --accent-red-light: rgba(244, 63, 94, 0.15);
+  --accent-purple: #c084fc;
+  --accent-purple-light: rgba(192, 132, 252, 0.15);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="cyberpunk"] body {
+  background-color: #070b14;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%),
+    linear-gradient(rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+  color: var(--text-primary);
+}
+
+[data-theme="cyberpunk"] header {
+  background: rgba(11, 17, 32, 0.92);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="cyberpunk"] .brand-badge {
+  background: linear-gradient(135deg, #0284c7, #6366f1);
+  color: #ffffff;
+  border: none;
+}
+
+[data-theme="cyberpunk"] .narration-banner {
+  background: linear-gradient(90deg, #1e293b, #0f172a);
+  border: 1px solid var(--border-strong);
+}
+
+[data-theme="cyberpunk"] .select-dropdown,
+[data-theme="cyberpunk"] .btn-secondary,
+[data-theme="cyberpunk"] .hardware-node,
+[data-theme="cyberpunk"] .memory-cell,
+[data-theme="cyberpunk"] .processing-unit,
+[data-theme="cyberpunk"] .analogy-card,
+[data-theme="cyberpunk"] .turnstile-box,
+[data-theme="cyberpunk"] .era-step-btn,
+[data-theme="cyberpunk"] footer {
+  background: var(--bg-surface-elevated) !important;
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+[data-theme="cyberpunk"] .memory-cell.written {
+  background: #064e3b !important;
+  color: #6ee7b7 !important;
+  border-color: #10b981 !important;
+}
+
+[data-theme="cyberpunk"] .hardware-node.node-master {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: #10b981;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="cyberpunk"] .hardware-node.node-stalled {
+  background: rgba(244, 63, 94, 0.12) !important;
+  border-color: #f43f5e;
+}
+
+[data-theme="cyberpunk"] .bus-system-container,
+[data-theme="cyberpunk"] .syn-highway-card,
+[data-theme="cyberpunk"] .era-visual-box {
+  background: #060b17 !important;
+  border-color: var(--border-strong);
+}
+
+[data-theme="cyberpunk"] .bus-physical-line,
+[data-theme="cyberpunk"] .wire-connector-line {
+  background: #17233d !important;
+}
+
+[data-theme="cyberpunk"] .gantt-slot {
+  background: var(--bg-surface-elevated);
+}
+
+[data-theme="cyberpunk"] .slot-cpu-running {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+  border-color: #0284c7;
+}
+
+[data-theme="cyberpunk"] .slot-cpu-stalled {
+  background: rgba(244, 63, 94, 0.25);
+  color: #fda4af;
+  border-color: #e11d48;
+}
+
+[data-theme="cyberpunk"] .slot-dma-transfer {
+  background: rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+  border-color: #10b981;
+}
+
+[data-theme="cyberpunk"] .on-chip-l3-cache {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+[data-theme="cyberpunk"] .system-bus-arbiter {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+[data-theme="cyberpunk"] .turnstile-slot {
+  background: var(--bg-base);
+}
+
+[data-theme="cyberpunk"] .turnstile-slot.slot-active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+}
+
+[data-theme="cyberpunk"] .turnstile-slot.slot-queued {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fde68a;
+}
+
+[data-theme="cyberpunk"] .analogy-box {
+  background: #0f172a !important;
+  border-color: var(--border-strong) !important;
+}
+
+[data-theme="cyberpunk"] .cache-hierarchy-pill {
+  background: var(--bg-base);
+  color: var(--accent-amber);
+  border-color: var(--border-subtle);
+}
+
+[data-theme="cyberpunk"] .distributed-ram-node {
+  background: var(--bg-surface-elevated) !important;
+  color: var(--accent-purple) !important;
+  border-color: var(--border-strong);
+}
+
+[data-theme="cyberpunk"] .meta-tag {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-subtle);
+}
+
+[data-theme="cyberpunk"] .chip-silicon-boundary {
+  background: rgba(56, 189, 248, 0.04);
+  border-color: var(--accent-blue);
+}
+
+[data-theme="cyberpunk"] .motherboard-boundary {
+  background: rgba(192, 132, 252, 0.04);
+  border-color: var(--accent-purple);
+}
+
+
+/* =====================================================================
+   THEME 3: APPLE STUDIO / FROSTED GLASS NEOMORPHISM
+   ===================================================================== */
+[data-theme="studio"] {
+  --bg-base: #f0f2f5;
+  --bg-surface: rgba(255, 255, 255, 0.72);
+  --bg-surface-elevated: rgba(255, 255, 255, 0.88);
+  --bg-surface-active: #e5e7eb;
+  --border-subtle: rgba(255, 255, 255, 0.85);
+  --border-strong: #d1d5db;
+  --border-focus: #0071e3;
+
+  --accent-blue: #0071e3;
+  --accent-blue-hover: #005bb5;
+  --accent-blue-light: #e8f2fc;
+  --accent-cyan: #0284c7;
+  --accent-green: #34c759;
+  --accent-green-light: #eaf8ee;
+  --accent-amber: #ff9500;
+  --accent-amber-light: #fff5e6;
+  --accent-red: #ff3b30;
+  --accent-red-light: #feecec;
+  --accent-purple: #af52de;
+  --accent-purple-light: #f6ebfd;
+
+  --text-primary: #1d1d1f;
+  --text-secondary: #424245;
+  --text-muted: #86868b;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.03);
+  --shadow-elevated: 0 20px 45px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="studio"] body {
+  background-color: #f0f2f5;
+  background-image: 
+    radial-gradient(at 5% 5%, rgba(0, 113, 227, 0.08) 0px, transparent 45%),
+    radial-gradient(at 95% 95%, rgba(175, 82, 222, 0.07) 0px, transparent 45%),
+    radial-gradient(at 50% 40%, rgba(52, 199, 89, 0.05) 0px, transparent 55%);
+  color: var(--text-primary);
+}
+
+[data-theme="studio"] header {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="studio"] .glass-card,
+[data-theme="studio"] .controls-card,
+[data-theme="studio"] .stat-card,
+[data-theme="studio"] .timeline-card,
+[data-theme="studio"] .arch-spec-card,
+[data-theme="studio"] .era-stepper-container,
+[data-theme="studio"] .analogy-box {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme="studio"] .hardware-node,
+[data-theme="studio"] .processing-unit,
+[data-theme="studio"] .turnstile-box,
+[data-theme="studio"] .era-step-btn {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: #e5e7eb;
+}
+
+[data-theme="studio"] .btn-primary {
+  background: #0071e3;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
+}
+
+[data-theme="studio"] .btn-secondary {
+  border-radius: 9999px;
+}
+
+[data-theme="studio"] .tab-btn {
+  border-radius: 9999px;
+}
+
+[data-theme="studio"] .tab-btn.active {
+  background: #0071e3;
+  border-radius: 9999px;
+}
+
+
+/* =====================================================================
+   THEME 4: RETRO 1980s PHOSPHOR CRT TERMINAL (VT100)
+   ===================================================================== */
+[data-theme="retro"] {
+  --bg-base: #040804;
+  --bg-surface: #0a140a;
+  --bg-surface-elevated: #0f200f;
+  --bg-surface-active: #152d15;
+  --border-subtle: #193819;
+  --border-strong: #22c55e;
+  --border-focus: #4ade80;
+
+  --accent-blue: #4ade80;
+  --accent-blue-hover: #22c55e;
+  --accent-blue-light: rgba(74, 222, 128, 0.15);
+  --accent-cyan: #86efac;
+  --accent-green: #22c55e;
+  --accent-green-light: rgba(34, 197, 94, 0.15);
+  --accent-amber: #facc15;
+  --accent-amber-light: rgba(250, 204, 21, 0.15);
+  --accent-red: #ef4444;
+  --accent-red-light: rgba(239, 68, 68, 0.15);
+  --accent-purple: #a3e635;
+  --accent-purple-light: rgba(163, 230, 53, 0.15);
+
+  --text-primary: #4ade80;
+  --text-secondary: #86efac;
+  --text-muted: #166534;
+
+  --font-main: 'JetBrains Mono', Consolas, monospace;
+  --shadow-card: 0 0 15px rgba(34, 197, 94, 0.12);
+}
+
+[data-theme="retro"] body {
+  background-color: #040804;
+  background-image: 
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 4px);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+[data-theme="retro"] header {
+  background: #070e07;
+  border-bottom: 2px solid #22c55e;
+}
+
+[data-theme="retro"] .brand-badge {
+  background: #0f200f;
+  color: #4ade80;
+  border: 1px solid #22c55e;
+}
+
+[data-theme="retro"] .hardware-node,
+[data-theme="retro"] .glass-card,
+[data-theme="retro"] .controls-card,
+[data-theme="retro"] .stat-card,
+[data-theme="retro"] .timeline-card,
+[data-theme="retro"] .arch-spec-card,
+[data-theme="retro"] .era-stepper-container,
+[data-theme="retro"] .analogy-box {
+  background: #091309 !important;
+  border-color: #22c55e;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+}
+
+[data-theme="retro"] .select-dropdown,
+[data-theme="retro"] .btn-secondary,
+[data-theme="retro"] .turnstile-box,
+[data-theme="retro"] .analogy-card,
+[data-theme="retro"] .era-step-btn,
+[data-theme="retro"] footer {
+  background: #0a170a !important;
+  color: #4ade80 !important;
+  border-color: #22c55e !important;
+}
+
+[data-theme="retro"] .btn-primary {
+  background: #15803d;
+  border-color: #22c55e;
+  color: #ffffff;
+}
+
+[data-theme="retro"] .narration-banner {
+  background: #071207;
+  border: 1px solid #22c55e;
+  border-left: 5px solid #22c55e;
+}
+
+[data-theme="retro"] .bus-system-container,
+[data-theme="retro"] .syn-highway-card,
+[data-theme="retro"] .era-visual-box {
+  background: #020602 !important;
+  border-color: #22c55e;
+}
+
+[data-theme="retro"] .bus-physical-line,
+[data-theme="retro"] .wire-connector-line {
+  background: #0a200a !important;
+}
+
+[data-theme="retro"] .memory-cell {
+  background: #061006 !important;
+  border-color: #193819 !important;
+  color: #4ade80 !important;
+}
+
+[data-theme="retro"] .memory-cell.written {
+  background: #14532d !important;
+  border-color: #4ade80 !important;
+  color: #ffffff !important;
+}
+
+
+/* =====================================================================
+   HIGH-OCTANE HARDWARE & CYBERPUNK ANIMATIONS
+   ===================================================================== */
+
+/* 1. CLOCK HEARTBEAT PULSE */
+@keyframes clockHeartbeat {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 10px var(--accent-cyan)); }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+.anim-clock-pulse {
+  animation: clockHeartbeat 1s infinite ease-in-out;
+}
+
+/* 2. BUS DATA PACKET STREAM (Visible Neon Floating Packets) */
+@keyframes packetSlideX {
+  0% {
+    left: -15%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 105%;
+    opacity: 0;
+  }
+}
+
+.packet-stream-track {
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-data-packet {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 6px;
+  border-radius: 3px;
+  background: #ffffff;
+  box-shadow: 0 0 12px var(--accent-cyan), 0 0 4px #ffffff;
+  animation: packetSlideX 1.2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.floating-data-packet.packet-ctrl {
+  background: #ffffff;
+  box-shadow: 0 0 12px var(--accent-green), 0 0 4px #ffffff;
+  animation-duration: 0.9s;
+}
+
+.floating-data-packet.packet-amber {
+  background: #ffffff;
+  box-shadow: 0 0 12px var(--accent-amber), 0 0 4px #ffffff;
+  animation-duration: 1.4s;
+}
+
+/* 3. THERMAL SHIMMER & HEAT WAVE FOR MULTICORE DIE */
+@keyframes thermalShimmer {
+  0% {
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.3), inset 0 0 10px rgba(244, 63, 94, 0.1);
+    border-color: #f43f5e;
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(244, 63, 94, 0.6), inset 0 0 25px rgba(245, 158, 11, 0.25);
+    border-color: #fb923c;
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.3), inset 0 0 10px rgba(244, 63, 94, 0.1);
+    border-color: #f43f5e;
+  }
+}
+
+.chip-silicon-boundary.thermal-active {
+  animation: thermalShimmer 1.4s infinite ease-in-out;
+}
+
+/* 4. CORE ACTIVITY THREAD OSCILLATOR BARS */
+@keyframes threadBarDance {
+  0%, 100% { height: 25%; }
+  50% { height: 95%; }
+}
+
+.core-thread-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 18px;
+  margin-top: 0.4rem;
+}
+
+.core-bar {
+  width: 4px;
+  background: var(--accent-green);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--accent-green);
+  animation: threadBarDance 0.8s infinite ease-in-out;
+}
+
+.core-bar:nth-child(2) { animation-delay: 0.15s; }
+.core-bar:nth-child(3) { animation-delay: 0.3s; }
+.core-bar:nth-child(4) { animation-delay: 0.45s; }
+
+/* 5. LASER TRACE BEAM FOR MEMORY ACCESS */
+@keyframes laserTracePulse {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+    box-shadow: 0 0 25px var(--accent-green);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(0.98);
+  }
+}
+
+.anim-laser-active {
+  animation: laserTracePulse 0.9s infinite ease-in-out;
+}
+
+/* 6. ROTATING TAPE REELS FOR 2ND GEN OS */
+@keyframes spinReel {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.anim-spin-reel {
+  display: inline-block;
+  animation: spinReel 1.5s infinite linear;
+}
+
+/* 7. MECHANICAL PUNCH CARD SLIDER */
+@keyframes punchCardFeed {
+  0% { transform: translateX(-40px); opacity: 0; }
+  30% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateX(60px); opacity: 0; }
+}
+
+.anim-punch-card {
+  display: inline-block;
+  animation: punchCardFeed 2s infinite linear;
+}
+
+/* 8. ARBITER TURNSTILE REVOLVING GATE */
+@keyframes turnstileSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.turnstile-rotor {
+  display: inline-block;
+  animation: turnstileSpin 3s infinite linear;
+}
+
+/* 9. LOGIC ANALYZER OSCILLOSCOPE SWEEPER */
+@keyframes oscilloscopeSweep {
+  0% { left: 0%; opacity: 0.8; }
+  100% { left: 100%; opacity: 0.8; }
+}
+
+.timeline-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.oscilloscope-beam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--accent-cyan), #ffffff, var(--accent-cyan), transparent);
+  box-shadow: 0 0 10px var(--accent-cyan), 0 0 20px var(--accent-cyan);
+  animation: oscilloscopeSweep 4s infinite linear;
+  pointer-events: none;
+}
+
+/* 10. NEON HANDSHAKE SIGNAL CONNECTOR */
+@keyframes handshakeSignalFlow {
+  0% { stroke-dashoffset: 40; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.handshake-arrow {
+  stroke-dasharray: 6 4;
+  animation: handshakeSignalFlow 0.8s infinite linear;
+}
+
+
+/* =====================================================================
+   NEXT-LEVEL HYPER-ANIMATIONS (CYBERPUNK LIVING LAB)
+   ===================================================================== */
+
+/* 11. DANCING AUDIO EQUALIZER WAVEFORM */
+@keyframes eqBarDance {
+  0%, 100% { height: 4px; }
+  50% { height: 26px; }
+}
+
+.audio-equalizer {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 28px;
+  padding: 0 4px;
+}
+
+.eq-bar {
+  width: 3px;
+  background: var(--accent-blue);
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--accent-blue);
+  animation: eqBarDance 0.8s infinite ease-in-out;
+}
+
+.eq-bar:nth-child(1) { animation-delay: 0.1s; animation-duration: 0.6s; }
+.eq-bar:nth-child(2) { animation-delay: 0.3s; animation-duration: 0.85s; }
+.eq-bar:nth-child(3) { animation-delay: 0.2s; animation-duration: 0.5s; }
+.eq-bar:nth-child(4) { animation-delay: 0.45s; animation-duration: 0.9s; }
+.eq-bar:nth-child(5) { animation-delay: 0.15s; animation-duration: 0.7s; }
+.eq-bar:nth-child(6) { animation-delay: 0.35s; animation-duration: 0.65s; }
+
+/* 12. RAM SHOCKWAVE EXPANSION RING */
+@keyframes ramShockwave {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.9), 0 0 20px rgba(245, 158, 11, 0.8);
+    transform: scale(1.12);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(245, 158, 11, 0), 0 0 35px rgba(245, 158, 11, 0.4);
+    transform: scale(1.06);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+    transform: scale(1);
+  }
+}
+
+.memory-cell.pulse-write {
+  animation: ramShockwave 0.7s infinite ease-out !important;
+  z-index: 10;
+}
+
+/* 13. ROTATING CROSSBAR RING BUS (L3 CACHE) */
+.crossbar-ring-track {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: rgba(56, 189, 248, 0.18);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.crossbar-ring-pulse {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), #ffffff, var(--accent-cyan), transparent);
+  box-shadow: 0 0 15px var(--accent-cyan);
+  animation: packetSlideX 0.75s infinite linear;
+}
+
+/* 14. SVG CONDUIT FLOW DASH */
+@keyframes conduitDash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.conduit-flowing {
+  animation: conduitDash 0.8s infinite linear;
+}
+
+/* 15. NEON HALO BREATHING FOR MASTER & STALLED NODES */
+@keyframes neonHaloBreathe {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.08);
+    border-color: #10b981;
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(16, 185, 129, 0.7), inset 0 0 20px rgba(16, 185, 129, 0.2);
+    border-color: #34d399;
+  }
+}
+
+[data-theme="cyberpunk"] .hardware-node.node-master {
+  animation: neonHaloBreathe 1.5s infinite ease-in-out !important;
+}
+
+@keyframes stalledNodeBreathe {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.35);
+    border-color: #f43f5e;
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(244, 63, 94, 0.75);
+    border-color: #fb7185;
+  }
+}
+
+[data-theme="cyberpunk"] .hardware-node.node-stalled {
+  animation: stalledNodeBreathe 1.2s infinite ease-in-out !important;
+}
+
+/* 16. AMBIENT DRIFTING CYBER GRID */
+@keyframes bgGridScan {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 0 0, 0 0, 0 56px, 56px 0; }
+}
+
+[data-theme="cyberpunk"] body {
+  animation: bgGridScan 25s infinite linear;
+}
+
+/* 17. SPARK WARNING FOR HIGH CONTENTION */
+@keyframes electricSpark {
+  0%, 100% { opacity: 0.2; transform: scale(0.95); }
+  25%, 75% { opacity: 1; transform: scale(1.08); filter: drop-shadow(0 0 12px var(--accent-red)); }
+  50% { opacity: 0.5; }
+}
+
+.spark-alert {
+  animation: electricSpark 0.45s infinite ease-in-out;
+}
+
+
+    .tab-pane {
+      display: none;
+      animation: tabFadeIn 0.2s ease-out;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .viva-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.75rem;
+    }
+    .viva-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .viva-q {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    .viva-a {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .slide-citation-badge {
+      align-self: flex-start;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--accent-amber);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-sm);
+      margin-top: 0.4rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-branding">
+      <div class="brand-row">
+        <span class="brand-title">⚡ OS-ArchLab</span>
+      </div>
+      <div class="brand-subtitle">Operating System Overview: Direct Memory Access (DMA) & Multiprocessor vs. Multicore</div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="navigateTab('dma')">
+        <span>📡</span> DMA Modes
+      </button>
+      <button class="tab-btn" onclick="navigateTab('multicore')">
+        <span>⚙️</span> Multicore vs Multiprocessor
+      </button>
+      <button class="tab-btn" onclick="navigateTab('unified')">
+        <span>🔬</span> Unified System Lab
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ==================== TAB 1: DMA CONTROLLER & MODES ==================== -->
+    <section id="pane-dma" class="tab-pane active">
+      
+      <!-- CONTROLS STRIP -->
+      <div class="controls-card">
+        <div class="control-cluster">
+          <span class="control-label">Transfer Mode:</span>
+          <select id="selectDmaMode" class="select-dropdown" onchange="handleModeChange()">
+            <option value="burst" selected>Burst Mode (Block Transfer - Slide 15)</option>
+            <option value="stealing">Cycle Stealing Mode (1 Byte/Cycle - Slide 15)</option>
+            <option value="transparent">Transparent Mode (CPU Idle Cycles Only - Slide 15)</option>
+          </select>
+        </div>
+
+        <div class="control-cluster">
+          <span class="control-label">Block Size:</span>
+          <select id="selectBlockSize" class="select-dropdown" onchange="resetSimulation()">
+            <option value="8">8 Bytes</option>
+            <option value="16" selected>16 Bytes (Standard)</option>
+            <option value="24">24 Bytes</option>
+          </select>
+        </div>
+
+        <div class="control-cluster">
+          <button id="btnPlayPause" class="btn btn-primary" onclick="toggleExecution()">▶ Start Transfer</button>
+          <button class="btn btn-secondary" onclick="stepClockCycle()">⏭ Step Cycle</button>
+          <button class="btn btn-secondary" onclick="resetSimulation()">↺ Reset</button>
+        </div>
+
+        <div class="control-cluster">
+          <span class="control-label">Speed:</span>
+          <select id="selectSpeed" class="select-dropdown" onchange="updateSimulationSpeed()">
+            <option value="1200">0.5x (Slow Walkthrough)</option>
+            <option value="700" selected>1.0x (Standard)</option>
+            <option value="350">2.0x (Fast)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- LIVE FACULTY NARRATION BANNER -->
+      <div class="narration-banner">
+        <div class="narration-icon">🎙️</div>
+        <div class="narration-text">
+          <div class="narration-title" id="narrationTitle">Current Cycle Action (Pedagogical Explanation)</div>
+          <div class="narration-message" id="narrationMsg">
+            Standby. Select a DMA Mode above and click "Start Transfer" or "Step Cycle" to begin the hardware sequence.
+          </div>
+        </div>
+      </div>
+
+      <!-- SCHEMATIC + METRICS -->
+      <div class="layout-grid">
+        <!-- LEFT: SCHEMATIC CANVAS -->
+        <div class="glass-card">
+          <div class="card-heading">
+            <span>Hardware Interconnect & Register State (Slide 14)</span>
+            <span id="labelMasterStatus" class="badge-status badge-blue">CPU BUS MASTER</span>
+          </div>
+
+          <!-- TOP BOXES -->
+          <div class="schematic-box-row">
+            <!-- CPU BOX -->
+            <div id="nodeCpu" class="hardware-node node-master">
+              <div class="node-header">
+                <span class="node-title">CPU (Processor)</span>
+                <span id="badgeCpu" class="badge-status badge-green">RUNNING</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Instruction Cycle: Fetch → Decode → Exec</p>
+              <table class="register-table">
+                <tr><td class="reg-label">Program Counter:</td><td class="reg-value" id="valCpuPc">0x0400</td></tr>
+                <tr><td class="reg-label">HOLD In (Bus Req):</td><td class="reg-value" id="valCpuHold">0 (Low)</td></tr>
+                <tr><td class="reg-label">HLDA Out (Grant):</td><td class="reg-value" id="valCpuHlda">0 (Low)</td></tr>
+              </table>
+              <div id="textCpuDetail" style="font-size: 0.82rem; color: var(--accent-blue); font-weight: 600;">Executing user process</div>
+            </div>
+
+            <!-- DMA CONTROLLER BOX -->
+            <div id="nodeDmac" class="hardware-node">
+              <div class="node-header">
+                <span class="node-title">DMA Controller</span>
+                <span id="badgeDma" class="badge-status badge-amber">IDLE</span>
+              </div>
+              <table class="register-table">
+                <tr><td class="reg-label">Source Register:</td><td class="reg-value" id="valDmaSrc">0x1000 (Disk)</td></tr>
+                <tr><td class="reg-label">Dest Register:</td><td class="reg-value" id="valDmaDest">0x8000 (RAM)</td></tr>
+                <tr><td class="reg-label">Byte Count Reg:</td><td class="reg-value" id="valDmaCount">16</td></tr>
+                <tr><td class="reg-label">Bus Mastership:</td><td class="reg-value" id="valDmaMaster">NO</td></tr>
+              </table>
+              <div id="textDmaModeLabel" style="font-size: 0.82rem; color: var(--accent-amber); font-weight: 600;">Mode: Burst Mode</div>
+            </div>
+
+            <!-- PERIPHERAL BOX -->
+            <div id="nodeIo" class="hardware-node">
+              <div class="node-header">
+                <span class="node-title">I/O Peripheral</span>
+                <span class="badge-status badge-blue">BUFFERED</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">High-speed NVMe / Disk Buffer</p>
+              <table class="register-table">
+                <tr><td class="reg-label">Buffer Ready:</td><td class="reg-value">16 Bytes</td></tr>
+                <tr><td class="reg-label">DREQ Signal:</td><td class="reg-value" style="color: var(--accent-green);">1 (Active)</td></tr>
+                <tr><td class="reg-label">DACK Signal:</td><td class="reg-value" id="valIoDack">0</td></tr>
+              </table>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">Direct transfer to memory</div>
+            </div>
+          </div>
+
+          <!-- SYSTEM BUS -->
+          <div class="bus-system-container">
+            <div class="bus-track">
+              <span class="bus-name-badge">CONTROL BUS:</span>
+              <div id="wireCtrl" class="bus-physical-line"></div>
+              <span id="stateCtrl" class="bus-state-display" style="color: var(--accent-green);">HLDA=0, IOR=0, MEMW=0</span>
+            </div>
+            <div class="bus-track">
+              <span class="bus-name-badge">ADDRESS BUS:</span>
+              <div id="wireAddr" class="bus-physical-line"></div>
+              <span id="stateAddr" class="bus-state-display" style="color: var(--accent-blue);">0x0400 (CPU Driven)</span>
+            </div>
+            <div class="bus-track">
+              <span class="bus-name-badge">DATA BUS:</span>
+              <div id="wireData" class="bus-physical-line"></div>
+              <span id="stateData" class="bus-state-display" style="color: var(--accent-amber);">IDLE / NO TRANSFER</span>
+            </div>
+          </div>
+
+          <!-- RAM BUFFER -->
+          <div class="ram-container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary);">Main Memory DRAM Target Buffer (0x8000)</span>
+              <span id="labelRamProgress" style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: var(--accent-green);">0 / 16 Bytes Written</span>
+            </div>
+            <div class="ram-cells-grid" id="ramCellsWrapper"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: METRICS HUD -->
+        <div class="metrics-column">
+          <div class="stat-card">
+            <span class="stat-label">CPU Active Utilization</span>
+            <span class="stat-value" id="statCpuUtil" style="color: var(--accent-green);">100%</span>
+            <span class="stat-explanation">Percentage of clock cycles the processor spent executing without bus preemption.</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">Elapsed System Clocks</span>
+            <span class="stat-value" id="statCycles" style="color: var(--accent-blue);">0</span>
+            <span class="stat-explanation">Discrete clock pulses elapsed since DMA initialization.</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">CPU Stalled Cycles</span>
+            <span class="stat-value" id="statStalls" style="color: var(--accent-red);">0</span>
+            <span class="stat-explanation">Cycles the CPU waited in idle wait-states due to DMA holding the bus.</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">Slide 15 Theoretical Core</span>
+            <div style="font-size: 1.05rem; font-weight: 800; color: var(--accent-amber);" id="ruleNameTitle">Burst Mode</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.35rem;" id="ruleNameDesc">
+              Upon bus grant, all data transfers must complete before releasing the bus back to the processor. High throughput for large blocks, but CPU is halted throughout.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GANTT TIMELINE WAVEFORM -->
+      <div class="timeline-card">
+        <div class="card-heading">
+          <span>Cycle-by-Cycle Waveform & Bus Arbitration Timing (Slide 15)</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Displaying Last 20 System Clocks</span>
+        </div>
+
+        <div class="gantt-row">
+          <div class="gantt-title">CPU Status:</div>
+          <div class="gantt-blocks-grid" id="rowCpuGantt"></div>
+        </div>
+
+        <div class="gantt-row">
+          <div class="gantt-title">Bus Mastership:</div>
+          <div class="gantt-blocks-grid" id="rowBusGantt"></div>
+        </div>
+
+        <div class="gantt-row">
+          <div class="gantt-title">DMA Controller:</div>
+          <div class="gantt-blocks-grid" id="rowDmaGantt"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: MULTICORE VS MULTIPROCESSOR ==================== -->
+    <section id="pane-multicore" class="tab-pane">
+      <div class="controls-card">
+        <div class="control-cluster">
+          <span class="control-label">Cores on Die:</span>
+          <select id="selectCoreCount" class="select-dropdown" onchange="changeCoreCount()">
+            <option value="2" selected>2 Cores (Dual-Core - Slide 16)</option>
+            <option value="4">4 Cores (Quad-Core)</option>
+            <option value="8">8 Cores (Octa-Core)</option>
+          </select>
+        </div>
+
+        <div class="control-cluster">
+          <span class="control-label">Workload:</span>
+          <select id="selectWorkloadType" class="select-dropdown">
+            <option value="single" selected>Single Multi-Threaded App (Render/Game)</option>
+            <option value="multi">Multiple Independent Server Jobs (Web+DB)</option>
+          </select>
+        </div>
+
+        <div class="control-cluster">
+          <button class="btn btn-primary" onclick="simulateMultiWorkload()">⚡ Run Benchmark</button>
+          <button class="btn btn-secondary" onclick="traceMemoryAccess()">🔍 Trace Memory Path</button>
+          <button class="btn btn-danger" onclick="triggerDieOverheat()">💥 Overheat Die</button>
+          <button class="btn btn-danger" onclick="triggerSocketPull()">🔌 Pull Socket 2</button>
+          <button class="btn btn-secondary" onclick="restoreMultiArchitectures()">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- LIVE MULTICORE/MULTIPROCESSOR NARRATION BANNER -->
+      <div class="narration-banner" style="border-left-color: var(--accent-purple);">
+        <div class="narration-icon">⚙️</div>
+        <div class="narration-text">
+          <div class="narration-title" id="multiNarrationTitle">Architectural Comparison Engine (Slide 16 vs 18)</div>
+          <div class="narration-message" id="multiNarrationMsg">
+            Standby. Multicore houses multiple cores on a single silicon die sharing L3 cache. Multiprocessors connect separate CPU chips across the motherboard bus arbiter. Click any button above to test!
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE BENCHMARK PROGRESS HUD -->
+      <div class="controls-card" id="multiBenchmarkHud" style="display: none; background: #080e1e; border-color: var(--accent-blue); margin-bottom: 1.75rem;">
+        <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem;">
+              <span style="color: var(--accent-blue);" id="mcHudLabel">Multicore Workload Progress:</span>
+              <span id="mcProgressText" style="color: var(--accent-green); font-family: var(--font-mono);">0%</span>
+            </div>
+            <div style="height: 12px; background: #1e293b; border-radius: 6px; overflow: hidden;">
+              <div id="mcProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #0284c7, #10b981); transition: width 0.15s ease;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-top: 0.4rem;">
+              <span>Interconnect: <strong style="color: var(--accent-green);">On-Die Crossbar (0.8ns)</strong></span>
+              <span>Off-Chip Bus Load: <strong style="color: var(--accent-green);" id="mcBusContention">14% (Low)</strong></span>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem;">
+              <span style="color: var(--accent-purple);" id="mpHudLabel">Multiprocessor Workload Progress:</span>
+              <span id="mpProgressText" style="color: var(--accent-amber); font-family: var(--font-mono);">0%</span>
+            </div>
+            <div style="height: 12px; background: #1e293b; border-radius: 6px; overflow: hidden;">
+              <div id="mpProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #8b5cf6, #f59e0b); transition: width 0.15s ease;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-top: 0.4rem;">
+              <span>Interconnect: <strong style="color: var(--accent-amber);">Motherboard Bus Arbiter (15ns)</strong></span>
+              <span>Off-Chip Bus Contention: <strong style="color: var(--accent-red);" id="mpBusContention">84% (High Contention)</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DUAL SCHEMATICS -->
+      <div class="comparison-grid">
+        <!-- MULTICORE PANE -->
+        <div class="arch-spec-card">
+          <div class="node-header">
+            <div>
+              <div style="font-size: 1.35rem; font-weight: 800; color: var(--accent-blue);">Multicore Architecture (Slide 16)</div>
+              <div style="font-size: 0.88rem; color: var(--text-muted);">Multiple execution cores on a SINGLE integrated silicon chip</div>
+            </div>
+            <span class="badge-status badge-blue">ON-CHIP CROSSBAR</span>
+          </div>
+
+          <div class="meta-tag-bar">
+            <span class="meta-tag" style="color: var(--accent-green);">📦 Cost: ~$220 (Cheap)</span>
+            <span class="meta-tag" style="color: var(--accent-blue);">⚡ Latency: ~0.8ns</span>
+            <span class="meta-tag" id="tagDieTemp" style="color: var(--accent-amber);">🌡️ Die Temp: 48°C (Normal)</span>
+          </div>
+
+          <div class="chip-silicon-boundary" id="siliconBoundary">
+            <span class="chip-boundary-label">Single Silicon Die Package</span>
+
+            <div class="cores-duo" id="coresGridWrapper">
+              <div class="processing-unit active-work" id="boxCore1">
+                <div style="font-weight: 800; font-size: 1.05rem;">Core 1</div>
+                <div class="cache-hierarchy-pill">L1: 32KB | L2: 512KB</div>
+                <div id="statusCore1" style="font-size: 0.85rem; color: var(--accent-green); font-weight: 700; margin-top: 0.5rem;">Executing Thread 1</div>
+              </div>
+
+              <div class="processing-unit active-work" id="boxCore2">
+                <div style="font-weight: 800; font-size: 1.05rem;">Core 2</div>
+                <div class="cache-hierarchy-pill">L1: 32KB | L2: 512KB</div>
+                <div id="statusCore2" style="font-size: 0.85rem; color: var(--accent-green); font-weight: 700; margin-top: 0.5rem;">Executing Thread 2</div>
+              </div>
+            </div>
+
+            <!-- SHARED L3 -->
+            <div class="on-chip-l3-cache" id="boxL3">
+              ⚡ On-Chip Shared L3 Cache (8 MB - Ultra Low Latency)
+              <div style="font-size: 0.82rem; font-weight: normal; color: #bae6fd; margin-top: 0.25rem;">
+                Filters memory requests on-die → Low external bus traffic
+              </div>
+            </div>
+          </div>
+
+          <div style="text-align: center;">
+            <div style="display: inline-block; background: var(--bg-surface-elevated); border: 1px solid var(--border-strong); padding: 0.5rem 1.25rem; border-radius: 6px; font-size: 0.88rem; font-weight: 600;">
+              ⬇ On-Chip Bus Interface Controller (Minimal off-chip bus load)
+            </div>
+          </div>
+
+          <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-strong); border-radius: var(--radius-md); padding: 1rem; text-align: center;">
+            <span style="font-size: 0.95rem; font-weight: 800; color: var(--text-muted);">Main Memory (DRAM)</span>
+          </div>
+
+          <div style="background: rgba(2, 132, 199, 0.08); border-radius: var(--radius-md); padding: 1.1rem; font-size: 0.92rem; line-height: 1.6;">
+            <strong style="color: var(--accent-green);">Slide 17 Advantages:</strong> Faster clock speed, energy efficient, fast inter-core communication, less external bus traffic.<br>
+            <strong style="color: var(--accent-red);">Slide 17 Disadvantages:</strong> Thermal hotspots, shared cache interference, single silicon failure disables all cores.
+          </div>
+        </div>
+
+        <!-- MULTIPROCESSOR PANE -->
+        <div class="arch-spec-card">
+          <div class="node-header">
+            <div>
+              <div style="font-size: 1.35rem; font-weight: 800; color: var(--accent-purple);">Multiprocessor Architecture (Slide 18)</div>
+              <div style="font-size: 0.88rem; color: var(--text-muted);">Two or more SEPARATE physical CPU sockets on motherboard</div>
+            </div>
+            <span class="badge-status" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #a855f7;">MOTHERBOARD BUS</span>
+          </div>
+
+          <!-- SLIDE 18 MEMORY MODE SELECTOR -->
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(168, 85, 247, 0.1); border: 1px solid var(--border-strong); padding: 0.5rem 0.9rem; border-radius: var(--radius-sm);">
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-purple);">Slide 18 Memory Mode:</span>
+            <select id="selectMpMemMode" class="select-dropdown" style="padding: 0.3rem 0.6rem; font-size: 0.82rem;" onchange="toggleMpMemoryMode()">
+              <option value="smp" selected>Symmetric (SMP) - Shared RAM</option>
+              <option value="distributed">Distributed Memory - Private RAM</option>
+            </select>
+          </div>
+
+          <div class="meta-tag-bar">
+            <span class="meta-tag" style="color: var(--accent-red);">📦 Cost: ~$1,850 (Expensive)</span>
+            <span class="meta-tag" style="color: var(--accent-amber);">⚡ Bus Overhead: ~15-65ns</span>
+            <span class="meta-tag" style="color: var(--accent-green);">🛡️ Fault Isolation: Independent</span>
+          </div>
+
+          <div class="motherboard-boundary">
+            <span class="motherboard-boundary-label">Motherboard Sockets Layout</span>
+
+            <div class="cores-duo">
+              <div class="processing-unit active-work" id="boxSocket1">
+                <div style="font-weight: 800; font-size: 1.05rem;">CPU Socket 1</div>
+                <div class="cache-hierarchy-pill">Private Cache: 1MB</div>
+                <div id="statusSocket1" style="font-size: 0.85rem; color: var(--accent-green); font-weight: 700; margin-top: 0.5rem;">Executing Job A</div>
+              </div>
+
+              <div class="processing-unit active-work" id="boxSocket2">
+                <div style="font-weight: 800; font-size: 1.05rem;">CPU Socket 2</div>
+                <div class="cache-hierarchy-pill">Private Cache: 1MB</div>
+                <div id="statusSocket2" style="font-size: 0.85rem; color: var(--accent-green); font-weight: 700; margin-top: 0.5rem;">Executing Job B</div>
+              </div>
+            </div>
+
+            <!-- SHARED SYSTEM BUS ARBITER -->
+            <div class="system-bus-arbiter" id="boxArbiter">
+              ⚖️ System Bus Arbiter & Shared Memory Pathway (Slide 18)
+              <div style="font-size: 0.82rem; font-weight: normal; color: #fde68a; margin-top: 0.25rem;">
+                Arbitrates access to memory & I/O → High bus contention
+              </div>
+            </div>
+
+            <!-- MEMORY CONTAINER (SWITCHES BETWEEN SMP AND DISTRIBUTED) -->
+            <div id="mpSharedMemContainer" style="background: var(--bg-surface-elevated); border: 1px solid var(--border-strong); border-radius: var(--radius-md); padding: 1rem; text-align: center;">
+              <span style="font-size: 0.95rem; font-weight: 800; color: var(--text-muted);">Shared Main Memory Pool (Large DRAM)</span>
+            </div>
+
+            <div id="mpDistributedMemContainer" class="distributed-ram-grid" style="display: none;">
+              <div class="distributed-ram-node">Socket 1 Local RAM<br><span style="font-size: 0.72rem; color: var(--text-muted);">Fast Private Memory (Slide 18)</span></div>
+              <div class="distributed-ram-node">Socket 2 Local RAM<br><span style="font-size: 0.72rem; color: var(--text-muted);">Fast Private Memory (Slide 18)</span></div>
+            </div>
+          </div>
+
+          <div style="background: rgba(168, 85, 247, 0.08); border-radius: var(--radius-md); padding: 1.1rem; font-size: 0.92rem; line-height: 1.6;">
+            <strong style="color: var(--accent-green);">Slide 19 Advantages:</strong> High fault tolerance (failure of 1 CPU does not affect others), high multi-job throughput.<br>
+            <strong style="color: var(--accent-red);">Slide 19 Disadvantages:</strong> Heavy bus traffic, complex coordination, expensive hardware.
+          </div>
+        </div>
+      </div>
+
+      <!-- REAL WORLD FACULTY ANALOGY CARD -->
+      <div class="analogy-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">💡 Real-World Architectural Analogy</span>
+          <span class="badge-status badge-amber">CONCEPTUAL ANALOGY</span>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+          Use this mental model to immediately understand the physical design trade-offs:
+        </p>
+        <div class="analogy-grid">
+          <div class="analogy-card" style="border-left: 4px solid var(--accent-blue);">
+            <div style="font-weight: 800; font-size: 1rem; color: var(--accent-blue);">👨‍🍳 Multicore = "One Kitchen, Multiple Chefs"</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+              All chefs (cores) stand inside the <strong>same kitchen</strong> (silicon die). They share the same spice rack (L3 Cache) instantaneously with zero walking. It is fast, compact, and cheap. But if the kitchen catches fire (die overheat), <strong>every chef must evacuate</strong> (all cores crash).
+            </p>
+          </div>
+
+          <div class="analogy-card" style="border-left: 4px solid var(--accent-purple);">
+            <div style="font-weight: 800; font-size: 1rem; color: var(--accent-purple);">🏢 Multiprocessor = "Separate Restaurant Branches"</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+              Each restaurant (CPU socket) is an <strong>independent building</strong>. If Branch 2 burns down, Branch 1 stays open and serves customers (high fault tolerance). But whenever they need ingredients from the central supplier (Main Memory), supply trucks must travel over the city highway (System Bus & Arbiter), causing <strong>heavy traffic congestion</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: UNIFIED SYSTEM LAB ==================== -->
+    <section id="pane-unified" class="tab-pane">
+      <!-- CONTROLS STRIP: SCENARIOS & STRESS SLIDER -->
+      <div class="controls-card">
+        <div class="control-cluster">
+          <span class="control-label">Workload Scenario:</span>
+          <select id="selectSynScenario" class="select-dropdown" onchange="changeSynScenario()">
+            <option value="gaming" selected>🎮 3D Gaming + Background File Download (Cycle Stealing)</option>
+            <option value="database">💾 Database Checkpoint Disk Flush (DMA Burst)</option>
+            <option value="streaming">🎬 Real-Time 4K Video Streaming (Smooth Interleaving)</option>
+          </select>
+        </div>
+
+        <div class="control-cluster">
+          <span class="control-label">CPU Memory Pressure:</span>
+          <input type="range" id="synStressSlider" min="20" max="95" value="45" step="5" class="range-input" style="width: 130px;" oninput="updateSynStress()">
+          <span id="synStressLabel" style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-amber); font-size: 0.95rem;">45% (Moderate)</span>
+        </div>
+
+        <div class="control-cluster">
+          <button id="btnSynRun" class="btn btn-primary" onclick="toggleSynSimulation()">🚀 Run Workload</button>
+          <button class="btn btn-secondary" onclick="stepSynCycle()">⏭ Step Pulse</button>
+          <button class="btn btn-secondary" onclick="resetSynLab()">↺ Reset Lab</button>
+        </div>
+      </div>
+
+      <!-- LIVE UNIFIED NARRATION BANNER -->
+      <div class="narration-banner" style="border-left-color: var(--accent-green);">
+        <div class="narration-icon">🔬</div>
+        <div class="narration-text">
+          <div class="narration-title" id="synNarrationTitle">Hardware Bus Arbitration & Memory Contention (Topic 5 + 6 Crossroads)</div>
+          <div class="narration-message" id="synNarrationMsg">
+            Standby. Select a real-world scenario above, adjust memory pressure, and click "Run Workload" to observe how the Memory Bus Arbiter balances CPU computing against DMA I/O throughput.
+          </div>
+        </div>
+      </div>
+
+      <!-- ANIMATED MEMORY BUS INTERSECTION & TURNSTILE QUEUE (FEATURE 2) -->
+      <div class="syn-highway-card">
+        <div class="card-heading">
+          <span>Memory Bus Highway Crossbar & Hardware Arbiter Turnstile</span>
+          <span id="synBusPhasePill" class="badge-status badge-blue">ARBITER READY</span>
+        </div>
+
+        <!-- TOP NODES: MULTICORE PROCESSORS -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 0.5rem;">
+          <div class="hardware-node" id="synNodeCore1">
+            <div class="node-header">
+              <span class="node-title" style="color: var(--accent-blue);">Multicore Core 1</span>
+              <span id="synCore1Badge" class="badge-status badge-green">COMPUTING</span>
+            </div>
+            <p id="synCore1Task" style="font-size: 0.88rem; color: var(--text-muted);">Vertex Shader Transformation</p>
+            <div id="synCore1BusStatus" style="font-size: 0.88rem; font-weight: 700; color: var(--accent-green);">Bus: ACTIVE ACCESS</div>
+          </div>
+
+          <div class="hardware-node" id="synNodeCore2">
+            <div class="node-header">
+              <span class="node-title" style="color: var(--accent-purple);">Multicore Core 2</span>
+              <span id="synCore2Badge" class="badge-status badge-amber">QUEUED</span>
+            </div>
+            <p id="synCore2Task" style="font-size: 0.88rem; color: var(--text-muted);">Physics Collision Calculations</p>
+            <div id="synCore2BusStatus" style="font-size: 0.88rem; font-weight: 700; color: var(--accent-amber);">Bus: WAITING ARBITER</div>
+          </div>
+        </div>
+
+        <!-- CONNECTING WIRES TO ARBITER -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div id="synWireCore1" class="wire-connector-line wire-flowing"></div>
+          <div id="synWireCore2" class="wire-connector-line"></div>
+        </div>
+
+        <!-- CENTER: HARDWARE BUS ARBITER & TURNSTILE QUEUE -->
+        <div class="turnstile-box" id="synArbiterBox">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 800; font-size: 1.05rem; color: var(--accent-amber);">⚖️ Hardware Memory Bus Arbiter (Slide 18 Turnstile)</span>
+            <span id="synTurnstileActiveMaster" class="badge-status badge-green" style="font-size: 0.82rem;">Core 1 Granted Bus</span>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+            Resolves simultaneous memory conflicts between multiple CPU cores and high-speed DMA I/O
+          </div>
+
+          <!-- THE TURNSTILE QUEUE -->
+          <div class="turnstile-queue">
+            <div class="turnstile-slot slot-active" id="synSlot1">
+              <span style="font-size: 0.7rem; text-transform: uppercase;">1. Active Master</span>
+              <span id="synSlot1Name">Core 1</span>
+            </div>
+            <div class="turnstile-slot slot-queued" id="synSlot2">
+              <span style="font-size: 0.7rem; text-transform: uppercase;">2. Next In Line</span>
+              <span id="synSlot2Name">DMA Controller</span>
+            </div>
+            <div class="turnstile-slot" id="synSlot3">
+              <span style="font-size: 0.7rem; text-transform: uppercase;">3. Pending</span>
+              <span id="synSlot3Name">Core 2</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONNECTING WIRES FROM DMA AND ARBITER TO MAIN DRAM -->
+        <div style="display: grid; grid-template-columns: 1.2fr 2fr; gap: 1.5rem; align-items: center; margin-top: 1rem;">
+          <!-- DMA CONTROLLER ON THE SIDE -->
+          <div class="hardware-node" id="synNodeDma">
+            <div class="node-header">
+              <span class="node-title" style="color: var(--accent-green);">DMA Controller (Station Master)</span>
+              <span id="synDmaBadge" class="badge-status badge-amber">HOLD_REQ</span>
+            </div>
+            <p id="synDmaTask" style="font-size: 0.85rem; color: var(--text-muted);">NVMe Disk Block Streaming</p>
+            <div id="synDmaBusStatus" style="font-size: 0.88rem; font-weight: 700; color: var(--accent-amber);">Bus: REQUESTING (HOLD)</div>
+            <div id="synWireDma" class="wire-connector-line" style="margin-top: 0.5rem;"></div>
+          </div>
+
+          <!-- SHARED MAIN DRAM TARGET -->
+          <div style="background: var(--bg-surface-elevated); border: 2px solid var(--accent-blue); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">Shared Main Memory (DRAM Highway)</span>
+              <span id="synRamAccessLabel" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); font-weight: 700;">Servicing: Core 1 Read (0x4420)</span>
+            </div>
+            <div id="synWireRam" class="wire-connector-line wire-flowing"></div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+              Single physical bandwidth pool shared across all processors and peripheral controllers
+            </div>
+          </div>
+        </div>
+
+        <!-- RADAR METRICS DASHBOARD (FEATURE 5) -->
+        <div class="syn-radar-grid">
+          <div class="stat-card">
+            <span class="stat-label">CPU Compute Efficiency</span>
+            <span class="stat-value" id="synMetricCpuEfficiency" style="color: var(--accent-green); font-size: 1.85rem;">88%</span>
+            <span class="stat-explanation" id="synMetricCpuDesc">Effective processor utilization unaffected by bus stall states.</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">Bus Contention Saturation</span>
+            <span class="stat-value" id="synMetricBusSaturation" style="color: var(--accent-amber); font-size: 1.85rem;">45%</span>
+            <span class="stat-explanation" id="synMetricBusDesc">Memory bus bandwidth consumption across active competitors.</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">DMA I/O Throughput</span>
+            <span class="stat-value" id="synMetricThroughput" style="color: var(--accent-blue); font-size: 1.85rem;">480 MB/s</span>
+            <span class="stat-explanation">Data transfer rate directly between disk buffer and RAM.</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">Average Bus Wait Penalty</span>
+            <span class="stat-value" id="synMetricWaitPenalty" style="color: var(--accent-purple); font-size: 1.85rem;">12 Clocks</span>
+            <span class="stat-explanation">Cycles processors spent waiting in line at the arbiter turnstile.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- STATE MACHINE ---
+    let activeTabId = 'dma';
+    let dmaMode = 'burst';
+    let blockSize = 16;
+    let transferredBytes = 0;
+    let currentClock = 0;
+    let isRunning = false;
+    let intervalTimer = null;
+    let clockDelay = 700;
+
+    let cpuWorkCycles = 0;
+    let cpuStallCycles = 0;
+
+    const ganttRecords = [];
+
+    // --- NAVIGATION ---
+    function navigateTab(tabName) {
+      activeTabId = tabName;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      if (tabName === 'dma') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('pane-dma').classList.add('active');
+      } else if (tabName === 'multicore') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('pane-multicore').classList.add('active');
+      } else if (tabName === 'unified') {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('pane-unified').classList.add('active');
+      }
+    }
+
+    // --- RAM GRID INITIALIZER ---
+    function setupRamGrid() {
+      const wrapper = document.getElementById('ramCellsWrapper');
+      wrapper.innerHTML = '';
+      for (let i = 0; i < blockSize; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'memory-cell';
+        cell.id = `ram_byte_${i}`;
+        cell.innerText = `0x${(0x8000 + i).toString(16).toUpperCase().slice(-3)}`;
+        wrapper.appendChild(cell);
+      }
+      refreshRamLabel();
+    }
+
+    function refreshRamLabel() {
+      document.getElementById('labelRamProgress').innerText = `${transferredBytes} / ${blockSize} Bytes Written`;
+    }
+
+    // --- DMA MODE HANDLER ---
+    function handleModeChange() {
+      dmaMode = document.getElementById('selectDmaMode').value;
+      const title = document.getElementById('ruleNameTitle');
+      const desc = document.getElementById('ruleNameDesc');
+      const label = document.getElementById('textDmaModeLabel');
+
+      if (dmaMode === 'burst') {
+        title.innerText = 'Burst Mode (Slide 15)';
+        desc.innerText = 'Transfers entire block in one continuous burst. The processor is stalled throughout the entire transfer.';
+        label.innerText = 'Mode: Burst Mode (Continuous Block)';
+      } else if (dmaMode === 'stealing') {
+        title.innerText = 'Cycle Stealing Mode (Slide 15)';
+        desc.innerText = 'DMA controller stops processor for only 1 clock cycle to transfer 1 byte, then lets go of the bus repeatedly.';
+        label.innerText = 'Mode: Cycle Stealing (1 Byte / Cycle)';
+      } else if (dmaMode === 'transparent') {
+        title.innerText = 'Transparent Mode (Slide 15)';
+        desc.innerText = 'DMA controller only controls system bus when not needed by the processor (e.g. during internal ALU execution). Zero CPU stalls!';
+        label.innerText = 'Mode: Transparent (Hidden Bus Stealing)';
+      }
+      resetSimulation();
+    }
+
+    function updateSimulationSpeed() {
+      clockDelay = parseInt(document.getElementById('selectSpeed').value, 10);
+      if (isRunning) {
+        clearInterval(intervalTimer);
+        intervalTimer = setInterval(stepClockCycle, clockDelay);
+      }
+    }
+
+    function toggleExecution() {
+      if (isRunning) {
+        pauseSimulation();
+      } else {
+        startSimulation();
+      }
+    }
+
+    function startSimulation() {
+      if (transferredBytes >= blockSize) resetSimulation();
+      isRunning = true;
+      document.getElementById('btnPlayPause').innerText = '⏸ Pause Transfer';
+      document.getElementById('btnPlayPause').classList.remove('btn-primary');
+      document.getElementById('btnPlayPause').classList.add('btn-danger');
+
+      intervalTimer = setInterval(stepClockCycle, clockDelay);
+    }
+
+    function pauseSimulation() {
+      isRunning = false;
+      clearInterval(intervalTimer);
+      document.getElementById('btnPlayPause').innerText = '▶ Start Transfer';
+      document.getElementById('btnPlayPause').classList.remove('btn-danger');
+      document.getElementById('btnPlayPause').classList.add('btn-primary');
+    }
+
+    function resetSimulation() {
+      pauseSimulation();
+      currentClock = 0;
+      transferredBytes = 0;
+      cpuWorkCycles = 0;
+      cpuStallCycles = 0;
+      ganttRecords.length = 0;
+      blockSize = parseInt(document.getElementById('selectBlockSize').value, 10);
+
+      document.getElementById('valDmaCount').innerText = blockSize;
+      document.getElementById('valDmaDest').innerText = '0x8000';
+      document.getElementById('valDmaMaster').innerText = 'NO';
+      document.getElementById('valCpuHold').innerText = '0 (Low)';
+      document.getElementById('valCpuHlda').innerText = '0 (Low)';
+
+      document.getElementById('nodeCpu').className = 'hardware-node node-master';
+      document.getElementById('nodeDmac').className = 'hardware-node';
+      document.getElementById('badgeCpu').className = 'badge-status badge-green';
+      document.getElementById('badgeCpu').innerText = 'RUNNING';
+      document.getElementById('badgeDma').className = 'badge-status badge-amber';
+      document.getElementById('badgeDma').innerText = 'IDLE';
+
+      document.getElementById('wireCtrl').className = 'bus-physical-line';
+      document.getElementById('wireData').className = 'bus-physical-line';
+      document.getElementById('wireAddr').className = 'bus-physical-line';
+
+      document.getElementById('labelMasterStatus').className = 'badge-status badge-blue';
+      document.getElementById('labelMasterStatus').innerText = 'CPU BUS MASTER';
+
+      document.getElementById('narrationTitle').innerText = 'System Initialized';
+      document.getElementById('narrationMsg').innerText = `DMA configured for ${blockSize}-byte transfer. CPU is currently bus master.`;
+
+      setupRamGrid();
+      refreshMetrics();
+      drawGantt();
+    }
+
+    function stepClockCycle() {
+      if (transferredBytes >= blockSize) {
+        finalizeTransfer();
+        return;
+      }
+
+      currentClock++;
+      let cpuState = 'work';
+      let busOwner = 'CPU';
+      let dmaState = 'idle';
+      let explanation = '';
+
+      // MODES BEHAVIOR (SLIDE 15)
+      if (dmaMode === 'burst') {
+        cpuState = 'stall';
+        busOwner = 'DMA';
+        dmaState = 'transfer';
+        transferredBytes++;
+        cpuStallCycles++;
+        explanation = `Cycle ${currentClock} [Burst Mode]: DMA Controller holds the system bus. Transferred Byte ${transferredBytes} directly from Disk to RAM 0x${(0x8000 + transferredBytes - 1).toString(16).toUpperCase()}. CPU is STALLED.`;
+      } else if (dmaMode === 'stealing') {
+        if (currentClock % 2 === 1) {
+          cpuState = 'stall';
+          busOwner = 'DMA';
+          dmaState = 'transfer';
+          transferredBytes++;
+          cpuStallCycles++;
+          explanation = `Cycle ${currentClock} [Cycle Stealing]: DMA stole this single clock cycle. Transferred Byte ${transferredBytes} to RAM. Bus will be yielded back to CPU on next clock.`;
+        } else {
+          cpuState = 'work';
+          busOwner = 'CPU';
+          dmaState = 'wait';
+          cpuWorkCycles++;
+          explanation = `Cycle ${currentClock} [Cycle Stealing]: CPU regained bus mastership and executed instructions without interruption while DMA prepared next byte.`;
+        }
+      } else if (dmaMode === 'transparent') {
+        cpuState = 'work';
+        busOwner = 'DMA (Hidden)';
+        dmaState = 'transfer';
+        transferredBytes++;
+        cpuWorkCycles++;
+        explanation = `Cycle ${currentClock} [Transparent Mode]: CPU is executing internal ALU/Decode instructions and does not require system bus. DMA transferred Byte ${transferredBytes} secretly with ZERO CPU stalls!`;
+      }
+
+      // Live Narration Update
+      document.getElementById('narrationTitle').innerText = `Clock Cycle ${currentClock} Execution`;
+      document.getElementById('narrationMsg').innerText = explanation;
+
+      // Update Registers
+      document.getElementById('valDmaCount').innerText = blockSize - transferredBytes;
+      const memTarget = 0x8000 + transferredBytes - 1;
+      document.getElementById('valDmaDest').innerText = `0x${(0x8000 + transferredBytes).toString(16).toUpperCase()}`;
+      document.getElementById('valCpuPc').innerText = `0x${(0x0400 + currentClock * 4).toString(16).toUpperCase().padStart(4, '0')}`;
+
+      // Update Visuals
+      if (busOwner.includes('DMA')) {
+        document.getElementById('nodeDmac').className = 'hardware-node node-master';
+        document.getElementById('valDmaMaster').innerText = 'YES (Master)';
+        document.getElementById('valCpuHold').innerText = '1 (Active)';
+        document.getElementById('valCpuHlda').innerText = '1 (Granted)';
+        document.getElementById('wireCtrl').className = 'bus-physical-line active-ctrl';
+        document.getElementById('wireData').className = 'bus-physical-line active-data';
+        document.getElementById('wireAddr').className = 'bus-physical-line active-data';
+        document.getElementById('stateData').innerText = `BYTE ${transferredBytes} -> RAM`;
+        document.getElementById('stateAddr').innerText = `0x${memTarget.toString(16).toUpperCase()} (DMA Driven)`;
+        document.getElementById('stateCtrl').innerText = 'HOLD=1, HLDA=1, MEMW=1';
+        document.getElementById('labelMasterStatus').className = 'badge-status badge-green';
+        document.getElementById('labelMasterStatus').innerText = 'DMA BUS MASTER';
+
+        if (cpuState === 'stall') {
+          document.getElementById('nodeCpu').className = 'hardware-node node-stalled';
+          document.getElementById('badgeCpu').className = 'badge-status badge-red';
+          document.getElementById('badgeCpu').innerText = 'STALLED';
+          document.getElementById('textCpuDetail').innerText = 'CPU waiting for bus release';
+        } else {
+          document.getElementById('nodeCpu').className = 'hardware-node';
+          document.getElementById('badgeCpu').className = 'badge-status badge-green';
+          document.getElementById('badgeCpu').innerText = 'ALU INTERNAL';
+          document.getElementById('textCpuDetail').innerText = 'CPU executing internal operations';
+        }
+      } else {
+        document.getElementById('nodeDmac').className = 'hardware-node';
+        document.getElementById('valDmaMaster').innerText = 'NO';
+        document.getElementById('nodeCpu').className = 'hardware-node node-master';
+        document.getElementById('badgeCpu').className = 'badge-status badge-green';
+        document.getElementById('badgeCpu').innerText = 'RUNNING';
+        document.getElementById('textCpuDetail').innerText = 'Executing user program code';
+        document.getElementById('wireData').className = 'bus-physical-line';
+        document.getElementById('stateData').innerText = 'CPU Instruction Fetch';
+        document.getElementById('stateAddr').innerText = `${document.getElementById('valCpuPc').innerText} (PC Driven)`;
+        document.getElementById('stateCtrl').innerText = 'HLDA=0, IOR=0, MEMR=1';
+        document.getElementById('labelMasterStatus').className = 'badge-status badge-blue';
+        document.getElementById('labelMasterStatus').innerText = 'CPU BUS MASTER';
+      }
+
+      // Memory cell pulse
+      if (dmaState === 'transfer' && transferredBytes > 0) {
+        const cell = document.getElementById(`ram_byte_${transferredBytes - 1}`);
+        if (cell) {
+          cell.className = 'memory-cell written pulse-write';
+          setTimeout(() => { if (cell) cell.className = 'memory-cell written'; }, 300);
+        }
+      }
+
+      refreshRamLabel();
+
+      // Gantt History
+      ganttRecords.push({ cycle: currentClock, cpu: cpuState, bus: busOwner, dma: dmaState });
+      if (ganttRecords.length > 20) ganttRecords.shift();
+
+      refreshMetrics();
+      drawGantt();
+
+      if (transferredBytes >= blockSize) {
+        finalizeTransfer();
+      }
+    }
+
+    function finalizeTransfer() {
+      pauseSimulation();
+      document.getElementById('narrationTitle').innerText = 'DMA Sequence Completed (Interrupt Triggered)';
+      document.getElementById('narrationMsg').innerText = `Slide 14 Step 6: All ${blockSize} bytes written to RAM. DMA Controller releases system bus and issues Interrupt (IRQ) to CPU.`;
+
+      document.getElementById('labelMasterStatus').className = 'badge-status badge-green';
+      document.getElementById('labelMasterStatus').innerText = 'COMPLETE / IRQ SENT';
+      document.getElementById('badgeDma').className = 'badge-status badge-green';
+      document.getElementById('badgeDma').innerText = 'DONE / IRQ';
+      document.getElementById('valCpuHold').innerText = '0 (Released)';
+      document.getElementById('valCpuHlda').innerText = '0 (Low)';
+      document.getElementById('nodeDmac').className = 'hardware-node';
+      document.getElementById('nodeCpu').className = 'hardware-node node-master';
+      document.getElementById('badgeCpu').className = 'badge-status badge-green';
+      document.getElementById('badgeCpu').innerText = 'RUNNING';
+      document.getElementById('wireCtrl').className = 'bus-physical-line';
+      document.getElementById('wireData').className = 'bus-physical-line';
+      document.getElementById('stateData').innerText = 'IDLE';
+    }
+
+    function refreshMetrics() {
+      document.getElementById('statCycles').innerText = currentClock;
+      document.getElementById('statStalls').innerText = cpuStallCycles;
+
+      const totalCycles = cpuWorkCycles + cpuStallCycles;
+      const util = totalCycles > 0 ? Math.round((cpuWorkCycles / totalCycles) * 100) : 100;
+      document.getElementById('statCpuUtil').innerText = `${util}%`;
+
+      if (util < 50) {
+        document.getElementById('statCpuUtil').style.color = 'var(--accent-red)';
+      } else if (util < 85) {
+        document.getElementById('statCpuUtil').style.color = 'var(--accent-amber)';
+      } else {
+        document.getElementById('statCpuUtil').style.color = 'var(--accent-green)';
+      }
+    }
+
+    function drawGantt() {
+      const cpuG = document.getElementById('rowCpuGantt');
+      const busG = document.getElementById('rowBusGantt');
+      const dmaG = document.getElementById('rowDmaGantt');
+
+      cpuG.innerHTML = '';
+      busG.innerHTML = '';
+      dmaG.innerHTML = '';
+
+      for (let i = 0; i < 20; i++) {
+        const item = ganttRecords[i];
+        const cSlot = document.createElement('div');
+        const bSlot = document.createElement('div');
+        const dSlot = document.createElement('div');
+
+        if (item) {
+          cSlot.className = `gantt-slot ${item.cpu === 'work' ? 'slot-cpu-running' : 'slot-cpu-stalled'}`;
+          cSlot.innerText = item.cpu === 'work' ? 'EXEC' : 'STALL';
+
+          bSlot.className = `gantt-slot ${item.bus.includes('DMA') ? 'slot-dma-transfer' : 'slot-cpu-running'}`;
+          bSlot.innerText = item.bus.includes('DMA') ? 'DMA' : 'CPU';
+
+          dSlot.className = `gantt-slot ${item.dma === 'transfer' ? 'slot-dma-transfer' : 'slot-idle-gray'}`;
+          dSlot.innerText = item.dma === 'transfer' ? 'TX' : '-';
+        } else {
+          cSlot.className = 'gantt-slot slot-idle-gray';
+          cSlot.innerText = '-';
+          bSlot.className = 'gantt-slot slot-idle-gray';
+          bSlot.innerText = '-';
+          dSlot.className = 'gantt-slot slot-idle-gray';
+          dSlot.innerText = '-';
+        }
+
+        cpuG.appendChild(cSlot);
+        busG.appendChild(bSlot);
+        dmaG.appendChild(dSlot);
+      }
+    }
+
+    // --- TAB 2 ACTIONS & ENGINE ---
+    let multiBenchmarkTimer = null;
+    let traceTimer = null;
+
+    function changeCoreCount() {
+      const count = parseInt(document.getElementById('selectCoreCount').value, 10);
+      const grid = document.getElementById('coresGridWrapper');
+      const tempTag = document.getElementById('tagDieTemp');
+
+      grid.innerHTML = '';
+      if (count === 2) {
+        grid.style.gridTemplateColumns = '1fr 1fr';
+        tempTag.innerText = '🌡️ Die Temp: 48°C (Normal)';
+        tempTag.style.color = 'var(--accent-amber)';
+        document.getElementById('multiNarrationTitle').innerText = 'Multicore Configuration: Dual-Core (Slide 16)';
+        document.getElementById('multiNarrationMsg').innerText = 'Slide 16: Two cores integrated on a single silicon die sharing L3 cache. Optimal power density and thermal balance.';
+      } else if (count === 4) {
+        grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+        tempTag.innerText = '🌡️ Die Temp: 68°C (Warm)';
+        tempTag.style.color = 'var(--accent-amber)';
+        document.getElementById('multiNarrationTitle').innerText = 'Multicore Configuration: Quad-Core (Slide 16)';
+        document.getElementById('multiNarrationMsg').innerText = 'Quad-core configuration. Higher parallel throughput, but thermal heat starts concentrating on the single die.';
+      } else if (count === 8) {
+        grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        tempTag.innerText = '🌡️ Die Temp: 89°C (Thermal Throttling Alert!)';
+        tempTag.style.color = 'var(--accent-red)';
+        document.getElementById('multiNarrationTitle').innerText = 'Multicore Configuration: Octa-Core (Slide 17 Contention)';
+        document.getElementById('multiNarrationMsg').innerText = 'Slide 17 Disadvantage Proven: "Increasing cores causes software interference due to resource sharing" & high heat generation in concentrated die area!';
+      }
+
+      for (let i = 1; i <= count; i++) {
+        const core = document.createElement('div');
+        core.className = 'processing-unit active-work';
+        core.id = `boxCore${i}`;
+        core.innerHTML = `
+          <div style="font-weight: 800; font-size: ${count === 8 ? '0.88rem' : '1.05rem'};">Core ${i}</div>
+          <div class="cache-hierarchy-pill" style="font-size: 0.72rem;">L1: 32K | L2: 512K</div>
+          <div id="statusCore${i}" style="font-size: 0.78rem; color: var(--accent-green); font-weight: 700; margin-top: 0.35rem;">Active</div>
+        `;
+        grid.appendChild(core);
+      }
+    }
+
+    function toggleMpMemoryMode() {
+      const mode = document.getElementById('selectMpMemMode').value;
+      const sharedBox = document.getElementById('mpSharedMemContainer');
+      const distGrid = document.getElementById('mpDistributedMemContainer');
+
+      if (mode === 'smp') {
+        sharedBox.style.display = 'block';
+        distGrid.style.display = 'none';
+        document.getElementById('multiNarrationTitle').innerText = 'Multiprocessor: Shared Memory (Symmetric - SMP)';
+        document.getElementById('multiNarrationMsg').innerText = 'Slide 18: In Symmetric Multiprocessors (SMP), all processors share a single main memory pool over the same system bus. High contention at the Bus Arbiter.';
+      } else {
+        sharedBox.style.display = 'none';
+        distGrid.style.display = 'grid';
+        document.getElementById('multiNarrationTitle').innerText = 'Multiprocessor: Distributed Memory Organization';
+        document.getElementById('multiNarrationMsg').innerText = 'Slide 18: "Each processor in a distributed memory multiprocessor has its own private memory where computation takes place. The system bus connects processors to communicate with each other."';
+      }
+    }
+
+    function traceMemoryAccess() {
+      clearTimeout(traceTimer);
+      const c1 = document.getElementById('boxCore1');
+      const l3 = document.getElementById('boxL3');
+      const s1 = document.getElementById('boxSocket1');
+      const arbiter = document.getElementById('boxArbiter');
+      const sharedMem = document.getElementById('mpSharedMemContainer');
+
+      // Multicore Trace (On-Die Fast Cache Hit)
+      c1.classList.add('trace-highlight-green');
+      document.getElementById('multiNarrationTitle').innerText = 'Memory Access Trace: Multicore vs Multiprocessor (Slide 20 Proof)';
+      document.getElementById('multiNarrationMsg').innerText = 'Step 1: Core 1 requests a memory block. Check L1/L2 caches...';
+
+      setTimeout(() => {
+        c1.classList.remove('trace-highlight-green');
+        l3.classList.add('trace-highlight-green');
+        document.getElementById('multiNarrationMsg').innerText = 'MULTICORE CACHE HIT: L3 Cache on the single silicon die responded in 0.8ns! Zero data traveled over the motherboard bus. Slide 20 verified: "Multicore has less traffic."';
+      }, 700);
+
+      // Multiprocessor Trace (External Bus Arbiter Delay)
+      setTimeout(() => {
+        l3.classList.remove('trace-highlight-green');
+        s1.classList.add('trace-highlight-amber');
+        document.getElementById('multiNarrationMsg').innerText = 'MULTIPROCESSOR REQUEST: Socket 1 suffers cache miss. Request must travel off-chip across motherboard pins to Bus Arbiter...';
+      }, 1600);
+
+      setTimeout(() => {
+        s1.classList.remove('trace-highlight-amber');
+        arbiter.classList.add('trace-highlight-amber');
+        document.getElementById('multiNarrationMsg').innerText = 'BUS ARBITER QUEUE: Socket 1 contends for the shared motherboard bus. Arbitration latency: 15ns...';
+      }, 2400);
+
+      setTimeout(() => {
+        arbiter.classList.remove('trace-highlight-amber');
+        sharedMem.classList.add('trace-highlight-amber');
+        document.getElementById('multiNarrationMsg').innerText = 'MAIN RAM SERVICED: Total access latency 65ns with heavy bus line utilization. Slide 20 verified: "Multiprocessor has more traffic."';
+      }, 3200);
+
+      setTimeout(() => {
+        sharedMem.classList.remove('trace-highlight-amber');
+        document.getElementById('multiNarrationTitle').innerText = 'Memory Trace Finished';
+        document.getElementById('multiNarrationMsg').innerText = 'Direct visual proof: Multicore resolves data on-chip (L3 Cache), while Multiprocessor floods the external motherboard bus.';
+      }, 4400);
+    }
+
+    function simulateMultiWorkload() {
+      if (multiBenchmarkTimer) clearInterval(multiBenchmarkTimer);
+      
+      const hud = document.getElementById('multiBenchmarkHud');
+      hud.style.display = 'block';
+
+      const workloadType = document.getElementById('selectWorkloadType').value;
+      const mcBar = document.getElementById('mcProgressBar');
+      const mpBar = document.getElementById('mpProgressBar');
+      const mcText = document.getElementById('mcProgressText');
+      const mpText = document.getElementById('mpProgressText');
+
+      mcBar.style.width = '0%';
+      mpBar.style.width = '0%';
+      mcText.innerText = '0%';
+      mpText.innerText = '0%';
+
+      let mcProgress = 0;
+      let mpProgress = 0;
+
+      if (workloadType === 'single') {
+        // Single Multi-Threaded Program (Multicore Wins - Slide 20)
+        document.getElementById('multiNarrationTitle').innerText = 'Benchmark: Single Multi-Threaded Program (Slide 20 Proof)';
+        document.getElementById('multiNarrationMsg').innerText = 'Workload: Single High-Performance Render. Multicore cores share thread memory directly inside L3 cache without off-chip bus serialization.';
+
+        multiBenchmarkTimer = setInterval(() => {
+          if (mcProgress < 100) {
+            mcProgress = Math.min(100, mcProgress + 16);
+            mcBar.style.width = `${mcProgress}%`;
+            mcText.innerText = `${mcProgress}% (Fast)`;
+          }
+
+          if (mpProgress < 100) {
+            mpProgress = Math.min(100, mpProgress + 7);
+            mpBar.style.width = `${mpProgress}%`;
+            mpText.innerText = `${mpProgress}% (Delayed by Bus)`;
+          }
+
+          if (mcProgress >= 100 && mpProgress < 100) {
+            document.getElementById('multiNarrationTitle').innerText = 'Multicore Won Decisively (2.2x Faster)';
+            document.getElementById('multiNarrationMsg').innerText = 'Slide 20 proven: "Multicore executes a single program faster" because tightly-coupled threads communicate over on-chip cache!';
+          }
+
+          if (mcProgress >= 100 && mpProgress >= 100) {
+            clearInterval(multiBenchmarkTimer);
+            multiBenchmarkTimer = null;
+            document.getElementById('multiNarrationTitle').innerText = 'Benchmark Finished: Slide 20 Verified';
+            document.getElementById('multiNarrationMsg').innerText = 'Multicore completed in 1.1s. Multiprocessor required 2.4s due to external bus arbiter overhead.';
+          }
+        }, 150);
+
+      } else {
+        // Multiple Independent Programs (Multiprocessor Wins - Slide 20)
+        document.getElementById('multiNarrationTitle').innerText = 'Benchmark: Multiple Independent Server Jobs (Slide 20 Proof)';
+        document.getElementById('multiNarrationMsg').innerText = 'Workload: Multiple Independent Server Jobs (Web Server + DB Server). Multiprocessor has distinct physical CPU pipelines with zero cache contention.';
+
+        multiBenchmarkTimer = setInterval(() => {
+          if (mpProgress < 100) {
+            mpProgress = Math.min(100, mpProgress + 16);
+            mpBar.style.width = `${mpProgress}%`;
+            mpText.innerText = `${mpProgress}% (Throughput Master)`;
+          }
+
+          if (mcProgress < 100) {
+            mcProgress = Math.min(100, mcProgress + 8);
+            mcBar.style.width = `${mcProgress}%`;
+            mcText.innerText = `${mcProgress}% (Cache Thrashing)`;
+          }
+
+          if (mpProgress >= 100 && mcProgress < 100) {
+            document.getElementById('multiNarrationTitle').innerText = 'Multiprocessor Won: High Independent Throughput';
+            document.getElementById('multiNarrationMsg').innerText = 'Slide 20 proven: "Multiprocessor executes multiple programs faster" because separate physical sockets isolate independent process spaces with zero software interference!';
+          }
+
+          if (mcProgress >= 100 && mpProgress >= 100) {
+            clearInterval(multiBenchmarkTimer);
+            multiBenchmarkTimer = null;
+            document.getElementById('multiNarrationTitle').innerText = 'Benchmark Finished: High-Throughput Server Proved';
+            document.getElementById('multiNarrationMsg').innerText = 'Multiprocessor completed independent jobs in 1.2s. Multicore suffered shared L3 cache thrashing, taking 2.3s.';
+          }
+        }, 150);
+      }
+    }
+
+    function triggerDieOverheat() {
+      if (multiBenchmarkTimer) clearInterval(multiBenchmarkTimer);
+      const count = parseInt(document.getElementById('selectCoreCount').value, 10);
+      for (let i = 1; i <= count; i++) {
+        const c = document.getElementById(`boxCore${i}`);
+        if (c) {
+          c.className = 'processing-unit crashed-unit';
+          const st = document.getElementById(`statusCore${i}`);
+          if (st) { st.innerText = 'CRASHED'; st.style.color = 'var(--accent-red)'; }
+        }
+      }
+      document.getElementById('siliconBoundary').style.borderColor = 'var(--accent-red)';
+      document.getElementById('tagDieTemp').innerText = '🔥 CRITICAL: 105°C (Die Melted)';
+      document.getElementById('tagDieTemp').style.color = 'var(--accent-red)';
+
+      document.getElementById('multiNarrationTitle').innerText = '💥 CRITICAL SILICON DIE FAILURE (Slide 17/20)';
+      document.getElementById('multiNarrationMsg').innerText = 'Single point of failure demonstrated! Because all cores reside on the exact same silicon die (Slide 16), thermal breakdown halted EVERY core simultaneously. Slide 20: "Multicore processors are not as reliable as multiprocessors."';
+    }
+
+    function triggerSocketPull() {
+      if (multiBenchmarkTimer) clearInterval(multiBenchmarkTimer);
+      document.getElementById('boxSocket2').className = 'processing-unit crashed-unit';
+      document.getElementById('statusSocket2').innerText = 'OFFLINE (Socket 2 Disconnected)';
+      document.getElementById('statusSocket2').style.color = 'var(--accent-red)';
+      document.getElementById('boxSocket1').className = 'processing-unit active-work';
+      document.getElementById('statusSocket1').innerText = 'ACTIVE: Absorbed Job B (Surviving)';
+      document.getElementById('statusSocket1').style.color = 'var(--accent-green)';
+
+      document.getElementById('multiNarrationTitle').innerText = '🔌 FAULT TOLERANCE DEMONSTRATED (Slide 18 & 19)';
+      document.getElementById('multiNarrationMsg').innerText = 'Hardware resilience proven! In multiprocessor systems, CPUs reside in physically distinct motherboard sockets (Slide 18). Even when Socket 2 failed, Socket 1 continued running without crashing! Slide 19 & 20: "Multiprocessors are more reliable as failure of one processor will not affect others."';
+    }
+
+    function restoreMultiArchitectures() {
+      if (multiBenchmarkTimer) clearInterval(multiBenchmarkTimer);
+      clearTimeout(traceTimer);
+      document.getElementById('multiBenchmarkHud').style.display = 'none';
+      document.getElementById('siliconBoundary').style.borderColor = '#0284c7';
+
+      changeCoreCount();
+
+      document.getElementById('boxSocket1').className = 'processing-unit active-work';
+      document.getElementById('boxSocket2').className = 'processing-unit active-work';
+      document.getElementById('statusSocket1').innerText = 'Executing Job A';
+      document.getElementById('statusSocket2').innerText = 'Executing Job B';
+      document.getElementById('statusSocket1').style.color = 'var(--accent-green)';
+      document.getElementById('statusSocket2').style.color = 'var(--accent-green)';
+
+      document.getElementById('multiNarrationTitle').innerText = 'Architectural Comparison Engine (Slide 16 vs 18)';
+      document.getElementById('multiNarrationMsg').innerText = 'Both architectures restored. Select Core Count, Workload Type, or Memory Mode to test!';
+    }
+
+    // --- TAB 3 UNIFIED CROSSBAR & ARBITER ENGINE ---
+    let synSimTimer = null;
+    let synIsRunning = false;
+    let synStepIndex = 0;
+
+    function changeSynScenario() {
+      const scenario = document.getElementById('selectSynScenario').value;
+      const c1Task = document.getElementById('synCore1Task');
+      const c2Task = document.getElementById('synCore2Task');
+      const dmaTask = document.getElementById('synDmaTask');
+
+      if (scenario === 'gaming') {
+        c1Task.innerText = 'Vertex Shader Texture Fetch (60 FPS)';
+        c2Task.innerText = 'Physics Collision Calculations';
+        dmaTask.innerText = 'Background Game Patch Download (Cycle Stealing)';
+        document.getElementById('synNarrationTitle').innerText = 'Scenario A: 3D Gaming + Background Download';
+        document.getElementById('synNarrationMsg').innerText = 'Cycle Stealing Mode in action: DMA sneaks network packets into RAM 1 byte at a time so Core 1 maintains 60 FPS frame rendering without stuttering.';
+      } else if (scenario === 'database') {
+        c1Task.innerText = 'OLTP SQL Query Processing';
+        c2Task.innerText = 'B-Tree Database Index Traversal';
+        dmaTask.innerText = 'WAL Transaction Checkpoint Flush (Burst Mode)';
+        document.getElementById('synNarrationTitle').innerText = 'Scenario B: Database Transaction Checkpoint (DMA Burst Mode)';
+        document.getElementById('synNarrationMsg').innerText = 'Burst Mode in action: DMA locks down the entire memory bus to flush transaction logs to NVMe SSD. All CPU cores are forced into wait-states until the burst completes (Slide 15)!';
+      } else if (scenario === 'streaming') {
+        c1Task.innerText = '4K HEVC Video Frame Decoder';
+        c2Task.innerText = 'Spatial Audio Filter Engine';
+        dmaTask.innerText = 'HDMI Capture Card Direct Stream';
+        document.getElementById('synNarrationTitle').innerText = 'Scenario C: Real-Time 4K Video Streaming';
+        document.getElementById('synNarrationMsg').innerText = 'Balanced Arbitration: Arbiter ensures continuous DMA streaming to prevent buffer underflow, while keeping CPU audio threads responsive.';
+      }
+      resetSynLab();
+    }
+
+    function updateSynStress() {
+      const stress = parseInt(document.getElementById('synStressSlider').value, 10);
+      const label = document.getElementById('synStressLabel');
+      
+      let tag = 'Moderate';
+      if (stress < 35) { tag = 'Light'; label.style.color = 'var(--accent-green)'; }
+      else if (stress < 70) { tag = 'Moderate'; label.style.color = 'var(--accent-amber)'; }
+      else { tag = 'Extreme Contention!'; label.style.color = 'var(--accent-red)'; }
+
+      label.innerText = `${stress}% (${tag})`;
+
+      // Recalculate Metrics Live
+      const busSat = Math.min(98, Math.round(stress * 1.15));
+      const cpuEff = Math.max(35, Math.round(100 - (stress * 0.65)));
+      const waitPenalty = Math.round(4 + (stress * 0.4));
+
+      document.getElementById('synMetricBusSaturation').innerText = `${busSat}%`;
+      document.getElementById('synMetricCpuEfficiency').innerText = `${cpuEff}%`;
+      document.getElementById('synMetricWaitPenalty').innerText = `${waitPenalty} Clocks`;
+
+      if (busSat > 75) {
+        document.getElementById('synMetricBusSaturation').style.color = 'var(--accent-red)';
+        document.getElementById('synMetricCpuEfficiency').style.color = 'var(--accent-red)';
+      } else {
+        document.getElementById('synMetricBusSaturation').style.color = 'var(--accent-amber)';
+        document.getElementById('synMetricCpuEfficiency').style.color = 'var(--accent-green)';
+      }
+
+      document.getElementById('synNarrationTitle').innerText = `Memory Pressure Adjusted to ${stress}%`;
+      document.getElementById('synNarrationMsg').innerText = `As processor memory request rate rises, bus contention jumps to ${busSat}%. Stalls multiply at the arbiter turnstile (Slide 19/24 memory bottleneck).`;
+    }
+
+    function toggleSynSimulation() {
+      if (synIsRunning) {
+        pauseSynSimulation();
+      } else {
+        startSynSimulation();
+      }
+    }
+
+    function startSynSimulation() {
+      synIsRunning = true;
+      document.getElementById('btnSynRun').innerText = '⏸ Pause Simulation';
+      document.getElementById('btnSynRun').classList.remove('btn-primary');
+      document.getElementById('btnSynRun').classList.add('btn-danger');
+
+      synSimTimer = setInterval(stepSynCycle, 900);
+    }
+
+    function pauseSynSimulation() {
+      synIsRunning = false;
+      clearInterval(synSimTimer);
+      document.getElementById('btnSynRun').innerText = '🚀 Run Workload';
+      document.getElementById('btnSynRun').classList.remove('btn-danger');
+      document.getElementById('btnSynRun').classList.add('btn-primary');
+    }
+
+    function resetSynLab() {
+      pauseSynSimulation();
+      synStepIndex = 0;
+      
+      document.getElementById('synBusPhasePill').className = 'badge-status badge-blue';
+      document.getElementById('synBusPhasePill').innerText = 'ARBITER READY';
+      document.getElementById('synTurnstileActiveMaster').innerText = 'Core 1 Granted Bus';
+      document.getElementById('synTurnstileActiveMaster').className = 'badge-status badge-green';
+
+      document.getElementById('synSlot1').className = 'turnstile-slot slot-active';
+      document.getElementById('synSlot2').className = 'turnstile-slot slot-queued';
+      document.getElementById('synSlot3').className = 'turnstile-slot';
+      document.getElementById('synSlot1Name').innerText = 'Core 1';
+      document.getElementById('synSlot2Name').innerText = 'DMA Controller';
+      document.getElementById('synSlot3Name').innerText = 'Core 2';
+
+      document.getElementById('synWireCore1').className = 'wire-connector-line wire-flowing';
+      document.getElementById('synWireCore2').className = 'wire-connector-line';
+      document.getElementById('synWireDma').className = 'wire-connector-line';
+      document.getElementById('synWireRam').className = 'wire-connector-line wire-flowing';
+
+      document.getElementById('synCore1Badge').className = 'badge-status badge-green';
+      document.getElementById('synCore1Badge').innerText = 'COMPUTING';
+      document.getElementById('synCore1BusStatus').innerText = 'Bus: ACTIVE ACCESS';
+      document.getElementById('synCore1BusStatus').style.color = 'var(--accent-green)';
+
+      document.getElementById('synCore2Badge').className = 'badge-status badge-amber';
+      document.getElementById('synCore2Badge').innerText = 'QUEUED';
+      document.getElementById('synCore2BusStatus').innerText = 'Bus: WAITING ARBITER';
+      document.getElementById('synCore2BusStatus').style.color = 'var(--accent-amber)';
+
+      document.getElementById('synDmaBadge').className = 'badge-status badge-amber';
+      document.getElementById('synDmaBadge').innerText = 'HOLD_REQ';
+      document.getElementById('synDmaBusStatus').innerText = 'Bus: REQUESTING (HOLD)';
+      document.getElementById('synDmaBusStatus').style.color = 'var(--accent-amber)';
+
+      document.getElementById('synRamAccessLabel').innerText = 'Servicing: Core 1 Read (0x4420)';
+      updateSynStress();
+    }
+
+    function stepSynCycle() {
+      synStepIndex = (synStepIndex + 1) % 3;
+      const scenario = document.getElementById('selectSynScenario').value;
+
+      if (scenario === 'database') {
+        // Database Checkpoint: DMA Burst captures the bus exclusively!
+        if (synStepIndex === 1 || synStepIndex === 2) {
+          // DMA Burst Active
+          document.getElementById('synBusPhasePill').className = 'badge-status badge-green';
+          document.getElementById('synBusPhasePill').innerText = 'DMA BURST ACTIVE (FULL BUS LOCK)';
+          document.getElementById('synTurnstileActiveMaster').className = 'badge-status badge-green';
+          document.getElementById('synTurnstileActiveMaster').innerText = 'DMA Bus Master (Bursting)';
+
+          document.getElementById('synSlot1').className = 'turnstile-slot slot-active';
+          document.getElementById('synSlot1Name').innerText = 'DMA Controller (LOCK)';
+          document.getElementById('synSlot2').className = 'turnstile-slot slot-queued';
+          document.getElementById('synSlot2Name').innerText = 'Core 1 (Stalled)';
+          document.getElementById('synSlot3').className = 'turnstile-slot slot-queued';
+          document.getElementById('synSlot3Name').innerText = 'Core 2 (Stalled)';
+
+          document.getElementById('synWireCore1').className = 'wire-connector-line';
+          document.getElementById('synWireCore2').className = 'wire-connector-line';
+          document.getElementById('synWireDma').className = 'wire-connector-line wire-dma-flow';
+          document.getElementById('synWireRam').className = 'wire-connector-line wire-dma-flow';
+
+          document.getElementById('synCore1Badge').className = 'badge-status badge-red';
+          document.getElementById('synCore1Badge').innerText = 'STALLED';
+          document.getElementById('synCore1BusStatus').innerText = 'Bus: WAITING (DMA Lock)';
+          document.getElementById('synCore1BusStatus').style.color = 'var(--accent-red)';
+
+          document.getElementById('synCore2Badge').className = 'badge-status badge-red';
+          document.getElementById('synCore2Badge').innerText = 'STALLED';
+          document.getElementById('synCore2BusStatus').innerText = 'Bus: WAITING (DMA Lock)';
+          document.getElementById('synCore2BusStatus').style.color = 'var(--accent-red)';
+
+          document.getElementById('synDmaBadge').className = 'badge-status badge-green';
+          document.getElementById('synDmaBadge').innerText = 'BURSTING';
+          document.getElementById('synDmaBusStatus').innerText = 'Bus: MASTER (Writing RAM)';
+          document.getElementById('synDmaBusStatus').style.color = 'var(--accent-green)';
+
+          document.getElementById('synRamAccessLabel').innerText = 'Servicing: DMA Burst Write (0x8000 -> 0x8FFF)';
+          document.getElementById('synMetricThroughput').innerText = '940 MB/s (Burst Peak)';
+
+          document.getElementById('synNarrationTitle').innerText = 'Arbiter Phase: DMA Burst Lock (Slide 15 Verification)';
+          document.getElementById('synNarrationMsg').innerText = 'Burst Mode demonstrated: DMA Controller claimed the entire bus to dump database logs. Notice both Core 1 and Core 2 are STALLED (red) with 0% compute throughput!';
+          return;
+        }
+      }
+
+      // Standard Fair Rotation (Cycle Stealing & Balanced Interleaving)
+      if (synStepIndex === 0) {
+        // Core 1 Granted
+        document.getElementById('synBusPhasePill').className = 'badge-status badge-blue';
+        document.getElementById('synBusPhasePill').innerText = 'CORE 1 BUS MASTER';
+        document.getElementById('synTurnstileActiveMaster').innerText = 'Core 1 Granted Bus';
+        document.getElementById('synTurnstileActiveMaster').className = 'badge-status badge-blue';
+
+        document.getElementById('synSlot1').className = 'turnstile-slot slot-active';
+        document.getElementById('synSlot1Name').innerText = 'Core 1';
+        document.getElementById('synSlot2').className = 'turnstile-slot slot-queued';
+        document.getElementById('synSlot2Name').innerText = 'DMA Controller';
+        document.getElementById('synSlot3').className = 'turnstile-slot';
+        document.getElementById('synSlot3Name').innerText = 'Core 2';
+
+        document.getElementById('synWireCore1').className = 'wire-connector-line wire-flowing';
+        document.getElementById('synWireCore2').className = 'wire-connector-line';
+        document.getElementById('synWireDma').className = 'wire-connector-line';
+        document.getElementById('synWireRam').className = 'wire-connector-line wire-flowing';
+
+        document.getElementById('synCore1Badge').className = 'badge-status badge-green';
+        document.getElementById('synCore1Badge').innerText = 'COMPUTING';
+        document.getElementById('synCore1BusStatus').innerText = 'Bus: ACTIVE ACCESS';
+        document.getElementById('synCore1BusStatus').style.color = 'var(--accent-green)';
+
+        document.getElementById('synCore2Badge').className = 'badge-status badge-amber';
+        document.getElementById('synCore2Badge').innerText = 'QUEUED';
+        document.getElementById('synCore2BusStatus').innerText = 'Bus: WAITING ARBITER';
+        document.getElementById('synCore2BusStatus').style.color = 'var(--accent-amber)';
+
+        document.getElementById('synDmaBadge').className = 'badge-status badge-amber';
+        document.getElementById('synDmaBadge').innerText = 'HOLD_REQ';
+        document.getElementById('synDmaBusStatus').innerText = 'Bus: REQUESTING (HOLD)';
+        document.getElementById('synDmaBusStatus').style.color = 'var(--accent-amber)';
+
+        document.getElementById('synRamAccessLabel').innerText = 'Servicing: Core 1 Read (0x4420)';
+        document.getElementById('synNarrationTitle').innerText = 'Arbiter Turnstile: Core 1 Granted Bus';
+        document.getElementById('synNarrationMsg').innerText = 'Arbiter gives memory access to Core 1 for vertex shader calculations. DMA and Core 2 wait in the turnstile queue.';
+
+      } else if (synStepIndex === 1) {
+        // DMA Steals 1 Cycle (Slide 15 Cycle Stealing)
+        document.getElementById('synBusPhasePill').className = 'badge-status badge-green';
+        document.getElementById('synBusPhasePill').innerText = 'DMA CYCLE STEAL (1 BYTE TX)';
+        document.getElementById('synTurnstileActiveMaster').innerText = 'DMA Stole Cycle';
+        document.getElementById('synTurnstileActiveMaster').className = 'badge-status badge-green';
+
+        document.getElementById('synSlot1').className = 'turnstile-slot slot-active';
+        document.getElementById('synSlot1Name').innerText = 'DMA Controller (Steal)';
+        document.getElementById('synSlot2').className = 'turnstile-slot slot-queued';
+        document.getElementById('synSlot2Name').innerText = 'Core 2';
+        document.getElementById('synSlot3').className = 'turnstile-slot';
+        document.getElementById('synSlot3Name').innerText = 'Core 1';
+
+        document.getElementById('synWireCore1').className = 'wire-connector-line';
+        document.getElementById('synWireCore2').className = 'wire-connector-line';
+        document.getElementById('synWireDma').className = 'wire-connector-line wire-dma-flow';
+        document.getElementById('synWireRam').className = 'wire-connector-line wire-dma-flow';
+
+        document.getElementById('synDmaBadge').className = 'badge-status badge-green';
+        document.getElementById('synDmaBadge').innerText = 'TRANSFERRING';
+        document.getElementById('synDmaBusStatus').innerText = 'Bus: STEALING CYCLE';
+        document.getElementById('synDmaBusStatus').style.color = 'var(--accent-green)';
+
+        document.getElementById('synCore1Badge').className = 'badge-status badge-amber';
+        document.getElementById('synCore1Badge').innerText = 'YIELDED';
+        document.getElementById('synCore1BusStatus').innerText = 'Bus: YIELDED TO DMA';
+        document.getElementById('synCore1BusStatus').style.color = 'var(--accent-amber)';
+
+        document.getElementById('synRamAccessLabel').innerText = 'Servicing: DMA Direct RAM Write (0x8024)';
+        document.getElementById('synMetricThroughput').innerText = '580 MB/s (Direct I/O)';
+        document.getElementById('synNarrationTitle').innerText = 'Arbiter Turnstile: DMA Cycle Stealing Active (Slide 15)';
+        document.getElementById('synNarrationMsg').innerText = 'DMA Controller steals exactly 1 clock cycle to transfer a data packet to RAM. It will immediately yield the bus on next clock to prevent starving Core 2.';
+
+      } else if (synStepIndex === 2) {
+        // Core 2 Granted
+        document.getElementById('synBusPhasePill').className = 'badge-status badge-purple';
+        document.getElementById('synBusPhasePill').innerText = 'CORE 2 BUS MASTER';
+        document.getElementById('synTurnstileActiveMaster').innerText = 'Core 2 Granted Bus';
+        document.getElementById('synTurnstileActiveMaster').className = 'badge-status badge-blue';
+
+        document.getElementById('synSlot1').className = 'turnstile-slot slot-active';
+        document.getElementById('synSlot1Name').innerText = 'Core 2';
+        document.getElementById('synSlot2').className = 'turnstile-slot slot-queued';
+        document.getElementById('synSlot2Name').innerText = 'Core 1';
+        document.getElementById('synSlot3').className = 'turnstile-slot';
+        document.getElementById('synSlot3Name').innerText = 'DMA Controller';
+
+        document.getElementById('synWireCore1').className = 'wire-connector-line';
+        document.getElementById('synWireCore2').className = 'wire-connector-line wire-flowing';
+        document.getElementById('synWireDma').className = 'wire-connector-line';
+        document.getElementById('synWireRam').className = 'wire-connector-line wire-flowing';
+
+        document.getElementById('synCore2Badge').className = 'badge-status badge-green';
+        document.getElementById('synCore2Badge').innerText = 'COMPUTING';
+        document.getElementById('synCore2BusStatus').innerText = 'Bus: ACTIVE ACCESS';
+        document.getElementById('synCore2BusStatus').style.color = 'var(--accent-green)';
+
+        document.getElementById('synDmaBadge').className = 'badge-status badge-amber';
+        document.getElementById('synDmaBadge').innerText = 'HOLD_REQ';
+        document.getElementById('synDmaBusStatus').innerText = 'Bus: REQUESTING (HOLD)';
+        document.getElementById('synDmaBusStatus').style.color = 'var(--accent-amber)';
+
+        document.getElementById('synRamAccessLabel').innerText = 'Servicing: Core 2 Read (0x6210)';
+        document.getElementById('synNarrationTitle').innerText = 'Arbiter Turnstile: Core 2 Granted Bus';
+        document.getElementById('synNarrationMsg').innerText = 'Fair Arbitration complete: Core 2 executes collision calculation memory fetches. Round-robin cycle ensures no processor or peripheral starves.';
+      }
+    }
+
+    function switchTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const badge = document.getElementById('themeBadgeDisplay');
+      const titles = {
+        academic: 'Stanford/MIT Academic',
+        cyberpunk: 'Cyberpunk Neon',
+        studio: 'Apple Studio Glass',
+        retro: '1980s Phosphor CRT'
+      };
+      if (badge) badge.textContent = titles[theme] || 'Academic Lab';
+      ['academic', 'cyberpunk', 'studio', 'retro'].forEach(t => {
+        const btn = document.getElementById('btnTheme' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn) btn.classList.toggle('active', t === theme);
+      });
+      localStorage.setItem('os_lab_theme', theme);
+    }
+
+    // Initialize on launch
+    window.onload = function() {
+      const savedTheme = localStorage.getItem('os_lab_theme') || 'cyberpunk';
+      switchTheme(savedTheme);
+      setupRamGrid();
+      drawGantt();
+    };
+  </script>
+</body>
+</html>
