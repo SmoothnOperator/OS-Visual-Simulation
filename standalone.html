@@ -28,10 +28,9 @@
   --accent-cobalt: #0052ff;
   --accent-cyan: #00d2ff;
   
-  /* Electric Acid Lime */
-  --accent-green: #ccff00;
-  --accent-green-light: rgba(204, 255, 0, 0.16);
-  --accent-lime: #ccff00;
+  /* Technical Emerald Bus Grant / IRQ */
+  --accent-green: #10b981;
+  --accent-green-light: rgba(16, 185, 129, 0.16);
   
   --accent-amber: #ffb703;
   --accent-amber-light: rgba(255, 183, 3, 0.16);
@@ -70,7 +69,7 @@ body {
   background-color: var(--bg-base);
   background-image: 
     radial-gradient(at 0% 0%, rgba(0, 82, 255, 0.2) 0px, transparent 40%),
-    radial-gradient(at 100% 100%, rgba(204, 255, 0, 0.08) 0px, transparent 40%),
+    radial-gradient(at 100% 100%, rgba(0, 210, 255, 0.08) 0px, transparent 40%),
     linear-gradient(rgba(0, 82, 255, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 82, 255, 0.08) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
@@ -1086,10 +1085,9 @@ main {
   --accent-cobalt: #0052ff;        /* Pure Electric Cobalt */
   --accent-cyan: #00d2ff;          /* High-Luminance Cobalt Cyan */
 
-  /* Piercing Electric Acid Lime */
-  --accent-green: #ccff00;         /* Electric Acid Lime */
-  --accent-green-light: rgba(204, 255, 0, 0.16);
-  --accent-lime: #ccff00;          /* Pure Acid Lime */
+  /* Technical Emerald Bus Grant / IRQ */
+  --accent-green: #10b981;
+  --accent-green-light: rgba(16, 185, 129, 0.16);
 
   /* Harmonized Warning & Stall Indicators */
   --accent-amber: #ffb703;         /* Golden Amber Warning */
@@ -1110,7 +1108,7 @@ main {
   background-color: #020408;
   background-image: 
     radial-gradient(at 0% 0%, rgba(0, 82, 255, 0.2) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(204, 255, 0, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(0, 210, 255, 0.08) 0px, transparent 50%),
     linear-gradient(rgba(0, 82, 255, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 82, 255, 0.08) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
@@ -1164,22 +1162,22 @@ main {
 [data-theme="cyberpunk"] .tab-btn.active {
   background: linear-gradient(135deg, #0042cc, #0052ff) !important;
   color: #ffffff !important;
-  box-shadow: 0 0 18px rgba(0, 82, 255, 0.6), inset 0 0 8px rgba(204, 255, 0, 0.25) !important;
+  box-shadow: 0 0 18px rgba(0, 82, 255, 0.6), inset 0 0 8px rgba(0, 210, 255, 0.25) !important;
   border: 1px solid rgba(0, 210, 255, 0.5) !important;
 }
 
 [data-theme="cyberpunk"] .tab-btn:hover:not(.active) {
-  color: #ccff00;
+  color: #00d2ff;
   background: rgba(0, 82, 255, 0.12);
 }
 
 [data-theme="cyberpunk"] .memory-cell.written {
-  background: rgba(204, 255, 0, 0.1) !important;
-  color: #ccff00 !important;
-  border-color: #ccff00 !important;
-  box-shadow: 0 0 12px rgba(204, 255, 0, 0.4), inset 0 0 8px rgba(204, 255, 0, 0.15) !important;
+  background: rgba(0, 82, 255, 0.14) !important;
+  color: #38bdf8 !important;
+  border-color: #0052ff !important;
+  box-shadow: 0 0 12px rgba(0, 82, 255, 0.35), inset 0 0 8px rgba(0, 82, 255, 0.15) !important;
   font-weight: 800 !important;
-  text-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
 }
 
 [data-theme="cyberpunk"] .hardware-node.node-master {
@@ -1227,18 +1225,18 @@ main {
 }
 
 [data-theme="cyberpunk"] .slot-dma-transfer {
-  background: rgba(204, 255, 0, 0.22);
-  color: #ccff00;
-  border-color: #ccff00;
-  box-shadow: 0 0 10px rgba(204, 255, 0, 0.35);
+  background: rgba(16, 185, 129, 0.22);
+  color: #6ee7b7;
+  border-color: #10b981;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
   font-weight: 700;
 }
 
 [data-theme="cyberpunk"] .badge-green {
-  background: rgba(204, 255, 0, 0.12) !important;
-  color: #ccff00 !important;
-  border-color: rgba(204, 255, 0, 0.4) !important;
-  box-shadow: 0 0 8px rgba(204, 255, 0, 0.25) !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.25) !important;
 }
 
 [data-theme="cyberpunk"] .badge-blue {
@@ -1267,10 +1265,10 @@ main {
 }
 
 [data-theme="cyberpunk"] .turnstile-slot.slot-active {
-  background: rgba(204, 255, 0, 0.18);
-  color: #ccff00;
-  border-color: #ccff00;
-  box-shadow: 0 0 10px rgba(204, 255, 0, 0.25);
+  background: rgba(0, 82, 255, 0.2);
+  color: #7dd3fc;
+  border-color: #0052ff;
+  box-shadow: 0 0 10px rgba(0, 82, 255, 0.35);
 }
 
 [data-theme="cyberpunk"] .turnstile-slot.slot-queued {
@@ -1285,8 +1283,8 @@ main {
 
 [data-theme="cyberpunk"] .cache-hierarchy-pill {
   background: var(--bg-base);
-  color: #ccff00;
-  border-color: rgba(204, 255, 0, 0.3);
+  color: #00d2ff;
+  border-color: rgba(0, 210, 255, 0.3);
 }
 
 [data-theme="cyberpunk"] .distributed-ram-node {
@@ -1880,8 +1878,8 @@ main {
   left: 0;
   width: 35%;
   height: 2.5px;
-  background: linear-gradient(90deg, transparent, #0052ff, #ccff00, #00d2ff, transparent);
-  box-shadow: 0 0 16px #0052ff, 0 0 26px #ccff00;
+  background: linear-gradient(90deg, transparent, #0052ff, #00d2ff, #ffffff, transparent);
+  box-shadow: 0 0 16px #0052ff, 0 0 26px #00d2ff;
   animation: headerPulseLaser 3.5s infinite ease-in-out;
   pointer-events: none;
 }
@@ -2149,7 +2147,7 @@ main {
     background: rgba(0, 82, 255, 0.2);
     border-color: #0052ff;
     box-shadow: 0 0 10px rgba(0, 82, 255, 0.5);
-    color: #ccff00;
+    color: #7dd3fc;
   }
   50% {
     background: rgba(0, 82, 255, 0.38);
@@ -2186,9 +2184,9 @@ main {
 @keyframes hexDecryptionMatrix {
   0% { color: #0052ff; text-shadow: 0 0 12px #0052ff; transform: scale(1.15); }
   25% { color: #00d2ff; text-shadow: 0 0 15px #00d2ff; }
-  50% { color: #ccff00; text-shadow: 0 0 20px #ccff00, 0 0 35px #ffffff; transform: scale(1.2); }
-  75% { color: #aaff00; text-shadow: 0 0 15px #aaff00; }
-  100% { color: #ccff00; transform: scale(1); }
+  50% { color: #38bdf8; text-shadow: 0 0 20px #38bdf8, 0 0 35px #ffffff; transform: scale(1.2); }
+  75% { color: #7dd3fc; text-shadow: 0 0 15px #7dd3fc; }
+  100% { color: #38bdf8; transform: scale(1); }
 }
 
 .matrix-hex-scramble {
@@ -2199,15 +2197,15 @@ main {
 
 @keyframes particleShockwaveRing {
   0% {
-    box-shadow: 0 0 0 0 rgba(204, 255, 0, 0.9), 0 0 25px rgba(204, 255, 0, 0.8);
+    box-shadow: 0 0 0 0 rgba(0, 82, 255, 0.9), 0 0 25px rgba(0, 82, 255, 0.8);
     transform: scale(1.2);
   }
   70% {
-    box-shadow: 0 0 0 22px rgba(204, 255, 0, 0), 0 0 45px rgba(0, 82, 255, 0.5);
+    box-shadow: 0 0 0 22px rgba(0, 82, 255, 0), 0 0 45px rgba(0, 210, 255, 0.5);
     transform: scale(1.08);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(204, 255, 0, 0);
+    box-shadow: 0 0 0 0 rgba(0, 82, 255, 0);
     transform: scale(1);
   }
 }
@@ -2261,8 +2259,8 @@ main {
 }
 
 .pin-led.high {
-  background: #ccff00;
-  box-shadow: 0 0 8px #ccff00, 0 0 16px #ccff00;
+  background: #00d2ff;
+  box-shadow: 0 0 8px #00d2ff, 0 0 16px #00d2ff;
 }
 
 .pin-led.low {
@@ -2277,8 +2275,8 @@ main {
 }
 
 .pin-voltage-text.high {
-  color: #ccff00;
-  text-shadow: 0 0 6px rgba(204, 255, 0, 0.6);
+  color: #00d2ff;
+  text-shadow: 0 0 6px rgba(0, 210, 255, 0.6);
 }
 
 .pin-voltage-text.low {
@@ -2334,15 +2332,15 @@ main {
 }
 
 .sfx-toggle-btn:hover {
-  border-color: #ccff00;
-  box-shadow: 0 0 15px rgba(204, 255, 0, 0.4);
+  border-color: #00d2ff;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
 }
 
 .sfx-toggle-btn.sfx-active {
   background: rgba(0, 82, 255, 0.18);
-  border-color: #ccff00;
-  color: #ccff00;
-  box-shadow: 0 0 14px rgba(204, 255, 0, 0.45);
+  border-color: #00d2ff;
+  color: #00d2ff;
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.45);
 }
 
 .sfx-wave-bars {
@@ -2354,7 +2352,7 @@ main {
 
 .sfx-wave-bar {
   width: 2px;
-  background: #ccff00;
+  background: #00d2ff;
   border-radius: 1px;
 }
 
