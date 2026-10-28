@@ -64,7 +64,6 @@ export default function DmaSimulator() {
 
   const timerRef = useRef(null);
   const stepCycleRef = useRef(null);
-  stepCycleRef.current = stepCycle;
 
   // Rock-solid non-thrashing interval
   useEffect(() => {
@@ -209,6 +208,7 @@ export default function DmaSimulator() {
       clearInterval(timerRef.current);
     }
   };
+  stepCycleRef.current = stepCycle;
 
   const totalMeasured = cpuWorkCycles + cpuStallCycles;
   const cpuUtilization = totalMeasured > 0 ? Math.round((cpuWorkCycles / totalMeasured) * 100) : 100;

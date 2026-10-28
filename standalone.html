@@ -4767,7 +4767,7 @@ body.cinema-mode-active main {
           ? `0x${((i * 17 + 0xAA) % 256).toString(16).toUpperCase().padStart(2, '0')}`
           : '0x00';
         cell.innerHTML = `
-          <span class="cell-addr-tag">+0x0${i.toString(16).toUpperCase()}</span>
+          <span class="cell-addr-tag">+0x${i.toString(16).toUpperCase().padStart(2, '0')}</span>
           <span class="cell-val-tag ${isWritten ? 'val-written' : 'val-pending'}">${byteVal}</span>
         `;
         if (isWritten) cell.classList.add('written');
@@ -5009,7 +5009,7 @@ body.cinema-mode-active main {
           const byteVal = `0x${((bIdx * 17 + 0xAA) % 256).toString(16).toUpperCase().padStart(2, '0')}`;
           cell.className = 'memory-cell written pulse-write';
           cell.innerHTML = `
-            <span class="cell-addr-tag">+0x0${bIdx.toString(16).toUpperCase()}</span>
+            <span class="cell-addr-tag">+0x${bIdx.toString(16).toUpperCase().padStart(2, '0')}</span>
             <span class="cell-val-tag val-written">${byteVal}</span>
           `;
           setTimeout(() => { if (cell) cell.className = 'memory-cell written'; }, 300);
@@ -5089,7 +5089,7 @@ body.cinema-mode-active main {
         if (clockG) {
           const clkSlot = document.createElement('div');
           clkSlot.className = `gantt-clock-slot ${isCurrent ? 'active-clock-head' : ''} ${item ? 'slot-recorded' : ''}`;
-          clkSlot.innerHTML = `<span class="clock-t-label">T${i + 1}</span>${isCurrent ? '<div class="clock-active-caret">▼</div>' : ''}`;
+          clkSlot.innerHTML = `<span class="clock-t-label">${item ? `T${item.cycle}` : `T${i + 1}`}</span>${isCurrent ? '<div class="clock-active-caret">▼</div>' : ''}`;
           clockG.appendChild(clkSlot);
         }
 
@@ -5469,15 +5469,25 @@ body.cinema-mode-active main {
       localStorage.setItem('os_lab_theme', theme);
     }
 
-    // Initialize on launch
-    window.onload = function() {
-      const savedTheme = localStorage.getItem('os_lab_theme') || 'cyberpunk';
+    // Robust Initialization
+    function initApp() {
+      let savedTheme = 'cyberpunk';
+      try {
+        savedTheme = localStorage.getItem('os_lab_theme') || 'cyberpunk';
+      } catch (e) {}
       switchTheme(savedTheme);
       navigateTab('dma');
       setupRamGrid();
       drawGantt();
       updateHardwareGauges();
-    };
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+    window.addEventListener('load', initApp);
 
     // =========================================================================
     // STARTUP BOOT SEQUENCE & LOGO ANIMATION ENGINE
