@@ -3121,3 +3121,520 @@ main {
   box-shadow: 0 0 14px rgba(0, 210, 255, 0.6);
   transform: scale(1.05);
 }
+
+
+/* ==========================================================================
+   47. FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES & TELEMETRY CLUSTER
+   ========================================================================== */
+.hud-gauges-cluster {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.hud-gauge-card {
+  background: rgba(4, 9, 24, 0.85);
+  border: 1px solid rgba(0, 82, 255, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.hud-gauge-card:hover {
+  border-color: rgba(0, 210, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+}
+
+.gauge-svg-container {
+  width: 72px;
+  height: 72px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.gauge-svg {
+  width: 72px;
+  height: 72px;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg-circle {
+  fill: none;
+  stroke: rgba(0, 82, 255, 0.15);
+  stroke-width: 6;
+}
+
+.gauge-fill-circle {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.35s ease, stroke 0.35s ease;
+}
+
+.gauge-center-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  pointer-events: none;
+}
+
+.gauge-info-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.gauge-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.gauge-value {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.gauge-subtext {
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   48. FEATURE 2: MULTI-STRAND FIBER-OPTIC BUS HIGHWAY
+   ========================================================================== */
+.fiber-highway-container {
+  background: rgba(3, 7, 18, 0.95);
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  box-shadow: 0 0 25px rgba(0, 82, 255, 0.15);
+}
+
+.fiber-highway-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed rgba(0, 82, 255, 0.3);
+}
+
+.fiber-highway-title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent-cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.fiber-lane-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.fiber-lane {
+  display: grid;
+  grid-template-columns: 140px 1fr 180px;
+  align-items: center;
+  gap: 0.85rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.fiber-lane-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.badge-addr-bus {
+  background: rgba(0, 210, 255, 0.15);
+  color: #00d2ff;
+  border: 1px solid rgba(0, 210, 255, 0.4);
+}
+
+.badge-data-bus {
+  background: rgba(0, 82, 255, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(0, 82, 255, 0.5);
+}
+
+.badge-ctrl-bus {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.fiber-core-track {
+  height: 8px;
+  background: rgba(2, 6, 23, 0.8);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fiber-laser-line {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.fiber-laser-cyan {
+  background: #00d2ff;
+  box-shadow: 0 0 8px #00d2ff;
+}
+
+.fiber-laser-blue {
+  background: #0052ff;
+  box-shadow: 0 0 8px #0052ff, 0 0 14px #00d2ff;
+}
+
+.fiber-laser-amber {
+  background: #fbbf24;
+  box-shadow: 0 0 8px #fbbf24;
+}
+
+.fiber-pulse-bead {
+  position: absolute;
+  top: -1px;
+  width: 24px;
+  height: 10px;
+  border-radius: 9999px;
+  filter: blur(1px);
+  animation: fiberBeadFlow 1.6s infinite linear;
+}
+
+@keyframes fiberBeadFlow {
+  0% { left: -30px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+.fiber-lane-readout {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fiber-ctrl-leds {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  justify-content: flex-end;
+}
+
+.led-chip {
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.led-chip.active-green {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.led-chip.active-amber {
+  background: rgba(251, 191, 36, 0.25);
+  border-color: #fbbf24;
+  color: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+.led-chip.active-red {
+  background: rgba(244, 63, 94, 0.25);
+  border-color: #f43f5e;
+  color: #f43f5e;
+  box-shadow: 0 0 8px rgba(244, 63, 94, 0.5);
+}
+
+/* ==========================================================================
+   49. FEATURE 3: CPU MICROARCHITECTURE X-RAY POPOVER & INSPECTOR
+   ========================================================================== */
+.cpu-xray-btn {
+  background: rgba(0, 82, 255, 0.15);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  color: #00d2ff;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.35rem;
+}
+
+.cpu-xray-btn:hover {
+  background: rgba(0, 82, 255, 0.35);
+  border-color: #00d2ff;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
+}
+
+.cpu-xray-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.cpu-xray-dialog {
+  background: #040918;
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 40px rgba(0, 82, 255, 0.4), inset 0 0 20px rgba(0, 210, 255, 0.1);
+  max-width: 680px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 1.5rem;
+}
+
+.xray-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 82, 255, 0.3);
+  margin-bottom: 1.25rem;
+}
+
+.xray-close-btn {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  color: #f43f5e;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.xray-close-btn:hover {
+  background: rgba(244, 63, 94, 0.3);
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+}
+
+.xray-alu-section {
+  background: rgba(0, 82, 255, 0.08);
+  border: 1px solid rgba(0, 82, 255, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.xray-alu-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.xray-proof-box {
+  background: rgba(0, 0, 0, 0.5);
+  border-left: 3px solid var(--accent-cyan);
+  padding: 0.65rem 0.85rem;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+  margin-top: 0.6rem;
+}
+
+.xray-reg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.xray-reg-cell {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 210, 255, 0.25);
+  border-radius: 4px;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.xray-reg-name {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.xray-reg-val {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--accent-blue);
+  margin-top: 0.15rem;
+}
+
+.xray-cache-section {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+/* ==========================================================================
+   50. FEATURE 4: FULLSCREEN PRESENTATION / CINEMA MODE
+   ========================================================================== */
+.cinema-mode-btn {
+  background: rgba(0, 82, 255, 0.15);
+  border: 1px solid rgba(0, 210, 255, 0.45);
+  color: #00d2ff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
+}
+
+.cinema-mode-btn:hover {
+  background: rgba(0, 82, 255, 0.35);
+  border-color: #00d2ff;
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.cinema-mode-btn.active {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+}
+
+/* CINEMA MODE EXPANDED VIEWPORT */
+body.cinema-mode-active {
+  overflow-x: hidden;
+}
+
+body.cinema-mode-active .ambient-stream-gutter {
+  display: none !important;
+}
+
+body.cinema-mode-active main {
+  max-width: 98vw !important;
+  padding: 0.75rem 1.5rem 5rem 1.5rem !important;
+}
+
+.cinema-floating-hud {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  background: rgba(4, 9, 24, 0.95);
+  border: 1.5px solid #00d2ff;
+  border-radius: 9999px;
+  padding: 0.4rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  box-shadow: 0 0 25px rgba(0, 210, 255, 0.5);
+  animation: slideUpHud 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpHud {
+  from { transform: translate(-50%, 40px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.cinema-pill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #00d2ff;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.45rem;
+  background: rgba(0, 82, 255, 0.25);
+  border-radius: 9999px;
+}
+
+.cinema-exit-btn {
+  background: rgba(244, 63, 94, 0.2);
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  color: #f43f5e;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cinema-exit-btn:hover {
+  background: rgba(244, 63, 94, 0.4);
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+}

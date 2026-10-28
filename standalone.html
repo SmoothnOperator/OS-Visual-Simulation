@@ -3133,6 +3133,524 @@ main {
   transform: scale(1.05);
 }
 
+  
+
+/* ==========================================================================
+   47. FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES & TELEMETRY CLUSTER
+   ========================================================================== */
+.hud-gauges-cluster {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.hud-gauge-card {
+  background: rgba(4, 9, 24, 0.85);
+  border: 1px solid rgba(0, 82, 255, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.hud-gauge-card:hover {
+  border-color: rgba(0, 210, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+}
+
+.gauge-svg-container {
+  width: 72px;
+  height: 72px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.gauge-svg {
+  width: 72px;
+  height: 72px;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg-circle {
+  fill: none;
+  stroke: rgba(0, 82, 255, 0.15);
+  stroke-width: 6;
+}
+
+.gauge-fill-circle {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.35s ease, stroke 0.35s ease;
+}
+
+.gauge-center-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  pointer-events: none;
+}
+
+.gauge-info-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.gauge-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.gauge-value {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.gauge-subtext {
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   48. FEATURE 2: MULTI-STRAND FIBER-OPTIC BUS HIGHWAY
+   ========================================================================== */
+.fiber-highway-container {
+  background: rgba(3, 7, 18, 0.95);
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  box-shadow: 0 0 25px rgba(0, 82, 255, 0.15);
+}
+
+.fiber-highway-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed rgba(0, 82, 255, 0.3);
+}
+
+.fiber-highway-title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent-cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.fiber-lane-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.fiber-lane {
+  display: grid;
+  grid-template-columns: 140px 1fr 180px;
+  align-items: center;
+  gap: 0.85rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.fiber-lane-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.badge-addr-bus {
+  background: rgba(0, 210, 255, 0.15);
+  color: #00d2ff;
+  border: 1px solid rgba(0, 210, 255, 0.4);
+}
+
+.badge-data-bus {
+  background: rgba(0, 82, 255, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(0, 82, 255, 0.5);
+}
+
+.badge-ctrl-bus {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.fiber-core-track {
+  height: 8px;
+  background: rgba(2, 6, 23, 0.8);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fiber-laser-line {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.fiber-laser-cyan {
+  background: #00d2ff;
+  box-shadow: 0 0 8px #00d2ff;
+}
+
+.fiber-laser-blue {
+  background: #0052ff;
+  box-shadow: 0 0 8px #0052ff, 0 0 14px #00d2ff;
+}
+
+.fiber-laser-amber {
+  background: #fbbf24;
+  box-shadow: 0 0 8px #fbbf24;
+}
+
+.fiber-pulse-bead {
+  position: absolute;
+  top: -1px;
+  width: 24px;
+  height: 10px;
+  border-radius: 9999px;
+  filter: blur(1px);
+  animation: fiberBeadFlow 1.6s infinite linear;
+}
+
+@keyframes fiberBeadFlow {
+  0% { left: -30px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+.fiber-lane-readout {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fiber-ctrl-leds {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  justify-content: flex-end;
+}
+
+.led-chip {
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.led-chip.active-green {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.led-chip.active-amber {
+  background: rgba(251, 191, 36, 0.25);
+  border-color: #fbbf24;
+  color: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+.led-chip.active-red {
+  background: rgba(244, 63, 94, 0.25);
+  border-color: #f43f5e;
+  color: #f43f5e;
+  box-shadow: 0 0 8px rgba(244, 63, 94, 0.5);
+}
+
+/* ==========================================================================
+   49. FEATURE 3: CPU MICROARCHITECTURE X-RAY POPOVER & INSPECTOR
+   ========================================================================== */
+.cpu-xray-btn {
+  background: rgba(0, 82, 255, 0.15);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  color: #00d2ff;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.35rem;
+}
+
+.cpu-xray-btn:hover {
+  background: rgba(0, 82, 255, 0.35);
+  border-color: #00d2ff;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
+}
+
+.cpu-xray-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.cpu-xray-dialog {
+  background: #040918;
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 40px rgba(0, 82, 255, 0.4), inset 0 0 20px rgba(0, 210, 255, 0.1);
+  max-width: 680px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 1.5rem;
+}
+
+.xray-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 82, 255, 0.3);
+  margin-bottom: 1.25rem;
+}
+
+.xray-close-btn {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  color: #f43f5e;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.xray-close-btn:hover {
+  background: rgba(244, 63, 94, 0.3);
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+}
+
+.xray-alu-section {
+  background: rgba(0, 82, 255, 0.08);
+  border: 1px solid rgba(0, 82, 255, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.xray-alu-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.xray-proof-box {
+  background: rgba(0, 0, 0, 0.5);
+  border-left: 3px solid var(--accent-cyan);
+  padding: 0.65rem 0.85rem;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+  margin-top: 0.6rem;
+}
+
+.xray-reg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.xray-reg-cell {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 210, 255, 0.25);
+  border-radius: 4px;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.xray-reg-name {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.xray-reg-val {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--accent-blue);
+  margin-top: 0.15rem;
+}
+
+.xray-cache-section {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+/* ==========================================================================
+   50. FEATURE 4: FULLSCREEN PRESENTATION / CINEMA MODE
+   ========================================================================== */
+.cinema-mode-btn {
+  background: rgba(0, 82, 255, 0.15);
+  border: 1px solid rgba(0, 210, 255, 0.45);
+  color: #00d2ff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
+}
+
+.cinema-mode-btn:hover {
+  background: rgba(0, 82, 255, 0.35);
+  border-color: #00d2ff;
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.cinema-mode-btn.active {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+}
+
+/* CINEMA MODE EXPANDED VIEWPORT */
+body.cinema-mode-active {
+  overflow-x: hidden;
+}
+
+body.cinema-mode-active .ambient-stream-gutter {
+  display: none !important;
+}
+
+body.cinema-mode-active main {
+  max-width: 98vw !important;
+  padding: 0.75rem 1.5rem 5rem 1.5rem !important;
+}
+
+.cinema-floating-hud {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  background: rgba(4, 9, 24, 0.95);
+  border: 1.5px solid #00d2ff;
+  border-radius: 9999px;
+  padding: 0.4rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  box-shadow: 0 0 25px rgba(0, 210, 255, 0.5);
+  animation: slideUpHud 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpHud {
+  from { transform: translate(-50%, 40px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.cinema-pill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #00d2ff;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.45rem;
+  background: rgba(0, 82, 255, 0.25);
+  border-radius: 9999px;
+}
+
+.cinema-exit-btn {
+  background: rgba(244, 63, 94, 0.2);
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  color: #f43f5e;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cinema-exit-btn:hover {
+  background: rgba(244, 63, 94, 0.4);
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+}
+
   </style>
 </head>
 <body>
@@ -3223,6 +3741,12 @@ main {
   <header>
     <div class="header-branding">
       <div class="brand-row">
+          <!-- CINEMA MODE TOGGLE BUTTON -->
+          <div style="position: absolute; right: 1.5rem; top: 1.25rem;">
+            <button class="cinema-mode-btn" id="btnCinemaMode" onclick="toggleCinemaMode()" title="Toggle Presentation / Fullscreen Cinema Mode (F or ESC)">
+              <span id="cinemaBtnIcon">⛶</span> <span id="cinemaBtnLabel">CINEMA MODE</span>
+            </button>
+          </div>
         <span class="brand-title" onclick="replayBootSequence()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.65rem;" title="Click to replay system boot sequence & logo animation">
           <div class="nav-logo-badge">
             <svg width="18" height="18" viewBox="0 0 120 120" fill="none">
@@ -3248,6 +3772,15 @@ main {
         <span>🔬</span> Unified System Lab
       </button>
     </nav>
+
+    <!-- FLOATING CINEMA HUD CONTROLS -->
+    <div id="cinemaFloatingHud" class="cinema-floating-hud" style="display: none;">
+      <span class="cinema-pill-tag">⛶ CINEMA VIEW</span>
+      <button class="tab-btn" style="padding: 0.25rem 0.65rem; font-size: 0.72rem; border-radius: 9999px;" onclick="navigateTab('dma')">DMA</button>
+      <button class="tab-btn" style="padding: 0.25rem 0.65rem; font-size: 0.72rem; border-radius: 9999px;" onclick="navigateTab('multicore')">MULTICORE</button>
+      <button class="tab-btn" style="padding: 0.25rem 0.65rem; font-size: 0.72rem; border-radius: 9999px;" onclick="navigateTab('unified')">UNIFIED LAB</button>
+      <button class="cinema-exit-btn" onclick="toggleCinemaMode()" title="Exit Cinema Mode (ESC)">✕ EXIT</button>
+    </div>
   </header>
 
   <main>
@@ -3296,6 +3829,57 @@ main {
         <span id="narrationMsg"></span>
       </div>
 
+      <!-- FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES & TELEMETRY CLUSTER -->
+      <div class="hud-gauges-cluster">
+        <!-- GAUGE 1: BUS SATURATION -->
+        <div class="hud-gauge-card card-hud-corner">
+          <div class="gauge-svg-container">
+            <svg class="gauge-svg" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" class="gauge-bg-circle" />
+              <circle id="gaugeCircleSat" cx="32" cy="32" r="26" class="gauge-fill-circle" stroke="#00d2ff" stroke-dasharray="163.36" stroke-dashoffset="150" />
+            </svg>
+            <div class="gauge-center-icon">⚡</div>
+          </div>
+          <div class="gauge-info-box">
+            <span class="gauge-title">Bus Saturation</span>
+            <span id="gaugeValSat" class="gauge-value" style="color: #00d2ff;">8%</span>
+            <span id="gaugeSubSat" class="gauge-subtext" style="color: var(--text-muted);">NORMAL LOAD</span>
+          </div>
+        </div>
+
+        <!-- GAUGE 2: DMA BANDWIDTH -->
+        <div class="hud-gauge-card card-hud-corner">
+          <div class="gauge-svg-container">
+            <svg class="gauge-svg" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" class="gauge-bg-circle" />
+              <circle id="gaugeCircleBw" cx="32" cy="32" r="26" class="gauge-fill-circle" stroke="#00d2ff" stroke-dasharray="163.36" stroke-dashoffset="163.36" />
+            </svg>
+            <div class="gauge-center-icon">📡</div>
+          </div>
+          <div class="gauge-info-box">
+            <span class="gauge-title">DMA Bandwidth</span>
+            <span id="gaugeValBw" class="gauge-value" style="color: #00d2ff;">0.00 <span style="font-size: 0.72rem; color: var(--text-muted);">GB/s</span></span>
+            <span class="gauge-subtext" style="color: var(--accent-green);">PCIe Gen4 Direct Stream</span>
+          </div>
+        </div>
+
+        <!-- GAUGE 3: CLOCK HARMONIC -->
+        <div class="hud-gauge-card card-hud-corner">
+          <div class="gauge-svg-container">
+            <svg class="gauge-svg" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" class="gauge-bg-circle" />
+              <circle id="gaugeCirclePhase" cx="32" cy="32" r="26" class="gauge-fill-circle" stroke="#0052ff" stroke-dasharray="163.36" stroke-dashoffset="40" />
+            </svg>
+            <div class="gauge-center-icon">⚙️</div>
+          </div>
+          <div class="gauge-info-box">
+            <span class="gauge-title">Harmonic Frequency</span>
+            <span class="gauge-value" style="color: #ffffff;">3.20 <span style="font-size: 0.72rem; color: var(--text-muted);">GHz</span></span>
+            <span id="gaugeSubPhase" class="gauge-subtext" style="color: var(--accent-amber); font-family: var(--font-mono);">PIPELINE: FETCH</span>
+          </div>
+        </div>
+      </div>
+
       <!-- SCHEMATIC + METRICS -->
       <div class="layout-grid">
         <!-- LEFT: SCHEMATIC CANVAS -->
@@ -3320,6 +3904,10 @@ main {
                 <tr><td class="reg-label">HLDA Out (Grant):</td><td class="reg-value" id="valCpuHlda">0 (Low)</td></tr>
               </table>
               <div id="textCpuDetail" style="font-size: 0.82rem; color: var(--accent-blue); font-weight: 600;">Executing user process</div>
+              <!-- FEATURE 3: CPU MICROARCHITECTURE X-RAY POPOVER BUTTON -->
+              <button class="cpu-xray-btn" onclick="openCpuXray()" title="Inspect CPU ALU Pipeline, Registers and Cache Architecture">
+                🔬 CPU Microarchitecture X-Ray
+              </button>
             </div>
 
             <!-- DMA CONTROLLER BOX -->
@@ -3354,22 +3942,55 @@ main {
             </div>
           </div>
 
-          <!-- SYSTEM BUS -->
-          <div class="bus-system-container">
-            <div class="bus-track">
-              <span class="bus-name-badge">CONTROL BUS:</span>
-              <div id="wireCtrl" class="bus-physical-line packet-stream-track"><div class="floating-data-packet comet-ribbon packet-ctrl"></div></div>
-              <span id="stateCtrl" class="bus-state-display" style="color: var(--accent-green);">HLDA=0, IOR=0, MEMW=0</span>
+          <!-- FEATURE 2: MULTI-STRAND FIBER-OPTIC BUS HIGHWAY -->
+          <div class="fiber-highway-container card-hud-corner">
+            <div class="fiber-highway-header">
+              <span class="fiber-highway-title">
+                <span class="anim-clock-pulse">⚡</span> MULTI-STRAND SYSTEM HIGHWAY (TRIPARTITE BUS ARCHITECTURE)
+              </span>
+              <div style="display: flex; gap: 0.4rem; font-size: 0.68rem; font-family: var(--font-mono);">
+                <span class="badge-status badge-blue">32-BIT ADDR</span>
+                <span class="badge-status badge-green">64-BIT DATA</span>
+                <span class="badge-status badge-amber">ASYNC CTRL</span>
+              </div>
             </div>
-            <div class="bus-track">
-              <span class="bus-name-badge">ADDRESS BUS:</span>
-              <div id="wireAddr" class="bus-physical-line packet-stream-track"><div class="floating-data-packet comet-ribbon"></div></div>
-              <span id="stateAddr" class="bus-state-display" style="color: var(--accent-blue);">0x0400 (CPU Driven)</span>
-            </div>
-            <div class="bus-track">
-              <span class="bus-name-badge">DATA BUS:</span>
-              <div id="wireData" class="bus-physical-line packet-stream-track"><div class="floating-data-packet comet-ribbon packet-amber"></div></div>
-              <span id="stateData" class="bus-state-display" style="color: var(--accent-amber);">IDLE / NO TRANSFER</span>
+
+            <div class="fiber-lane-row">
+              <!-- ADDRESS BUS (CYAN) -->
+              <div class="fiber-lane">
+                <span class="fiber-lane-badge badge-addr-bus">ADDRESS BUS</span>
+                <div class="fiber-core-track">
+                  <div class="fiber-laser-line fiber-laser-cyan"></div>
+                  <div class="fiber-pulse-bead" id="wireAddr" style="background: #00d2ff; box-shadow: 0 0 10px #00d2ff; animation-duration: 2.2s;"></div>
+                </div>
+                <div id="stateAddr" class="fiber-lane-readout" style="color: var(--accent-cyan);">0x0400 (CPU Driven)</div>
+              </div>
+
+              <!-- DATA BUS (ELECTRIC COBALT BLUE) -->
+              <div class="fiber-lane">
+                <span class="fiber-lane-badge badge-data-bus">DATA BUS</span>
+                <div class="fiber-core-track">
+                  <div class="fiber-laser-line fiber-laser-blue"></div>
+                  <div class="fiber-pulse-bead" id="wireData" style="background: #60a5fa; box-shadow: 0 0 12px #0052ff; animation-duration: 2.0s;"></div>
+                </div>
+                <div id="stateData" class="fiber-lane-readout" style="color: #60a5fa;">IDLE / NO TRANSFER</div>
+              </div>
+
+              <!-- CONTROL BUS (AMBER WITH LIVE LED INDICATORS) -->
+              <div class="fiber-lane">
+                <span class="fiber-lane-badge badge-ctrl-bus">CONTROL BUS</span>
+                <div class="fiber-core-track">
+                  <div class="fiber-laser-line fiber-laser-amber"></div>
+                  <div class="fiber-pulse-bead" id="wireCtrl" style="background: #fbbf24; box-shadow: 0 0 10px #fbbf24; animation-duration: 1.5s;"></div>
+                </div>
+                <div class="fiber-ctrl-leds" id="stateCtrl">
+                  <span class="led-chip" id="ledHold">HOLD</span>
+                  <span class="led-chip" id="ledHlda">HLDA</span>
+                  <span class="led-chip active-amber" id="ledDreq">DREQ</span>
+                  <span class="led-chip" id="ledDack">DACK</span>
+                  <span class="led-chip" id="ledMemw">MEMW</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -4975,6 +5596,249 @@ main {
       runBootSequence();
     });
 
+
+    // =========================================================================
+    // FEATURE 4: FULLSCREEN PRESENTATION / CINEMA MODE ENGINE
+    // =========================================================================
+    let isCinemaModeActive = false;
+
+    function toggleCinemaMode() {
+      isCinemaModeActive = !isCinemaModeActive;
+      const hud = document.getElementById('cinemaFloatingHud');
+      const btn = document.getElementById('btnCinemaMode');
+      const icon = document.getElementById('cinemaBtnIcon');
+      const label = document.getElementById('cinemaBtnLabel');
+
+      if (isCinemaModeActive) {
+        document.body.classList.add('cinema-mode-active');
+        if (hud) hud.style.display = 'flex';
+        if (btn) btn.classList.add('active');
+        if (icon) icon.innerText = '✕';
+        if (label) label.innerText = 'EXIT CINEMA';
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        }
+      } else {
+        document.body.classList.remove('cinema-mode-active');
+        if (hud) hud.style.display = 'none';
+        if (btn) btn.classList.remove('active');
+        if (icon) icon.innerText = '⛶';
+        if (label) label.innerText = 'CINEMA MODE';
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && isCinemaModeActive) {
+        toggleCinemaMode();
+      }
+    });
+
+    // =========================================================================
+    // FEATURE 3: CPU MICROARCHITECTURE X-RAY POPOVER ENGINE
+    // =========================================================================
+    function openCpuXray() {
+      const modal = document.getElementById('cpuXrayModal');
+      if (!modal) return;
+      modal.style.display = 'flex';
+      updateCpuXrayState();
+    }
+
+    function closeCpuXray() {
+      const modal = document.getElementById('cpuXrayModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function updateCpuXrayState() {
+      const mode = document.getElementById('selectDmaMode').value;
+      const isDmaOwner = valDmaMaster === 'YES';
+      const badge = document.getElementById('xrayAluBadge');
+      const op = document.getElementById('xrayAluOp');
+      const proof = document.getElementById('xrayAluProof');
+      const pc = document.getElementById('xrayValPc');
+
+      if (pc) pc.innerText = '0x' + (0x0400 + currentClock * 4).toString(16).toUpperCase().padStart(4, '0');
+
+      if (!badge || !op || !proof) return;
+
+      if (mode === 'transparent') {
+        badge.className = 'badge-status badge-green';
+        badge.innerText = '⚡ 100% PARALLEL EXECUTION';
+        op.innerText = 'ALU_MUL R1, R2 [INTERNAL REGISTERS ONLY]';
+        proof.innerHTML = '<span style="color: #6ee7b7;"><strong>Transparent Mode Advantage Demonstrated:</strong> The CPU Arithmetic Logic Unit (ALU) computes continuous mathematical instructions exclusively using internal registers and L1 cache. Because it requires zero memory bus access during these cycles, the DMA controller accesses DRAM simultaneously with <strong>zero CPU wait states</strong>!</span>';
+      } else if (isDmaOwner && mode === 'burst') {
+        badge.className = 'badge-status badge-red';
+        badge.innerText = '⚠️ ALU STALLED (BUS STARVATION)';
+        op.innerText = 'NOP (CPU Halted on HLDA = 1)';
+        proof.innerHTML = '<span style="color: #fca5a5;"><strong>Burst Mode Trade-off Demonstrated:</strong> The DMA controller asserts HOLD and assumes exclusive ownership of the bus for the entire block. Because the CPU cannot fetch external instructions or data operands, the CPU instruction pipeline is stalled until the transfer finishes.</span>';
+      } else if (isDmaOwner && mode === 'stealing') {
+        badge.className = 'badge-status badge-amber';
+        badge.innerText = '⏱️ 1-CYCLE DELAY (YIELDED BUS SLICE)';
+        op.innerText = 'ALU_DELAY (1 Cycle DMA Slice Interleaving)';
+        proof.innerHTML = '<span style="color: #fde68a;"><strong>Cycle Stealing Trade-off Demonstrated:</strong> The DMA controller interleaves 1 memory cycle per byte with the CPU. The CPU suffers only brief single-cycle pauses and continues executing user processes in between.</span>';
+      } else {
+        badge.className = 'badge-status badge-blue';
+        badge.innerText = 'ACTIVE INSTRUCTION EXECUTION';
+        op.innerText = 'ALU_ADD AX, [0x0400 + ' + (currentClock * 4) + ']';
+        proof.innerHTML = '<span style="color: #6ee7b7;"><strong>Instruction Execution Active:</strong> The CPU ALU is executing standard user process instruction stream.</span>';
+      }
+    }
+
+    // =========================================================================
+    // FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES UPDATE ENGINE
+    // =========================================================================
+    function updateHardwareGauges() {
+      const mode = document.getElementById('selectDmaMode') ? document.getElementById('selectDmaMode').value : 'burst';
+      const isDmaOwner = valDmaMaster === 'YES';
+
+      // 1. Bus Saturation
+      let satPct = 8;
+      if (isDmaOwner) {
+        if (mode === 'burst') satPct = 96;
+        else if (mode === 'stealing') satPct = 34;
+        else if (mode === 'transparent') satPct = 12;
+      }
+      const C = 163.36;
+      const satOffset = C - (satPct / 100) * C;
+      const circleSat = document.getElementById('gaugeCircleSat');
+      const valSat = document.getElementById('gaugeValSat');
+      const subSat = document.getElementById('gaugeSubSat');
+
+      if (circleSat) {
+        circleSat.style.strokeDashoffset = satOffset;
+        circleSat.style.stroke = satPct > 75 ? '#f43f5e' : (satPct > 30 ? '#fbbf24' : '#00d2ff');
+      }
+      if (valSat) {
+        valSat.innerText = satPct + '%';
+        valSat.style.color = satPct > 75 ? '#f43f5e' : (satPct > 30 ? '#fbbf24' : '#00d2ff');
+      }
+      if (subSat) {
+        subSat.innerText = satPct > 75 ? 'HIGH BUS LOCK' : 'NORMAL LOAD';
+        subSat.style.color = satPct > 75 ? 'var(--accent-red)' : 'var(--text-muted)';
+      }
+
+      // 2. DMA Bandwidth
+      let bwText = '0.00';
+      let bwPct = 0;
+      if (isDmaOwner && transferredBytes < blockSize) {
+        if (mode === 'burst') { bwText = '2.84'; bwPct = 88; }
+        else if (mode === 'stealing') { bwText = '0.48'; bwPct = 25; }
+        else if (mode === 'transparent') { bwText = '1.92'; bwPct = 65; }
+      } else if (transferredBytes >= blockSize) {
+        bwText = '3.20';
+        bwPct = 100;
+      }
+      const bwOffset = C - (bwPct / 100) * C;
+      const circleBw = document.getElementById('gaugeCircleBw');
+      const valBw = document.getElementById('gaugeValBw');
+      if (circleBw) circleBw.style.strokeDashoffset = bwOffset;
+      if (valBw) valBw.innerHTML = bwText + ' <span style="font-size: 0.72rem; color: var(--text-muted);">GB/s</span>';
+
+      // 3. Clock Harmonic & Pipeline Phase
+      const phases = ['WRITEBACK', 'FETCH', 'DECODE', 'EXECUTE'];
+      const currentPhase = phases[currentClock % 4];
+      const phasePct = ((currentClock % 4) + 1) * 25;
+      const phaseOffset = C - (phasePct / 100) * C;
+      const circlePhase = document.getElementById('gaugeCirclePhase');
+      const subPhase = document.getElementById('gaugeSubPhase');
+      if (circlePhase) circlePhase.style.strokeDashoffset = phaseOffset;
+      if (subPhase) subPhase.innerText = 'PIPELINE: ' + currentPhase;
+
+      // Update LEDs on fiber control bus
+      const ledHold = document.getElementById('ledHold');
+      const ledHlda = document.getElementById('ledHlda');
+      const ledDreq = document.getElementById('ledDreq');
+      const ledDack = document.getElementById('ledDack');
+      const ledMemw = document.getElementById('ledMemw');
+
+      if (ledHold) ledHold.className = 'led-chip ' + (isDmaOwner ? 'active-amber' : '');
+      if (ledHlda) ledHlda.className = 'led-chip ' + (isDmaOwner ? 'active-green' : '');
+      if (ledDreq) ledDreq.className = 'led-chip ' + (transferredBytes < blockSize ? 'active-amber' : '');
+      if (ledDack) ledDack.className = 'led-chip ' + (isDmaOwner ? 'active-green' : '');
+      if (ledMemw) ledMemw.className = 'led-chip ' + (isDmaOwner ? 'active-amber' : '');
+
+      // Update X-Ray modal if open
+      const xrayModal = document.getElementById('cpuXrayModal');
+      if (xrayModal && xrayModal.style.display !== 'none') {
+        updateCpuXrayState();
+      }
+    }
+
 </script>
+
+  <!-- FEATURE 3: CPU MICROARCHITECTURE X-RAY POPOVER MODAL -->
+  <div id="cpuXrayModal" class="cpu-xray-modal-backdrop" style="display: none;" onclick="closeCpuXray()">
+    <div class="cpu-xray-dialog" onclick="event.stopPropagation()">
+      <div class="xray-header">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <span style="font-size: 1.5rem;">🔬</span>
+          <div>
+            <div style="font-size: 1.1rem; fontWeight: 800; color: #ffffff;">CPU Microarchitecture & Pipeline X-Ray</div>
+            <div style="font-size: 0.74rem; color: var(--text-muted);">Internal Silicon Core: ALU Execution, Register Banks & Cache Hierarchy</div>
+          </div>
+        </div>
+        <button class="xray-close-btn" onclick="closeCpuXray()" title="Close X-Ray (ESC)">✕ CLOSE</button>
+      </div>
+
+      <!-- ALU PIPELINE SECTION -->
+      <div class="xray-alu-section">
+        <div class="xray-alu-title">
+          <span>⚙️ ARITHMETIC LOGIC UNIT (ALU) PIPELINE</span>
+          <span id="xrayAluBadge" class="badge-status badge-blue">ACTIVE INSTRUCTION EXECUTION</span>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-family: var(--font-mono); margin: 0.4rem 0;">
+          <span style="color: var(--text-muted);">Current Micro-Op:</span>
+          <span id="xrayAluOp" style="color: var(--accent-cyan); font-weight: 800;">ALU_ADD AX, [0x0400]</span>
+        </div>
+
+        <div class="xray-proof-box" id="xrayAluProof">
+          <span style="color: #6ee7b7;">
+            <strong>Execution Verified:</strong> The CPU executes instruction cycles while monitoring bus arbiter status.
+          </span>
+        </div>
+      </div>
+
+      <!-- REGISTER BANK -->
+      <div style="margin-bottom: 0.5rem; font-size: 0.78rem; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.08em;">
+        Hardware Register Bank (16/32-Bit Core Registers)
+      </div>
+      <div class="xray-reg-grid">
+        <div class="xray-reg-cell"><div class="xray-reg-name">AX (Accumulator)</div><div class="xray-reg-val">0x4F02</div></div>
+        <div class="xray-reg-cell"><div class="xray-reg-name">BX (Base Ptr)</div><div class="xray-reg-val">0x1000</div></div>
+        <div class="xray-reg-cell"><div class="xray-reg-name">CX (Counter)</div><div class="xray-reg-val">0x0010</div></div>
+        <div class="xray-reg-cell"><div class="xray-reg-name">DX (Data Reg)</div><div class="xray-reg-val">0x8000</div></div>
+        <div class="xray-reg-cell"><div class="xray-reg-name">PC (Program Counter)</div><div class="xray-reg-val" id="xrayValPc" style="color: var(--accent-cyan);">0x0400</div></div>
+        <div class="xray-reg-cell"><div class="xray-reg-name">SP (Stack Pointer)</div><div class="xray-reg-val">0x7FFE</div></div>
+        <div class="xray-reg-cell"><div class="xray-reg-name">BP (Frame Ptr)</div><div class="xray-reg-val">0x7F00</div></div>
+        <div class="xray-reg-cell"><div class="xray-reg-name">FLAGS Register</div><div class="xray-reg-val" style="font-size: 0.72rem; color: var(--accent-green);">CF:0 ZF:1 IF:1</div></div>
+      </div>
+
+      <!-- CACHE HIERARCHY -->
+      <div class="xray-cache-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+          <span style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan);">On-Chip Cache Memory Hierarchy</span>
+          <span style="font-size: 0.72rem; color: var(--accent-green); font-weight: 700;">HIT RATIO: 98.6%</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.65rem;">
+          <div style="background: rgba(0, 0, 0, 0.4); padding: 0.5rem; border-radius: 4px; border: 1px solid rgba(0, 82, 255, 0.2);">
+            <div style="font-size: 0.68rem; color: var(--text-muted);">L1 I-Cache (Inst)</div>
+            <div style="font-size: 0.85rem; font-weight: 800; color: #ffffff;">32 KB • 0.4ns</div>
+          </div>
+          <div style="background: rgba(0, 0, 0, 0.4); padding: 0.5rem; border-radius: 4px; border: 1px solid rgba(0, 82, 255, 0.2);">
+            <div style="font-size: 0.68rem; color: var(--text-muted);">L1 D-Cache (Data)</div>
+            <div style="font-size: 0.85rem; font-weight: 800; color: #ffffff;">32 KB • 0.5ns</div>
+          </div>
+          <div style="background: rgba(0, 0, 0, 0.4); padding: 0.5rem; border-radius: 4px; border: 1px solid rgba(0, 82, 255, 0.2);">
+            <div style="font-size: 0.68rem; color: var(--text-muted);">L2 Shared Cache</div>
+            <div style="font-size: 0.85rem; font-weight: 800; color: #ffffff;">512 KB • 1.2ns</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

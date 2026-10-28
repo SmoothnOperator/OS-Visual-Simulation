@@ -1,9 +1,53 @@
-import React, { useState } from 'react';
-import { Zap, Cpu, Layers, Volume2, VolumeX } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Zap, Cpu, Layers, Volume2, VolumeX, Maximize2, Minimize2 } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 
 export default function Navbar({ activeTab, setActiveTab, onReboot }) {
   const [sfxEnabled, setSfxEnabled] = useState(false);
+  const [isCinemaMode, setIsCinemaMode] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFull = !!document.fullscreenElement;
+      setIsCinemaMode(isFull);
+      if (isFull) {
+        document.body.classList.add('cinema-mode-active');
+      } else {
+        document.body.classList.remove('cinema-mode-active');
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      // Toggle on 'f' or 'F' if not typing in an input
+      if ((e.key === 'f' || e.key === 'F') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') {
+        toggleCinemaMode();
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isCinemaMode]);
+
+  const toggleCinemaMode = () => {
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      document.body.classList.add('cinema-mode-active');
+      setIsCinemaMode(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      document.body.classList.remove('cinema-mode-active');
+      setIsCinemaMode(false);
+    }
+  };
 
   const handleToggleSound = () => {
     const newState = soundFx.toggle();
@@ -74,6 +118,16 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
               <div className="sfx-wave-bar" style={{ height: '6px' }}></div>
             </div>
           </button>
+
+          {/* FEATURE 4: FULLSCREEN CINEMA / PRESENTATION MODE TOGGLE */}
+          <button
+            className={`cinema-mode-btn ${isCinemaMode ? 'active' : ''}`}
+            onClick={toggleCinemaMode}
+            title="Toggle Presentation / Fullscreen Cinema Mode (Press F or ESC)"
+          >
+            {isCinemaMode ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
+            <span>{isCinemaMode ? 'EXIT CINEMA' : 'CINEMA MODE'}</span>
+          </button>
         </div>
         <div className="brand-subtitle">
           Operating System Overview: Direct Memory Access (DMA) & Multiprocessor vs. Multicore
@@ -115,6 +169,46 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
           <Zap size={18} /> Unified System Lab
         </button>
       </nav>
+
+      {/* FLOATING CINEMA HUD CONTROLS */}
+      {isCinemaMode && (
+        <div className="cinema-floating-hud">
+          <span className="cinema-pill-tag">⛶ CINEMA VIEW</span>
+          <button
+            className={`tab-btn ${activeTab === 'dma' ? 'active' : ''}`}
+            style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', borderRadius: '9999px' }}
+            onClick={() => {
+              setActiveTab('dma');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            DMA
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'multicore' ? 'active' : ''}`}
+            style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', borderRadius: '9999px' }}
+            onClick={() => {
+              setActiveTab('multicore');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            MULTICORE
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'unified' ? 'active' : ''}`}
+            style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', borderRadius: '9999px' }}
+            onClick={() => {
+              setActiveTab('unified');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            UNIFIED LAB
+          </button>
+          <button className="cinema-exit-btn" onClick={toggleCinemaMode} title="Exit Cinema Mode (ESC)">
+            ✕ EXIT
+          </button>
+        </div>
+      )}
     </header>
   );
 }

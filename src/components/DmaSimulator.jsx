@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, SkipForward, RotateCcw, Cpu, Layers, Activity } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
+import HardwareGaugesCluster from './HardwareGaugesCluster';
+import CpuXrayModal from './CpuXrayModal';
 
 export default function DmaSimulator() {
   const [mode, setMode] = useState('burst');
   const [blockSize, setBlockSize] = useState(16);
   const [speed, setSpeed] = useState(700);
   const [isRunning, setIsRunning] = useState(false);
+  const [showCpuXray, setShowCpuXray] = useState(false);
 
   const [currentClock, setCurrentClock] = useState(0);
   const [transferredBytes, setTransferredBytes] = useState(0);
@@ -234,6 +237,15 @@ export default function DmaSimulator() {
         </div>
       </div>
 
+      {/* FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES & TELEMETRY CLUSTER */}
+      <HardwareGaugesCluster
+        mode={mode}
+        busOwner={busOwner}
+        transferredBytes={transferredBytes}
+        blockSize={blockSize}
+        currentClock={currentClock}
+      />
+
       {/* HARDWARE GRID */}
       <div className="layout-grid">
         {/* SCHEMATIC */}
@@ -310,6 +322,15 @@ export default function DmaSimulator() {
                   {cpuState === 'stall' ? '🔒 WRITE' : '4. WRITE'}
                 </div>
               </div>
+
+              {/* FEATURE 3: CPU MICROARCHITECTURE X-RAY POPOVER BUTTON */}
+              <button
+                className="cpu-xray-btn"
+                onClick={() => setShowCpuXray(true)}
+                title="Inspect CPU ALU Pipeline, Registers and Cache Architecture"
+              >
+                🔬 CPU Microarchitecture X-Ray
+              </button>
             </div>
 
             {/* DMA CONTROLLER NODE */}
@@ -411,58 +432,65 @@ export default function DmaSimulator() {
             </svg>
           </div>
 
-          {/* BUS SYSTEM WITH CONTINUOUS OPTIC FIBER COMET RIBBONS */}
-          <div className="bus-system-container card-hud-corner">
-            <div className="bus-track">
-              <span className="bus-name-badge">CONTROL BUS:</span>
-              <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-ctrl' : ''}`}>
-                {busOwner.includes('DMA') ? (
-                  <>
-                    <div className={`floating-data-packet comet-ribbon packet-ctrl packet-p1 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                    <div className={`floating-data-packet comet-ribbon packet-ctrl packet-p2 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                    <div className={`floating-data-packet comet-ribbon packet-ctrl packet-p3 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                  </>
-                ) : (
-                  <div className="floating-data-packet comet-ribbon packet-ctrl" style={{ animationDuration: '2.5s' }}></div>
-                )}
-              </div>
-              <span className="bus-state-display" style={{ color: 'var(--accent-green)' }}>
-                {busOwner.includes('DMA') ? 'HOLD=1, HLDA=1, MEMW=1' : 'HLDA=0, IOR=0, MEMR=1'}
+          {/* FEATURE 2: MULTI-STRAND FIBER-OPTIC BUS HIGHWAY */}
+          <div className="fiber-highway-container card-hud-corner">
+            <div className="fiber-highway-header">
+              <span className="fiber-highway-title">
+                <span className="anim-clock-pulse">⚡</span> MULTI-STRAND SYSTEM HIGHWAY (TRIPARTITE BUS ARCHITECTURE)
               </span>
+              <div style={{ display: 'flex', gap: '0.4rem', fontSize: '0.68rem', fontFamily: 'var(--font-mono)' }}>
+                <span className="badge-status badge-blue">32-BIT ADDR</span>
+                <span className="badge-status badge-green">64-BIT DATA</span>
+                <span className="badge-status badge-amber">ASYNC CTRL</span>
+              </div>
             </div>
-            <div className="bus-track">
-              <span className="bus-name-badge">ADDRESS BUS:</span>
-              <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-data' : ''}`}>
-                {busOwner.includes('DMA') ? (
-                  <>
-                    <div className={`floating-data-packet comet-ribbon packet-p1 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                    <div className={`floating-data-packet comet-ribbon packet-p2 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                    <div className={`floating-data-packet comet-ribbon packet-p3 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                  </>
-                ) : (
-                  <div className="floating-data-packet comet-ribbon" style={{ animationDuration: '2s' }}></div>
-                )}
+
+            <div className="fiber-lane-row">
+              {/* ADDRESS BUS (CYAN) */}
+              <div className="fiber-lane">
+                <span className="fiber-lane-badge badge-addr-bus">ADDRESS BUS</span>
+                <div className="fiber-core-track">
+                  <div className="fiber-laser-line fiber-laser-cyan"></div>
+                  <div className="fiber-pulse-bead" style={{ background: '#00d2ff', boxShadow: '0 0 10px #00d2ff', animationDuration: busOwner.includes('DMA') ? '1.1s' : '2.4s' }}></div>
+                  {busOwner.includes('DMA') && (
+                    <div className="fiber-pulse-bead" style={{ background: '#00d2ff', boxShadow: '0 0 10px #00d2ff', animationDuration: '1.1s', animationDelay: '0.55s' }}></div>
+                  )}
+                </div>
+                <div className="fiber-lane-readout" style={{ color: 'var(--accent-cyan)' }}>
+                  {busOwner.includes('DMA') ? `0x${currentRamAddr.toString(16).toUpperCase()} (DMA TGT)` : `0x0400 (PC INST)`}
+                </div>
               </div>
-              <span className="bus-state-display" style={{ color: 'var(--accent-blue)' }}>
-                {busOwner.includes('DMA') ? `0x${currentRamAddr.toString(16).toUpperCase()} (DMA Direct)` : '0x0400 (PC)'}
-              </span>
-            </div>
-            <div className="bus-track">
-              <span className="bus-name-badge">DATA BUS:</span>
-              <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-data' : ''}`}>
-                {busOwner.includes('DMA') ? (
-                  <>
-                    <div className={`floating-data-packet comet-ribbon packet-amber packet-p1 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                    <div className={`floating-data-packet comet-ribbon packet-amber packet-p2 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                    <div className={`floating-data-packet comet-ribbon packet-amber packet-p3 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
-                  </>
-                ) : (
-                  <div className="floating-data-packet comet-ribbon packet-amber" style={{ animationDuration: '2.2s' }}></div>
-                )}
+
+              {/* DATA BUS (ELECTRIC COBALT BLUE) */}
+              <div className="fiber-lane">
+                <span className="fiber-lane-badge badge-data-bus">DATA BUS</span>
+                <div className="fiber-core-track">
+                  <div className="fiber-laser-line fiber-laser-blue"></div>
+                  <div className="fiber-pulse-bead" style={{ background: '#60a5fa', boxShadow: '0 0 12px #0052ff', animationDuration: busOwner.includes('DMA') ? '0.9s' : '2.2s' }}></div>
+                  {busOwner.includes('DMA') && (
+                    <div className="fiber-pulse-bead" style={{ background: '#60a5fa', boxShadow: '0 0 12px #0052ff', animationDuration: '0.9s', animationDelay: '0.45s' }}></div>
+                  )}
+                </div>
+                <div className="fiber-lane-readout" style={{ color: '#60a5fa' }}>
+                  {busOwner.includes('DMA') ? `0x${((transferredBytes * 17 + 0xAA) % 256).toString(16).toUpperCase().padStart(2, '0')} (BYTE ${transferredBytes}/${blockSize})` : '0x90 (NOP / ALU)'}
+                </div>
               </div>
-              <span className="bus-state-display" style={{ color: 'var(--accent-amber)' }}>
-                {busOwner.includes('DMA') ? `BYTE ${transferredBytes} -> RAM TARGET` : 'CPU Read'}
-              </span>
+
+              {/* CONTROL BUS (AMBER WITH LIVE LED INDICATORS) */}
+              <div className="fiber-lane">
+                <span className="fiber-lane-badge badge-ctrl-bus">CONTROL BUS</span>
+                <div className="fiber-core-track">
+                  <div className="fiber-laser-line fiber-laser-amber"></div>
+                  <div className="fiber-pulse-bead" style={{ background: '#fbbf24', boxShadow: '0 0 10px #fbbf24', animationDuration: '1.4s' }}></div>
+                </div>
+                <div className="fiber-ctrl-leds">
+                  <span className={`led-chip ${busOwner.includes('DMA') ? 'active-amber' : ''}`}>HOLD</span>
+                  <span className={`led-chip ${busOwner.includes('DMA') ? 'active-green' : ''}`}>HLDA</span>
+                  <span className={`led-chip ${transferredBytes < blockSize ? 'active-amber' : ''}`}>DREQ</span>
+                  <span className={`led-chip ${busOwner.includes('DMA') ? 'active-green' : ''}`}>DACK</span>
+                  <span className={`led-chip ${busOwner.includes('DMA') ? 'active-amber' : ''}`}>MEMW</span>
+                </div>
+              </div>
             </div>
           </div>
 
