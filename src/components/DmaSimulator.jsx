@@ -10,6 +10,42 @@ export default function DmaSimulator() {
   const [speed, setSpeed] = useState(700);
   const [isRunning, setIsRunning] = useState(false);
   const [showCpuXray, setShowCpuXray] = useState(false);
+  const [stressInjected, setStressInjected] = useState(false);
+  const [pcieGen, setPcieGen] = useState('gen4');
+  const [clockFreqGhz, setClockFreqGhz] = useState('3.20');
+
+  const handleToggleStress = () => {
+    setStressInjected(!stressInjected);
+    try { soundFx.playClick(); } catch (e) {}
+  };
+
+  const handleCyclePcieGen = () => {
+    try { soundFx.playClick(); } catch (e) {}
+    if (pcieGen === 'gen4') {
+      setPcieGen('gen5');
+      setSpeed(350);
+    } else if (pcieGen === 'gen5') {
+      setPcieGen('legacy');
+      setSpeed(1200);
+    } else {
+      setPcieGen('gen4');
+      setSpeed(700);
+    }
+  };
+
+  const handleCycleClockFreq = () => {
+    try { soundFx.playClick(); } catch (e) {}
+    if (clockFreqGhz === '3.20') {
+      setClockFreqGhz('4.80');
+      setSpeed(350);
+    } else if (clockFreqGhz === '4.80') {
+      setClockFreqGhz('1.60');
+      setSpeed(1200);
+    } else {
+      setClockFreqGhz('3.20');
+      setSpeed(700);
+    }
+  };
 
   const [currentClock, setCurrentClock] = useState(0);
   const [transferredBytes, setTransferredBytes] = useState(0);
@@ -237,13 +273,19 @@ export default function DmaSimulator() {
         </div>
       </div>
 
-      {/* FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES & TELEMETRY CLUSTER */}
+      {/* FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES & TELEMETRY CLUSTER (WORKABLE & INTERACTIVE) */}
       <HardwareGaugesCluster
         mode={mode}
         busOwner={busOwner}
         transferredBytes={transferredBytes}
         blockSize={blockSize}
         currentClock={currentClock}
+        stressInjected={stressInjected}
+        onToggleStress={handleToggleStress}
+        pcieGen={pcieGen}
+        onCyclePcieGen={handleCyclePcieGen}
+        clockFreqGhz={clockFreqGhz}
+        onCycleClockFreq={handleCycleClockFreq}
       />
 
       {/* HARDWARE GRID */}

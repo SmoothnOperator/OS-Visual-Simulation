@@ -3651,6 +3651,30 @@ body.cinema-mode-active main {
   box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
 }
 
+  
+.gauge-action-hint {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.35rem;
+  background: rgba(0, 210, 255, 0.15);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  border-radius: 3px;
+  color: #00d2ff;
+  transition: all 0.2s ease;
+}
+
+.hud-gauge-card:hover .gauge-action-hint {
+  background: #00d2ff;
+  color: #000000;
+  box-shadow: 0 0 8px #00d2ff;
+}
+
+.gauge-card-stressed {
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.4) !important;
+}
+
   </style>
 </head>
 <body>
@@ -3829,10 +3853,10 @@ body.cinema-mode-active main {
         <span id="narrationMsg"></span>
       </div>
 
-      <!-- FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES & TELEMETRY CLUSTER -->
+      <!-- FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES & TELEMETRY CLUSTER (WORKABLE & INTERACTIVE) -->
       <div class="hud-gauges-cluster">
-        <!-- GAUGE 1: BUS SATURATION -->
-        <div class="hud-gauge-card card-hud-corner">
+        <!-- GAUGE 1: BUS SATURATION (INTERACTIVE CONTENTION INJECTOR) -->
+        <div class="hud-gauge-card card-hud-corner" id="cardGaugeSat" onclick="toggleBusStress()" title="Click to toggle Bus Contention Stress (Normal ↔ Overload 98%)" style="cursor: pointer;">
           <div class="gauge-svg-container">
             <svg class="gauge-svg" viewBox="0 0 64 64">
               <circle cx="32" cy="32" r="26" class="gauge-bg-circle" />
@@ -3841,14 +3865,17 @@ body.cinema-mode-active main {
             <div class="gauge-center-icon">⚡</div>
           </div>
           <div class="gauge-info-box">
-            <span class="gauge-title">Bus Saturation</span>
+            <span class="gauge-title" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Bus Saturation</span>
+              <span class="gauge-action-hint">👆 TOGGLE</span>
+            </span>
             <span id="gaugeValSat" class="gauge-value" style="color: #00d2ff;">8%</span>
-            <span id="gaugeSubSat" class="gauge-subtext" style="color: var(--text-muted);">NORMAL LOAD</span>
+            <span id="gaugeSubSat" class="gauge-subtext" style="color: var(--accent-green);">NORMAL LOAD</span>
           </div>
         </div>
 
-        <!-- GAUGE 2: DMA BANDWIDTH -->
-        <div class="hud-gauge-card card-hud-corner">
+        <!-- GAUGE 2: DMA BANDWIDTH (INTERACTIVE PCIE SPEED SELECTOR) -->
+        <div class="hud-gauge-card card-hud-corner" id="cardGaugeBw" onclick="cyclePcieGen()" title="Click to cycle Architecture PCIe Speed (Gen4 3.2 GB/s ↔ Gen5 Turbo 6.4 GB/s ↔ Legacy 1.6 GB/s)" style="cursor: pointer;">
           <div class="gauge-svg-container">
             <svg class="gauge-svg" viewBox="0 0 64 64">
               <circle cx="32" cy="32" r="26" class="gauge-bg-circle" />
@@ -3857,14 +3884,17 @@ body.cinema-mode-active main {
             <div class="gauge-center-icon">📡</div>
           </div>
           <div class="gauge-info-box">
-            <span class="gauge-title">DMA Bandwidth</span>
+            <span class="gauge-title" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>DMA Bandwidth</span>
+              <span class="gauge-action-hint">👆 SPEED</span>
+            </span>
             <span id="gaugeValBw" class="gauge-value" style="color: #00d2ff;">0.00 <span style="font-size: 0.72rem; color: var(--text-muted);">GB/s</span></span>
-            <span class="gauge-subtext" style="color: var(--accent-green);">PCIe Gen4 Direct Stream</span>
+            <span id="gaugeSubBw" class="gauge-subtext" style="color: var(--accent-green);">⚡ PCIe Gen4 (3.2 GB/s)</span>
           </div>
         </div>
 
-        <!-- GAUGE 3: CLOCK HARMONIC -->
-        <div class="hud-gauge-card card-hud-corner">
+        <!-- GAUGE 3: CLOCK HARMONIC (INTERACTIVE CPU OVERCLOCK) -->
+        <div class="hud-gauge-card card-hud-corner" id="cardGaugeClock" onclick="cycleClockFreq()" title="Click to cycle CPU Frequency (3.20 GHz Base ↔ 4.80 GHz Turbo ↔ 1.60 GHz Eco)" style="cursor: pointer;">
           <div class="gauge-svg-container">
             <svg class="gauge-svg" viewBox="0 0 64 64">
               <circle cx="32" cy="32" r="26" class="gauge-bg-circle" />
@@ -3873,9 +3903,12 @@ body.cinema-mode-active main {
             <div class="gauge-center-icon">⚙️</div>
           </div>
           <div class="gauge-info-box">
-            <span class="gauge-title">Harmonic Frequency</span>
-            <span class="gauge-value" style="color: #ffffff;">3.20 <span style="font-size: 0.72rem; color: var(--text-muted);">GHz</span></span>
-            <span id="gaugeSubPhase" class="gauge-subtext" style="color: var(--accent-amber); font-family: var(--font-mono);">PIPELINE: FETCH</span>
+            <span class="gauge-title" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Clock Harmonic</span>
+              <span class="gauge-action-hint">👆 CLOCK</span>
+            </span>
+            <span id="gaugeValClock" class="gauge-value" style="color: #ffffff;">3.20 <span style="font-size: 0.72rem; color: var(--text-muted);">GHz</span></span>
+            <span id="gaugeSubPhase" class="gauge-subtext" style="color: var(--accent-amber); font-family: var(--font-mono);">STAGE: FETCH</span>
           </div>
         </div>
       </div>
@@ -4677,7 +4710,9 @@ body.cinema-mode-active main {
 
       setupRamGrid();
       refreshMetrics();
+      updateHardwareGauges();
       drawGantt();
+      updateHardwareGauges();
     }
 
     function stepClockCycle() {
@@ -4816,6 +4851,7 @@ body.cinema-mode-active main {
 
       refreshMetrics();
       drawGantt();
+      updateHardwareGauges();
 
       if (transferredBytes >= blockSize) {
         finalizeTransfer();
@@ -5514,6 +5550,7 @@ body.cinema-mode-active main {
       navigateTab('dma');
       setupRamGrid();
       drawGantt();
+      updateHardwareGauges();
     };
 
     // =========================================================================
@@ -5687,19 +5724,79 @@ body.cinema-mode-active main {
     }
 
     // =========================================================================
-    // FEATURE 1: CIRCULAR HUD SPEEDOMETER GAUGES UPDATE ENGINE
+    // FEATURE 1: WORKABLE & INTERACTIVE CIRCULAR HUD GAUGES ENGINE
     // =========================================================================
+    let stressInjected = false;
+    let pcieGen = 'gen4'; // 'gen4', 'gen5', 'legacy'
+    let clockFreqGhz = '3.20'; // '3.20', '4.80', '1.60'
+
+    function toggleBusStress() {
+      stressInjected = !stressInjected;
+      const card = document.getElementById('cardGaugeSat');
+      if (card) {
+        if (stressInjected) card.classList.add('gauge-card-stressed');
+        else card.classList.remove('gauge-card-stressed');
+      }
+      updateHardwareGauges();
+    }
+
+    function cyclePcieGen() {
+      if (pcieGen === 'gen4') {
+        pcieGen = 'gen5';
+        clockDelay = 350;
+      } else if (pcieGen === 'gen5') {
+        pcieGen = 'legacy';
+        clockDelay = 1200;
+      } else {
+        pcieGen = 'gen4';
+        clockDelay = 700;
+      }
+      const sel = document.getElementById('selectSpeed');
+      if (sel) sel.value = String(clockDelay);
+      if (isRunning) {
+        clearInterval(intervalTimer);
+        intervalTimer = setInterval(stepClockCycle, clockDelay);
+      }
+      updateHardwareGauges();
+    }
+
+    function cycleClockFreq() {
+      if (clockFreqGhz === '3.20') {
+        clockFreqGhz = '4.80';
+        clockDelay = 350;
+      } else if (clockFreqGhz === '4.80') {
+        clockFreqGhz = '1.60';
+        clockDelay = 1200;
+      } else {
+        clockFreqGhz = '3.20';
+        clockDelay = 700;
+      }
+      const sel = document.getElementById('selectSpeed');
+      if (sel) sel.value = String(clockDelay);
+      if (isRunning) {
+        clearInterval(intervalTimer);
+        intervalTimer = setInterval(stepClockCycle, clockDelay);
+      }
+      updateHardwareGauges();
+    }
+
     function updateHardwareGauges() {
       const mode = document.getElementById('selectDmaMode') ? document.getElementById('selectDmaMode').value : 'burst';
-      const isDmaOwner = valDmaMaster === 'YES';
+      const dmaMasterElem = document.getElementById('valDmaMaster');
+      const isDmaOwner = dmaMasterElem ? dmaMasterElem.innerText.includes('YES') : false;
 
-      // 1. Bus Saturation
+      // 1. Bus Saturation Percentage
       let satPct = 8;
-      if (isDmaOwner) {
+      if (stressInjected) {
+        satPct = 98;
+      } else if (isDmaOwner) {
         if (mode === 'burst') satPct = 96;
-        else if (mode === 'stealing') satPct = 34;
+        else if (mode === 'stealing') satPct = (currentClock % 2 === 1) ? 36 : 10;
         else if (mode === 'transparent') satPct = 12;
+      } else {
+        satPct = (mode === 'burst') ? 6 : 8;
       }
+
       const C = 163.36;
       const satOffset = C - (satPct / 100) * C;
       const circleSat = document.getElementById('gaugeCircleSat');
@@ -5715,26 +5812,52 @@ body.cinema-mode-active main {
         valSat.style.color = satPct > 75 ? '#f43f5e' : (satPct > 30 ? '#fbbf24' : '#00d2ff');
       }
       if (subSat) {
-        subSat.innerText = satPct > 75 ? 'HIGH BUS LOCK' : 'NORMAL LOAD';
-        subSat.style.color = satPct > 75 ? 'var(--accent-red)' : 'var(--text-muted)';
+        if (stressInjected) {
+          subSat.innerText = '⚡ CONTENTION FORCED (98%)';
+          subSat.style.color = 'var(--accent-red)';
+        } else if (satPct > 70) {
+          subSat.innerText = 'HIGH BUS LOCK';
+          subSat.style.color = 'var(--accent-red)';
+        } else {
+          subSat.innerText = 'NORMAL LOAD';
+          subSat.style.color = 'var(--accent-green)';
+        }
       }
 
       // 2. DMA Bandwidth
+      const multiplier = pcieGen === 'gen5' ? 2 : (pcieGen === 'legacy' ? 0.5 : 1);
+      const maxBw = (3.2 * multiplier).toFixed(2);
       let bwText = '0.00';
       let bwPct = 0;
+
       if (isDmaOwner && transferredBytes < blockSize) {
-        if (mode === 'burst') { bwText = '2.84'; bwPct = 88; }
-        else if (mode === 'stealing') { bwText = '0.48'; bwPct = 25; }
-        else if (mode === 'transparent') { bwText = '1.92'; bwPct = 65; }
+        if (mode === 'burst') { bwText = (2.84 * multiplier).toFixed(2); bwPct = 88; }
+        else if (mode === 'stealing') { bwText = (0.48 * multiplier).toFixed(2); bwPct = 25; }
+        else if (mode === 'transparent') { bwText = (1.92 * multiplier).toFixed(2); bwPct = 65; }
       } else if (transferredBytes >= blockSize) {
-        bwText = '3.20';
+        bwText = maxBw;
         bwPct = 100;
       }
+
       const bwOffset = C - (bwPct / 100) * C;
       const circleBw = document.getElementById('gaugeCircleBw');
       const valBw = document.getElementById('gaugeValBw');
+      const subBw = document.getElementById('gaugeSubBw');
+
       if (circleBw) circleBw.style.strokeDashoffset = bwOffset;
       if (valBw) valBw.innerHTML = bwText + ' <span style="font-size: 0.72rem; color: var(--text-muted);">GB/s</span>';
+      if (subBw) {
+        if (pcieGen === 'gen5') {
+          subBw.innerText = '🚀 PCIe Gen5 Turbo (6.4 GB/s)';
+          subBw.style.color = '#a78bfa';
+        } else if (pcieGen === 'legacy') {
+          subBw.innerText = '⏱️ Legacy ISA/PCI (1.6 GB/s)';
+          subBw.style.color = 'var(--text-muted)';
+        } else {
+          subBw.innerText = '⚡ PCIe Gen4 (3.2 GB/s)';
+          subBw.style.color = 'var(--accent-green)';
+        }
+      }
 
       // 3. Clock Harmonic & Pipeline Phase
       const phases = ['WRITEBACK', 'FETCH', 'DECODE', 'EXECUTE'];
@@ -5742,9 +5865,20 @@ body.cinema-mode-active main {
       const phasePct = ((currentClock % 4) + 1) * 25;
       const phaseOffset = C - (phasePct / 100) * C;
       const circlePhase = document.getElementById('gaugeCirclePhase');
+      const valClock = document.getElementById('gaugeValClock');
       const subPhase = document.getElementById('gaugeSubPhase');
-      if (circlePhase) circlePhase.style.strokeDashoffset = phaseOffset;
-      if (subPhase) subPhase.innerText = 'PIPELINE: ' + currentPhase;
+
+      if (circlePhase) {
+        circlePhase.style.strokeDashoffset = phaseOffset;
+        circlePhase.style.stroke = clockFreqGhz === '4.80' ? '#00d2ff' : '#0052ff';
+      }
+      if (valClock) {
+        valClock.innerHTML = clockFreqGhz + ' <span style="font-size: 0.72rem; color: var(--text-muted);">GHz</span>';
+        valClock.style.color = clockFreqGhz === '4.80' ? '#00d2ff' : '#ffffff';
+      }
+      if (subPhase) {
+        subPhase.innerText = 'STAGE: ' + currentPhase;
+      }
 
       // Update LEDs on fiber control bus
       const ledHold = document.getElementById('ledHold');
@@ -5753,11 +5887,21 @@ body.cinema-mode-active main {
       const ledDack = document.getElementById('ledDack');
       const ledMemw = document.getElementById('ledMemw');
 
-      if (ledHold) ledHold.className = 'led-chip ' + (isDmaOwner ? 'active-amber' : '');
+      if (ledHold) ledHold.className = 'led-chip ' + (isDmaOwner || stressInjected ? 'active-amber' : '');
       if (ledHlda) ledHlda.className = 'led-chip ' + (isDmaOwner ? 'active-green' : '');
       if (ledDreq) ledDreq.className = 'led-chip ' + (transferredBytes < blockSize ? 'active-amber' : '');
       if (ledDack) ledDack.className = 'led-chip ' + (isDmaOwner ? 'active-green' : '');
       if (ledMemw) ledMemw.className = 'led-chip ' + (isDmaOwner ? 'active-amber' : '');
+
+      // Update Fiber Lane Readouts
+      const stateAddr = document.getElementById('stateAddr');
+      const stateData = document.getElementById('stateData');
+      if (stateAddr) {
+        stateAddr.innerText = isDmaOwner ? `0x${(0x8000 + transferredBytes).toString(16).toUpperCase()} (DMA TGT)` : `0x${(0x0400 + currentClock * 4).toString(16).toUpperCase()} (PC INST)`;
+      }
+      if (stateData) {
+        stateData.innerText = isDmaOwner ? `0x${((transferredBytes * 17 + 0xAA) % 256).toString(16).toUpperCase().padStart(2, '0')} (BYTE ${transferredBytes}/${blockSize})` : '0x90 (NOP / ALU)';
+      }
 
       // Update X-Ray modal if open
       const xrayModal = document.getElementById('cpuXrayModal');

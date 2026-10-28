@@ -3638,3 +3638,26 @@ body.cinema-mode-active main {
   background: rgba(244, 63, 94, 0.4);
   box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
 }
+
+.gauge-action-hint {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.35rem;
+  background: rgba(0, 210, 255, 0.15);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  border-radius: 3px;
+  color: #00d2ff;
+  transition: all 0.2s ease;
+}
+
+.hud-gauge-card:hover .gauge-action-hint {
+  background: #00d2ff;
+  color: #000000;
+  box-shadow: 0 0 8px #00d2ff;
+}
+
+.gauge-card-stressed {
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.4) !important;
+}
