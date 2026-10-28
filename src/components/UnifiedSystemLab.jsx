@@ -223,6 +223,14 @@ export default function UnifiedSystemLab() {
             <div style={{ fontSize: '0.88rem', fontWeight: 700, color: isDmaBurstLock ? 'var(--accent-red)' : (stepIndex === 0 ? 'var(--accent-green)' : 'var(--accent-amber)') }}>
               {isDmaBurstLock ? 'Bus: WAITING (DMA Lock)' : (stepIndex === 0 ? 'Bus: ACTIVE ACCESS' : 'Bus: YIELDED TO DMA')}
             </div>
+            {/* THREAD ACTIVITY EQUALIZER */}
+            <div className="core-thread-bars" style={{ opacity: stepIndex === 0 && !isDmaBurstLock ? 1 : 0.25, transition: 'opacity 0.2s ease', marginTop: '0.4rem' }}>
+              <div className="core-bar" style={{ animationDuration: '0.65s' }}></div>
+              <div className="core-bar" style={{ animationDuration: '0.85s' }}></div>
+              <div className="core-bar" style={{ animationDuration: '0.55s' }}></div>
+              <div className="core-bar" style={{ animationDuration: '0.75s' }}></div>
+              <div className="core-bar" style={{ animationDuration: '0.60s' }}></div>
+            </div>
           </div>
 
           <div className={`hardware-node cyber-tilt-card cyber-target-container ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 2 ? 'node-master target-active' : '')}`}>
@@ -245,24 +253,31 @@ export default function UnifiedSystemLab() {
             <div style={{ fontSize: '0.88rem', fontWeight: 700, color: isDmaBurstLock ? 'var(--accent-red)' : (stepIndex === 2 ? 'var(--accent-green)' : 'var(--accent-amber)') }}>
               {isDmaBurstLock ? 'Bus: WAITING (DMA Lock)' : (stepIndex === 2 ? 'Bus: ACTIVE ACCESS' : 'Bus: WAITING ARBITER')}
             </div>
+            {/* THREAD ACTIVITY EQUALIZER */}
+            <div className="core-thread-bars" style={{ opacity: stepIndex === 2 && !isDmaBurstLock ? 1 : 0.25, transition: 'opacity 0.2s ease', marginTop: '0.4rem' }}>
+              <div className="core-bar" style={{ background: 'var(--accent-purple)', animationDuration: '0.75s' }}></div>
+              <div className="core-bar" style={{ background: 'var(--accent-purple)', animationDuration: '0.95s' }}></div>
+              <div className="core-bar" style={{ background: 'var(--accent-purple)', animationDuration: '0.65s' }}></div>
+              <div className="core-bar" style={{ background: 'var(--accent-purple)', animationDuration: '0.80s' }}></div>
+            </div>
           </div>
         </div>
 
         {/* CONNECTING WIRES TO ARBITER WITH MULTI-PHOTON STREAM */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          <div className={`wire-connector-line packet-stream-track ${stepIndex === 0 && !isDmaBurstLock ? 'wire-flowing' : ''}`}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', position: 'relative', height: '24px' }}>
+          <div className={`wire-connector-line packet-stream-track ${stepIndex === 0 && !isDmaBurstLock ? 'wire-flowing' : ''}`} style={{ height: '8px', margin: '0.4rem 0' }}>
             {stepIndex === 0 && !isDmaBurstLock ? (
               <>
-                <div className="floating-data-packet packet-p1"></div>
-                <div className="floating-data-packet packet-p2"></div>
+                <div className="floating-data-packet comet-ribbon packet-p1"></div>
+                <div className="floating-data-packet comet-ribbon packet-p2"></div>
               </>
             ) : null}
           </div>
-          <div className={`wire-connector-line packet-stream-track ${stepIndex === 2 && !isDmaBurstLock ? 'wire-flowing' : ''}`}>
+          <div className={`wire-connector-line packet-stream-track ${stepIndex === 2 && !isDmaBurstLock ? 'wire-flowing' : ''}`} style={{ height: '8px', margin: '0.4rem 0' }}>
             {stepIndex === 2 && !isDmaBurstLock ? (
               <>
-                <div className="floating-data-packet packet-amber packet-p1"></div>
-                <div className="floating-data-packet packet-amber packet-p2"></div>
+                <div className="floating-data-packet comet-ribbon packet-amber packet-p1"></div>
+                <div className="floating-data-packet comet-ribbon packet-amber packet-p2"></div>
               </>
             ) : null}
           </div>
@@ -364,7 +379,20 @@ export default function UnifiedSystemLab() {
               <div className="floating-data-packet packet-p1 comet-ribbon"></div>
               <div className="floating-data-packet packet-amber packet-p2 comet-ribbon"></div>
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem', position: 'relative', zIndex: 3 }}>
+
+            {/* LIVE ANIMATED DRAM HEX BLOCK GRID */}
+            <div className="ram-cells-grid" style={{ position: 'relative', zIndex: 5, marginTop: '0.6rem', gridTemplateColumns: 'repeat(8, 1fr)' }}>
+              <div className={`memory-cell written ${stepIndex === 0 ? 'pulse-write shockwave-blast' : ''}`}>0x4420</div>
+              <div className="memory-cell written">0x4424</div>
+              <div className={`memory-cell written ${stepIndex === 2 ? 'pulse-write shockwave-blast' : ''}`}>0x6210</div>
+              <div className="memory-cell written">0x6214</div>
+              <div className={`memory-cell ${stepIndex === 1 || isDmaBurstLock ? 'written pulse-write shockwave-blast' : ''}`}>0x8000</div>
+              <div className={`memory-cell ${stepIndex === 1 || isDmaBurstLock ? 'written pulse-write shockwave-blast' : ''}`}>0x8004</div>
+              <div className="memory-cell">0x8008</div>
+              <div className="memory-cell">0x800C</div>
+            </div>
+
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.4rem', position: 'relative', zIndex: 3 }}>
               Single physical bandwidth pool shared across all processors and peripheral controllers
             </div>
           </div>

@@ -3342,37 +3342,87 @@ main {
           <span id="synBusPhasePill" class="badge-status badge-blue">ARBITER READY</span>
         </div>
 
-        <!-- TOP NODES: MULTICORE PROCESSORS -->
+        <!-- TOP NODES: MULTICORE PROCESSORS WITH DYNAMIC THREAD ACTIVITY -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 0.5rem;">
-          <div class="hardware-node" id="synNodeCore1">
+          <div class="hardware-node card-hud-corner cyber-tilt-card cyber-target-container" id="synNodeCore1">
+            <div class="target-corner target-tl"></div>
+            <div class="target-corner target-tr"></div>
+            <div class="target-corner target-bl"></div>
+            <div class="target-corner target-br"></div>
+            <span class="target-badge-telemetry">CORE 1 • 3.2GHz</span>
             <div class="node-header">
               <span class="node-title" style="color: var(--accent-blue);">Multicore Core 1</span>
               <span id="synCore1Badge" class="badge-status badge-green">COMPUTING</span>
             </div>
             <p id="synCore1Task" style="font-size: 0.88rem; color: var(--text-muted);">Vertex Shader Transformation</p>
             <div id="synCore1BusStatus" style="font-size: 0.88rem; font-weight: 700; color: var(--accent-green);">Bus: ACTIVE ACCESS</div>
+            <div class="core-thread-bars" id="synCore1Threads" style="margin-top: 0.4rem; transition: opacity 0.25s ease;">
+              <div class="core-bar" style="animation-duration: 0.65s;"></div>
+              <div class="core-bar" style="animation-duration: 0.85s;"></div>
+              <div class="core-bar" style="animation-duration: 0.55s;"></div>
+              <div class="core-bar" style="animation-duration: 0.75s;"></div>
+              <div class="core-bar" style="animation-duration: 0.60s;"></div>
+            </div>
           </div>
 
-          <div class="hardware-node" id="synNodeCore2">
+          <div class="hardware-node card-hud-corner cyber-tilt-card cyber-target-container" id="synNodeCore2">
+            <div class="target-corner target-tl"></div>
+            <div class="target-corner target-tr"></div>
+            <div class="target-corner target-bl"></div>
+            <div class="target-corner target-br"></div>
+            <span class="target-badge-telemetry">CORE 2 • 3.2GHz</span>
             <div class="node-header">
               <span class="node-title" style="color: var(--accent-purple);">Multicore Core 2</span>
               <span id="synCore2Badge" class="badge-status badge-amber">QUEUED</span>
             </div>
             <p id="synCore2Task" style="font-size: 0.88rem; color: var(--text-muted);">Physics Collision Calculations</p>
             <div id="synCore2BusStatus" style="font-size: 0.88rem; font-weight: 700; color: var(--accent-amber);">Bus: WAITING ARBITER</div>
+            <div class="core-thread-bars" id="synCore2Threads" style="margin-top: 0.4rem; opacity: 0.25; transition: opacity 0.25s ease;">
+              <div class="core-bar" style="background: var(--accent-purple); animation-duration: 0.75s;"></div>
+              <div class="core-bar" style="background: var(--accent-purple); animation-duration: 0.95s;"></div>
+              <div class="core-bar" style="background: var(--accent-purple); animation-duration: 0.65s;"></div>
+              <div class="core-bar" style="background: var(--accent-purple); animation-duration: 0.80s;"></div>
+            </div>
           </div>
         </div>
 
-        <!-- CONNECTING WIRES TO ARBITER -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-          <div id="synWireCore1" class="wire-connector-line wire-flowing"></div>
-          <div id="synWireCore2" class="wire-connector-line"></div>
+        <!-- CONNECTING WIRES TO ARBITER WITH MULTI-PHOTON STREAM -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; position: relative; height: 26px;">
+          <div id="synWireCore1" class="wire-connector-line packet-stream-track wire-flowing" style="height: 10px; margin: 0.4rem 0;">
+            <div class="floating-data-packet comet-ribbon packet-p1"></div>
+            <div class="floating-data-packet comet-ribbon packet-p2"></div>
+          </div>
+          <div id="synWireCore2" class="wire-connector-line packet-stream-track" style="height: 10px; margin: 0.4rem 0;">
+            <div class="floating-data-packet comet-ribbon packet-amber packet-p1" style="display: none;"></div>
+            <div class="floating-data-packet comet-ribbon packet-amber packet-p2" style="display: none;"></div>
+          </div>
+        </div>
+
+        <!-- CONTENTION PLASMA SURGE LIGHTNING (TRIGGERED AT STRESS > 70%) -->
+        <div id="synPlasmaSurge" style="display: none; position: relative; height: 36px; margin: -0.3rem 0;">
+          <svg width="100%" height="36" viewBox="0 0 400 36" preserveAspectRatio="none" class="lightning-arc-svg">
+            <path d="M 20 18 L 80 5 L 110 28 L 170 8 L 220 30 L 280 10 L 340 25 L 380 18" fill="none" stroke="#f43f5e" stroke-width="2.5" />
+            <path d="M 20 18 L 90 28 L 130 10 L 190 32 L 240 12 L 300 28 L 350 12 L 380 18" fill="none" stroke="#fbbf24" stroke-width="1.5" />
+            <path d="M 50 18 L 140 20 L 210 16 L 290 20 L 360 18" fill="none" stroke="#ffffff" stroke-width="1" />
+          </svg>
+          <div style="position: absolute; top: 7px; left: 50%; transform: translateX(-50%); background: rgba(225, 29, 72, 0.95); color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.15rem 0.75rem; border-radius: 9999px; box-shadow: 0 0 15px #f43f5e; letter-spacing: 0.05em; white-space: nowrap;">
+            ⚡ CONTENTION PLASMA SURGE: HIGH BUS PRESSURE (<span id="synPlasmaPct">75</span>%)
+          </div>
         </div>
 
         <!-- CENTER: HARDWARE BUS ARBITER & TURNSTILE QUEUE -->
-        <div class="turnstile-box" id="synArbiterBox">
+        <div class="turnstile-box card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container" id="synArbiterBox">
+          <div class="lidar-scan-beam"></div>
+          <div class="target-corner target-tl"></div>
+          <div class="target-corner target-tr"></div>
+          <div class="target-corner target-bl"></div>
+          <div class="target-corner target-br"></div>
+          <span class="target-badge-telemetry" style="border-color: var(--accent-amber); color: var(--accent-amber);">BUS ARBITER</span>
+
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 800; font-size: 1.05rem; color: var(--accent-amber);">⚖️ Hardware Memory Bus Arbiter (Slide 18 Turnstile)</span>
+            <span style="font-weight: 800; font-size: 1.05rem; color: var(--accent-amber); display: inline-flex; align-items: center; gap: 0.45rem;">
+              <span class="iris-ring-rotor" style="font-size: 1.15rem; display: inline-block;">⚙️</span> Hardware Memory Bus Arbiter (Slide 18 Turnstile)
+            </span>
             <span id="synTurnstileActiveMaster" class="badge-status badge-green" style="font-size: 0.82rem;">Core 1 Granted Bus</span>
           </div>
           <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
@@ -3381,9 +3431,9 @@ main {
 
           <!-- THE TURNSTILE QUEUE -->
           <div class="turnstile-queue">
-            <div class="turnstile-slot slot-active" id="synSlot1">
-              <span style="font-size: 0.7rem; text-transform: uppercase;">1. Active Master</span>
-              <span id="synSlot1Name">Core 1</span>
+            <div class="turnstile-slot slot-active anim-laser-active" id="synSlot1">
+              <span style="font-size: 0.7rem; text-transform: uppercase;">1. Active Master ⚡</span>
+              <span id="synSlot1Name" style="font-weight: 800;">Core 1</span>
             </div>
             <div class="turnstile-slot slot-queued" id="synSlot2">
               <span style="font-size: 0.7rem; text-transform: uppercase;">2. Next In Line</span>
@@ -3399,24 +3449,55 @@ main {
         <!-- CONNECTING WIRES FROM DMA AND ARBITER TO MAIN DRAM -->
         <div style="display: grid; grid-template-columns: 1.2fr 2fr; gap: 1.5rem; align-items: center; margin-top: 1rem;">
           <!-- DMA CONTROLLER ON THE SIDE -->
-          <div class="hardware-node" id="synNodeDma">
+          <div class="hardware-node card-hud-corner cyber-tilt-card cyber-target-container" id="synNodeDma">
+            <div class="target-corner target-tl"></div>
+            <div class="target-corner target-tr"></div>
+            <div class="target-corner target-bl"></div>
+            <div class="target-corner target-br"></div>
+            <span class="target-badge-telemetry" style="border-color: var(--accent-green); color: var(--accent-green);">DMA 8237</span>
             <div class="node-header">
               <span class="node-title" style="color: var(--accent-green);">DMA Controller (Station Master)</span>
               <span id="synDmaBadge" class="badge-status badge-amber">HOLD_REQ</span>
             </div>
             <p id="synDmaTask" style="font-size: 0.85rem; color: var(--text-muted);">NVMe Disk Block Streaming</p>
             <div id="synDmaBusStatus" style="font-size: 0.88rem; font-weight: 700; color: var(--accent-amber);">Bus: REQUESTING (HOLD)</div>
-            <div id="synWireDma" class="wire-connector-line" style="margin-top: 0.5rem;"></div>
+            <div id="synWireDma" class="wire-connector-line packet-stream-track" style="margin-top: 0.5rem; height: 8px;">
+              <div class="floating-data-packet comet-ribbon packet-ctrl" style="display: none;"></div>
+            </div>
           </div>
 
           <!-- SHARED MAIN DRAM TARGET -->
-          <div style="background: var(--bg-surface-elevated); border: 2px solid var(--accent-blue); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+          <div class="ram-container card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container" style="background: var(--bg-surface-elevated); border: 2px solid var(--accent-blue); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; position: relative; overflow: hidden;">
+            <div class="lidar-scan-beam"></div>
+            <div class="target-corner target-tl"></div>
+            <div class="target-corner target-tr"></div>
+            <div class="target-corner target-bl"></div>
+            <div class="target-corner target-br"></div>
+            <span class="target-badge-telemetry">SHARED DRAM</span>
+            <div class="memory-radar-scanner"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; position: relative; z-index: 5;">
               <span style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">Shared Main Memory (DRAM Highway)</span>
               <span id="synRamAccessLabel" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); font-weight: 700;">Servicing: Core 1 Read (0x4420)</span>
             </div>
-            <div id="synWireRam" class="wire-connector-line wire-flowing"></div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+            <div id="synWireRam" class="wire-connector-line packet-stream-track wire-flowing" style="position: relative; z-index: 5; height: 10px; margin: 0.5rem 0;">
+              <div class="floating-data-packet comet-ribbon packet-p1"></div>
+              <div class="floating-data-packet comet-ribbon packet-amber packet-p2"></div>
+            </div>
+
+            <!-- LIVE ANIMATED DRAM HEX BLOCK GRID -->
+            <div class="ram-cells-grid" id="synDramHexGrid" style="position: relative; z-index: 5; margin-top: 0.6rem; grid-template-columns: repeat(8, 1fr);">
+              <div class="memory-cell written pulse-write shockwave-blast" id="synCell_0">0x4420</div>
+              <div class="memory-cell written" id="synCell_1">0x4424</div>
+              <div class="memory-cell written" id="synCell_2">0x6210</div>
+              <div class="memory-cell written" id="synCell_3">0x6214</div>
+              <div class="memory-cell" id="synCell_4">0x8000</div>
+              <div class="memory-cell" id="synCell_5">0x8004</div>
+              <div class="memory-cell" id="synCell_6">0x8008</div>
+              <div class="memory-cell" id="synCell_7">0x800C</div>
+            </div>
+
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; position: relative; z-index: 5;">
               Single physical bandwidth pool shared across all processors and peripheral controllers
             </div>
           </div>
@@ -4164,6 +4245,17 @@ main {
         document.getElementById('synMetricCpuEfficiency').style.color = 'var(--accent-green)';
       }
 
+      const plasma = document.getElementById('synPlasmaSurge');
+      const plasmaPct = document.getElementById('synPlasmaPct');
+      if (plasma) {
+        if (busSat > 70) {
+          plasma.style.display = 'block';
+          if (plasmaPct) plasmaPct.innerText = busSat;
+        } else {
+          plasma.style.display = 'none';
+        }
+      }
+
       document.getElementById('synNarrationTitle').innerText = `Memory Pressure Adjusted to ${stress}%`;
       document.getElementById('synNarrationMsg').innerText = `As processor memory request rate rises, bus contention jumps to ${busSat}%. Stalls multiply at the arbiter turnstile (Slide 19/24 memory bottleneck).`;
     }
@@ -4202,17 +4294,34 @@ main {
       document.getElementById('synTurnstileActiveMaster').innerText = 'Core 1 Granted Bus';
       document.getElementById('synTurnstileActiveMaster').className = 'badge-status badge-green';
 
-      document.getElementById('synSlot1').className = 'turnstile-slot slot-active';
+      document.getElementById('synSlot1').className = 'turnstile-slot slot-active anim-laser-active';
       document.getElementById('synSlot2').className = 'turnstile-slot slot-queued';
       document.getElementById('synSlot3').className = 'turnstile-slot';
       document.getElementById('synSlot1Name').innerText = 'Core 1';
       document.getElementById('synSlot2Name').innerText = 'DMA Controller';
       document.getElementById('synSlot3Name').innerText = 'Core 2';
 
-      document.getElementById('synWireCore1').className = 'wire-connector-line wire-flowing';
-      document.getElementById('synWireCore2').className = 'wire-connector-line';
-      document.getElementById('synWireDma').className = 'wire-connector-line';
-      document.getElementById('synWireRam').className = 'wire-connector-line wire-flowing';
+      document.getElementById('synWireCore1').className = 'wire-connector-line packet-stream-track wire-flowing';
+      document.getElementById('synWireCore2').className = 'wire-connector-line packet-stream-track';
+      document.getElementById('synWireDma').className = 'wire-connector-line packet-stream-track';
+      document.getElementById('synWireRam').className = 'wire-connector-line packet-stream-track wire-flowing';
+
+      // Reset packet comet visibilities
+      const c1Pkts = document.querySelectorAll('#synWireCore1 .floating-data-packet');
+      const c2Pkts = document.querySelectorAll('#synWireCore2 .floating-data-packet');
+      const dmaPkts = document.querySelectorAll('#synWireDma .floating-data-packet');
+      c1Pkts.forEach(p => p.style.display = 'block');
+      c2Pkts.forEach(p => p.style.display = 'none');
+      dmaPkts.forEach(p => p.style.display = 'none');
+
+      const t1 = document.getElementById('synCore1Threads');
+      const t2 = document.getElementById('synCore2Threads');
+      if (t1) t1.style.opacity = '1';
+      if (t2) t2.style.opacity = '0.25';
+
+      document.getElementById('synNodeCore1').className = 'hardware-node card-hud-corner cyber-tilt-card cyber-target-container node-master target-active';
+      document.getElementById('synNodeCore2').className = 'hardware-node card-hud-corner cyber-tilt-card cyber-target-container';
+      document.getElementById('synNodeDma').className = 'hardware-node card-hud-corner cyber-tilt-card cyber-target-container';
 
       document.getElementById('synCore1Badge').className = 'badge-status badge-green';
       document.getElementById('synCore1Badge').innerText = 'COMPUTING';
