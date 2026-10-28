@@ -2890,15 +2890,10 @@ main {
         </div>
       </div>
 
-      <!-- LIVE FACULTY NARRATION BANNER -->
-      <div class="narration-banner">
-        <div class="narration-icon">🎙️</div>
-        <div class="narration-text">
-          <div class="narration-title" id="narrationTitle">Current Cycle Action (Pedagogical Explanation)</div>
-          <div class="narration-message" id="narrationMsg">
-            Standby. Select a DMA Mode above and click "Start Transfer" or "Step Cycle" to begin the hardware sequence.
-          </div>
-        </div>
+      <!-- Hidden telemetry sink maintaining JS compatibility -->
+      <div style="display: none;" aria-hidden="true">
+        <span id="narrationTitle"></span>
+        <span id="narrationMsg"></span>
       </div>
 
       <!-- SCHEMATIC + METRICS -->

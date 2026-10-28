@@ -234,25 +234,6 @@ export default function DmaSimulator() {
         </div>
       </div>
 
-      {/* PEDAGOGICAL NARRATION BANNER */}
-      <div className="narration-banner">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <div className="narration-icon">🎙️</div>
-          <div className="audio-equalizer">
-            <div className="eq-bar"></div>
-            <div className="eq-bar"></div>
-            <div className="eq-bar"></div>
-            <div className="eq-bar"></div>
-            <div className="eq-bar"></div>
-            <div className="eq-bar"></div>
-          </div>
-        </div>
-        <div className="narration-text">
-          <div className="narration-title">{narration.title}</div>
-          <div className="narration-message">{narration.msg}</div>
-        </div>
-      </div>
-
       {/* HARDWARE GRID */}
       <div className="layout-grid">
         {/* SCHEMATIC */}
