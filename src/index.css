@@ -1,12 +1,12 @@
 :root {
-  /* Midnight Black Core Architecture */
-  --bg-base: #020408;
-  --bg-surface: #070b14;
-  --bg-surface-elevated: #0c1322;
-  --bg-surface-active: #14203a;
+  /* Midnight Blueprint Navy Architecture (from CAD/Engineering Schematics) */
+  --bg-base: #021132;
+  --bg-surface: #05153a;
+  --bg-surface-elevated: #091b48;
+  --bg-surface-active: #0f2662;
   
-  --border-subtle: rgba(0, 82, 255, 0.22);
-  --border-strong: rgba(0, 82, 255, 0.45);
+  --border-subtle: rgba(0, 82, 255, 0.28);
+  --border-strong: rgba(0, 82, 255, 0.5);
   --border-focus: #0052ff;
 
   /* Electric Cobalt Blue */
@@ -56,11 +56,11 @@
 body {
   background-color: var(--bg-base);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(0, 82, 255, 0.2) 0px, transparent 40%),
-    radial-gradient(at 100% 100%, rgba(0, 210, 255, 0.08) 0px, transparent 40%),
-    linear-gradient(rgba(0, 82, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 82, 255, 0.08) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+    radial-gradient(ellipse 100% 70% at 50% 0%, rgba(2, 28, 85, 0.45) 0%, transparent 80%),
+    linear-gradient(rgba(3, 42, 125, 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(3, 42, 125, 0.6) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px, 28px 28px;
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-main);
   font-size: 16px;
@@ -77,9 +77,9 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER - Midnight Black & Cobalt Bar */
+/* HEADER - Midnight Blueprint Navy Bar */
 header {
-  background: rgba(3, 7, 18, 0.95);
+  background: rgba(2, 17, 50, 0.94);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
   padding: 1rem 2.2rem;
@@ -1057,13 +1057,13 @@ main {
    THEME 2: DEEP CYBERPUNK / NEON SCI-FI
    ===================================================================== */
 [data-theme="cyberpunk"] {
-  /* Midnight Black Core Surface Architecture */
-  --bg-base: #020408;              /* True Midnight Black Void */
-  --bg-surface: #070b14;           /* Midnight Black Obsidian */
-  --bg-surface-elevated: #0c1322;  /* Midnight Elevated Container */
-  --bg-surface-active: #14203a;    /* Cobalt Midnight Active */
-  --border-subtle: rgba(0, 82, 255, 0.22); /* Hairline Electric Cobalt Border */
-  --border-strong: rgba(0, 82, 255, 0.45); /* Solid Electric Cobalt Border */
+  /* Midnight Blueprint Navy Architecture (from CAD/Engineering Schematics) */
+  --bg-base: #021132;              /* True Midnight Blueprint Navy Void */
+  --bg-surface: #05153a;           /* Elevated Midnight Blueprint Surface */
+  --bg-surface-elevated: #091b48;  /* Elevated Blueprint Container */
+  --bg-surface-active: #0f2662;    /* Active Cobalt Highlight */
+  --border-subtle: rgba(0, 82, 255, 0.28); /* Hairline Electric Cobalt Border */
+  --border-strong: rgba(0, 82, 255, 0.5);  /* Solid Electric Cobalt Border */
   --border-focus: #0052ff;         /* Electric Cobalt Focus Glow */
 
   /* High-Voltage Electric Cobalt Blue */
@@ -1089,24 +1089,24 @@ main {
   --text-primary: #f0fdf4;         /* High-contrast Ice White */
   --text-secondary: #94a3b8;       /* Cobalt-tinted Slate */
   --text-muted: #64748b;           /* Technical Muted Gray */
-  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.85), 0 0 1px 1px rgba(0, 82, 255, 0.22);
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(0, 82, 255, 0.28);
 }
 
 [data-theme="cyberpunk"] body {
-  background-color: #020408;
+  background-color: #021132;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(0, 82, 255, 0.2) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(0, 210, 255, 0.08) 0px, transparent 50%),
-    linear-gradient(rgba(0, 82, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 82, 255, 0.08) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+    radial-gradient(ellipse 100% 70% at 50% 0%, rgba(2, 28, 85, 0.45) 0%, transparent 80%),
+    linear-gradient(rgba(3, 42, 125, 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(3, 42, 125, 0.6) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px, 28px 28px;
+  background-attachment: fixed;
   color: var(--text-primary);
 }
 
 [data-theme="cyberpunk"] header {
-  background: rgba(3, 7, 18, 0.95);
+  background: rgba(2, 17, 50, 0.95);
   border-bottom: 1px solid rgba(0, 82, 255, 0.35);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.85), 0 0 15px rgba(0, 82, 255, 0.12);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.75), 0 0 15px rgba(0, 82, 255, 0.15);
 }
 
 [data-theme="cyberpunk"] .brand-badge {
