@@ -1,12 +1,12 @@
 :root {
-  /* Midnight Blueprint Navy Architecture (from CAD/Engineering Schematics) */
-  --bg-base: #021132;
-  --bg-surface: #05153a;
-  --bg-surface-elevated: #091b48;
-  --bg-surface-active: #0f2662;
+  /* True Pitch Black Architecture */
+  --bg-base: #000000;
+  --bg-surface: #070a12;
+  --bg-surface-elevated: #0d1220;
+  --bg-surface-active: #131b2c;
   
-  --border-subtle: rgba(0, 82, 255, 0.28);
-  --border-strong: rgba(0, 82, 255, 0.5);
+  --border-subtle: rgba(0, 82, 255, 0.22);
+  --border-strong: rgba(0, 82, 255, 0.45);
   --border-focus: #0052ff;
 
   /* Electric Cobalt Blue */
@@ -54,11 +54,11 @@
 }
 
 body {
-  background-color: var(--bg-base);
+  background-color: #000000;
   background-image: 
-    radial-gradient(ellipse 100% 70% at 50% 0%, rgba(2, 28, 85, 0.45) 0%, transparent 80%),
-    linear-gradient(rgba(3, 42, 125, 0.6) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(3, 42, 125, 0.6) 1px, transparent 1px);
+    radial-gradient(ellipse 100% 70% at 50% 0%, rgba(0, 82, 255, 0.1) 0%, transparent 80%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 100% 100%, 28px 28px, 28px 28px;
   background-attachment: fixed;
   color: var(--text-primary);
@@ -77,9 +77,9 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER - Midnight Blueprint Navy Bar */
+/* HEADER - Pure Black Bar */
 header {
-  background: rgba(2, 17, 50, 0.94);
+  background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
   padding: 1rem 2.2rem;
@@ -1057,13 +1057,13 @@ main {
    THEME 2: DEEP CYBERPUNK / NEON SCI-FI
    ===================================================================== */
 [data-theme="cyberpunk"] {
-  /* Midnight Blueprint Navy Architecture (from CAD/Engineering Schematics) */
-  --bg-base: #021132;              /* True Midnight Blueprint Navy Void */
-  --bg-surface: #05153a;           /* Elevated Midnight Blueprint Surface */
-  --bg-surface-elevated: #091b48;  /* Elevated Blueprint Container */
-  --bg-surface-active: #0f2662;    /* Active Cobalt Highlight */
-  --border-subtle: rgba(0, 82, 255, 0.28); /* Hairline Electric Cobalt Border */
-  --border-strong: rgba(0, 82, 255, 0.5);  /* Solid Electric Cobalt Border */
+  /* True Pitch Black Core Architecture */
+  --bg-base: #000000;              /* Pure Pitch Black Void */
+  --bg-surface: #070a12;           /* Deep Obsidian Black Surface */
+  --bg-surface-elevated: #0d1220;  /* Elevated Black Container */
+  --bg-surface-active: #131b2c;    /* Active Black Highlight */
+  --border-subtle: rgba(0, 82, 255, 0.22); /* Hairline Electric Cobalt Border */
+  --border-strong: rgba(0, 82, 255, 0.45); /* Solid Electric Cobalt Border */
   --border-focus: #0052ff;         /* Electric Cobalt Focus Glow */
 
   /* High-Voltage Electric Cobalt Blue */
@@ -1089,24 +1089,24 @@ main {
   --text-primary: #f0fdf4;         /* High-contrast Ice White */
   --text-secondary: #94a3b8;       /* Cobalt-tinted Slate */
   --text-muted: #64748b;           /* Technical Muted Gray */
-  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(0, 82, 255, 0.28);
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.9), 0 0 1px 1px rgba(0, 82, 255, 0.22);
 }
 
 [data-theme="cyberpunk"] body {
-  background-color: #021132;
+  background-color: #000000;
   background-image: 
-    radial-gradient(ellipse 100% 70% at 50% 0%, rgba(2, 28, 85, 0.45) 0%, transparent 80%),
-    linear-gradient(rgba(3, 42, 125, 0.6) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(3, 42, 125, 0.6) 1px, transparent 1px);
+    radial-gradient(ellipse 100% 70% at 50% 0%, rgba(0, 82, 255, 0.1) 0%, transparent 80%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 100% 100%, 28px 28px, 28px 28px;
   background-attachment: fixed;
   color: var(--text-primary);
 }
 
 [data-theme="cyberpunk"] header {
-  background: rgba(2, 17, 50, 0.95);
+  background: rgba(0, 0, 0, 0.96);
   border-bottom: 1px solid rgba(0, 82, 255, 0.35);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.75), 0 0 15px rgba(0, 82, 255, 0.15);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.95), 0 0 15px rgba(0, 82, 255, 0.12);
 }
 
 [data-theme="cyberpunk"] .brand-badge {

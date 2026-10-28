@@ -27,7 +27,7 @@ export default function App() {
       <footer style={{
         textAlign: 'center',
         padding: '1.25rem 2rem',
-        background: 'var(--bg-surface)',
+        background: 'var(--bg-base)',
         borderTop: '1px solid var(--border-subtle)',
         color: 'var(--text-muted)',
         fontSize: '0.85rem'
