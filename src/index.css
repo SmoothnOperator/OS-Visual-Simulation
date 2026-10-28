@@ -3543,20 +3543,29 @@ main {
 /* ==========================================================================
    50. FEATURE 4: FULLSCREEN PRESENTATION / CINEMA MODE
    ========================================================================== */
+.header-nav-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-shrink: 0;
+}
+
 .cinema-mode-btn {
   background: rgba(0, 82, 255, 0.15);
   border: 1px solid rgba(0, 210, 255, 0.45);
   color: #00d2ff;
-  padding: 0.35rem 0.75rem;
-  border-radius: 4px;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.06em;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: all 0.2s ease;
 }
 

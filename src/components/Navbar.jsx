@@ -119,56 +119,60 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
             </div>
           </button>
 
-          {/* FEATURE 4: FULLSCREEN CINEMA / PRESENTATION MODE TOGGLE */}
-          <button
-            className={`cinema-mode-btn ${isCinemaMode ? 'active' : ''}`}
-            onClick={toggleCinemaMode}
-            title="Toggle Presentation / Fullscreen Cinema Mode (Press F or ESC)"
-          >
-            {isCinemaMode ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
-            <span>{isCinemaMode ? 'EXIT CINEMA' : 'CINEMA MODE'}</span>
-          </button>
+
         </div>
         <div className="brand-subtitle">
           Operating System Overview: Direct Memory Access (DMA) & Multiprocessor vs. Multicore
         </div>
       </div>
 
-      <nav className="nav-tabs">
+      <div className="header-nav-cluster" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexShrink: 0 }}>
+        <nav className="nav-tabs">
+          <button
+            id="tabBtnDma"
+            className={`tab-btn btn-cyber-kinetic ${activeTab === 'dma' ? 'active' : ''}`}
+            onClick={() => {
+              try { soundFx.playClick(); } catch (e) {}
+              setActiveTab('dma');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            <Cpu size={18} /> DMA Modes
+          </button>
+          <button
+            id="tabBtnMulticore"
+            className={`tab-btn btn-cyber-kinetic ${activeTab === 'multicore' ? 'active' : ''}`}
+            onClick={() => {
+              try { soundFx.playClick(); } catch (e) {}
+              setActiveTab('multicore');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            <Layers size={18} /> Multicore vs Multiprocessor
+          </button>
+          <button
+            id="tabBtnUnified"
+            className={`tab-btn btn-cyber-kinetic ${activeTab === 'unified' ? 'active' : ''}`}
+            onClick={() => {
+              try { soundFx.playClick(); } catch (e) {}
+              setActiveTab('unified');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            <Zap size={18} /> Unified System Lab
+          </button>
+        </nav>
+
+        {/* FEATURE 4: FULLSCREEN CINEMA / PRESENTATION MODE TOGGLE */}
         <button
-          id="tabBtnDma"
-          className={`tab-btn btn-cyber-kinetic ${activeTab === 'dma' ? 'active' : ''}`}
-          onClick={() => {
-            try { soundFx.playClick(); } catch (e) {}
-            setActiveTab('dma');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
+          className={`cinema-mode-btn ${isCinemaMode ? 'active' : ''}`}
+          onClick={toggleCinemaMode}
+          title="Toggle Presentation / Fullscreen Cinema Mode (Press F or ESC)"
         >
-          <Cpu size={18} /> DMA Modes
+          {isCinemaMode ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
+          <span>{isCinemaMode ? 'EXIT CINEMA' : 'CINEMA MODE'}</span>
         </button>
-        <button
-          id="tabBtnMulticore"
-          className={`tab-btn btn-cyber-kinetic ${activeTab === 'multicore' ? 'active' : ''}`}
-          onClick={() => {
-            try { soundFx.playClick(); } catch (e) {}
-            setActiveTab('multicore');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-        >
-          <Layers size={18} /> Multicore vs Multiprocessor
-        </button>
-        <button
-          id="tabBtnUnified"
-          className={`tab-btn btn-cyber-kinetic ${activeTab === 'unified' ? 'active' : ''}`}
-          onClick={() => {
-            try { soundFx.playClick(); } catch (e) {}
-            setActiveTab('unified');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-        >
-          <Zap size={18} /> Unified System Lab
-        </button>
-      </nav>
+      </div>
 
       {/* FLOATING CINEMA HUD CONTROLS */}
       {isCinemaMode && (
