@@ -150,17 +150,7 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
           >
             <Layers size={18} /> Multicore vs Multiprocessor
           </button>
-          <button
-            id="tabBtnUnified"
-            className={`tab-btn btn-cyber-kinetic ${activeTab === 'unified' ? 'active' : ''}`}
-            onClick={() => {
-              try { soundFx.playClick(); } catch (e) {}
-              setActiveTab('unified');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          >
-            <Zap size={18} /> Unified System Lab
-          </button>
+
         </nav>
 
         {/* FEATURE 4: FULLSCREEN CINEMA / PRESENTATION MODE TOGGLE */}
@@ -198,16 +188,7 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
           >
             MULTICORE
           </button>
-          <button
-            className={`tab-btn ${activeTab === 'unified' ? 'active' : ''}`}
-            style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', borderRadius: '9999px' }}
-            onClick={() => {
-              setActiveTab('unified');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          >
-            UNIFIED LAB
-          </button>
+
           <button className="cinema-exit-btn" onClick={toggleCinemaMode} title="Exit Cinema Mode (ESC)">
             ✕ EXIT
           </button>

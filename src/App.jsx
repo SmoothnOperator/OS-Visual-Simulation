@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import DmaSimulator from './components/DmaSimulator';
 import MultiArchitectureComparator from './components/MultiArchitectureComparator';
-import UnifiedSystemLab from './components/UnifiedSystemLab';
 import StartupBootScreen from './components/StartupBootScreen';
 
 const OPCODE_STREAM_LEFT = [
@@ -64,7 +63,6 @@ export default function App() {
       <main>
         {activeTab === 'dma' && <DmaSimulator />}
         {activeTab === 'multicore' && <MultiArchitectureComparator />}
-        {activeTab === 'unified' && <UnifiedSystemLab />}
       </main>
       <footer style={{
         textAlign: 'center',
