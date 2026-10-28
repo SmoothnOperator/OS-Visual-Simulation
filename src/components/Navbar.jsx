@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Cpu, Layers, History } from 'lucide-react';
+import { Zap, Cpu, Layers } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
   return (
@@ -33,12 +33,6 @@ export default function Navbar({ activeTab, setActiveTab }) {
           onClick={() => setActiveTab('unified')}
         >
           <Zap size={18} /> Unified System Lab
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'evolution' ? 'active' : ''}`}
-          onClick={() => setActiveTab('evolution')}
-        >
-          <History size={18} /> OS Evolution Time Machine
         </button>
       </nav>
     </header>

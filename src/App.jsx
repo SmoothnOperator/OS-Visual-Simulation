@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import DmaSimulator from './components/DmaSimulator';
 import MultiArchitectureComparator from './components/MultiArchitectureComparator';
 import UnifiedSystemLab from './components/UnifiedSystemLab';
-import OsEvolutionTimeMachine from './components/OsEvolutionTimeMachine';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dma');
@@ -24,7 +23,6 @@ export default function App() {
         {activeTab === 'dma' && <DmaSimulator />}
         {activeTab === 'multicore' && <MultiArchitectureComparator />}
         {activeTab === 'unified' && <UnifiedSystemLab />}
-        {activeTab === 'evolution' && <OsEvolutionTimeMachine />}
       </main>
       <footer style={{
         textAlign: 'center',
