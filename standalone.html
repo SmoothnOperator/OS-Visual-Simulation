@@ -2626,6 +2626,195 @@ main {
   z-index: 50;
 }
 
+/* =====================================================================
+   CLASSY CYBER INSTRUMENTATION SUITE (UPGRADE BATCH 3)
+   ===================================================================== */
+
+/* 41. FEATURE 1: CYBER SONAR LIDAR SCANNER */
+.sonar-lidar-container {
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes lidarSweepAnim {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(600%);
+    opacity: 0;
+  }
+}
+
+.lidar-scan-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(0, 82, 255, 0.4), #00d2ff, #ffffff, #00d2ff, rgba(0, 82, 255, 0.4), transparent);
+  box-shadow: 0 0 15px #00d2ff, 0 0 25px #0052ff;
+  pointer-events: none;
+  z-index: 15;
+  animation: lidarSweepAnim 6s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.lidar-scan-beam::after {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(0deg, rgba(0, 210, 255, 0.15), transparent);
+  pointer-events: none;
+}
+
+/* 42. FEATURE 2: LIVE CLOCK HARMONIC FFT SPECTRUM ANALYZER */
+.cyber-fft-equalizer {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 22px;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 82, 255, 0.35);
+  border-radius: 4px;
+}
+
+@keyframes fftBarBounce {
+  0%, 100% { height: 4px; }
+  50% { height: 18px; }
+}
+
+.fft-bar {
+  width: 2.5px;
+  min-height: 3px;
+  background: linear-gradient(180deg, #00d2ff, #0052ff);
+  border-radius: 1px 1px 0 0;
+  animation: fftBarBounce 1.2s infinite ease-in-out;
+  will-change: height;
+}
+
+/* 43. FEATURE 3: INTERACTIVE 3D HOLOGRAPHIC PERSPECTIVE TILT */
+.cyber-tilt-card {
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.cyber-tilt-card:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-2px);
+  border-color: rgba(0, 210, 255, 0.7) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 82, 255, 0.25) !important;
+}
+
+/* 44. FEATURE 4: HUD SNAP-TO-TARGET CYBER BRACKETS */
+.cyber-target-container {
+  position: relative;
+}
+
+.target-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: rgba(0, 210, 255, 0.5);
+  border-style: solid;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
+
+.target-tl { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
+.target-tr { top: -2px; right: -2px; border-width: 2px 2px 0 0; }
+.target-bl { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; }
+.target-br { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
+
+.cyber-target-container:hover .target-corner,
+.cyber-target-container.target-active .target-corner {
+  width: 14px;
+  height: 14px;
+  border-color: #00d2ff;
+  filter: drop-shadow(0 0 5px #00d2ff);
+}
+
+.target-badge-telemetry {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #00d2ff;
+  background: #000000;
+  border: 1px solid rgba(0, 82, 255, 0.5);
+  padding: 0.05rem 0.4rem;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(0, 82, 255, 0.3);
+  z-index: 11;
+  pointer-events: none;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.cyber-target-container:hover .target-badge-telemetry {
+  opacity: 1;
+  border-color: #00d2ff;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
+}
+
+/* 45. FEATURE 5: AMBIENT OPCODE DIGITAL STREAM (MATRIX WATERFALL) */
+.ambient-stream-gutter {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 75px;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.22;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #0052ff;
+  line-height: 1.7;
+  user-select: none;
+  mask-image: linear-gradient(180deg, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.ambient-stream-gutter.left {
+  left: 10px;
+}
+
+.ambient-stream-gutter.right {
+  right: 10px;
+  text-align: right;
+  color: #00d2ff;
+  opacity: 0.16;
+}
+
+@keyframes streamWaterfallAnim {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.ambient-stream-content {
+  display: flex;
+  flex-direction: column;
+  animation: streamWaterfallAnim 24s infinite linear;
+  will-change: transform;
+}
+
   </style>
 </head>
 <body>
@@ -2737,7 +2926,12 @@ main {
             </div>
 
             <!-- DMA CONTROLLER BOX -->
-            <div id="nodeDmac" class="hardware-node">
+            <div id="nodeDmac" class="hardware-node card-hud-corner cyber-tilt-card cyber-target-container" style="position: relative;">
+            <div class="target-corner target-tl"></div>
+            <div class="target-corner target-tr"></div>
+            <div class="target-corner target-bl"></div>
+            <div class="target-corner target-br"></div>
+            <span class="target-badge-telemetry">DMA 8237</span>
               <div class="node-header">
                 <span class="node-title">DMA Controller</span>
                 <span id="badgeDma" class="badge-status badge-amber">IDLE</span>
@@ -2787,7 +2981,15 @@ main {
           </div>
 
           <!-- RAM BUFFER -->
-          <div class="ram-container card-hud-corner">
+          <div class="ram-container card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container">
+            <!-- FEATURE 1: CYBER SONAR LIDAR SCANNER -->
+            <div class="lidar-scan-beam"></div>
+            <!-- FEATURE 4: HUD TARGET CORNER BRACKETS -->
+            <div class="target-corner target-tl"></div>
+            <div class="target-corner target-tr"></div>
+            <div class="target-corner target-bl"></div>
+            <div class="target-corner target-br"></div>
+            <span class="target-badge-telemetry">DRAM • 0x8000</span>
             <!-- FEATURE 5: MEMORY RADAR SWEEP SCANNER -->
             <div class="memory-radar-scanner"></div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -2943,7 +3145,15 @@ main {
             <span class="meta-tag" id="tagDieTemp" style="color: var(--accent-amber);">🌡️ Die Temp: 48°C (Normal)</span>
           </div>
 
-          <div class="chip-silicon-boundary" id="siliconBoundary" style="position: relative;">
+          <div class="chip-silicon-boundary sonar-lidar-container cyber-tilt-card cyber-target-container" id="siliconBoundary" style="position: relative;">
+            <!-- FEATURE 1: CYBER SONAR LIDAR SCANNER -->
+            <div class="lidar-scan-beam"></div>
+            <!-- FEATURE 4: HUD TARGET CORNER BRACKETS -->
+            <div class="target-corner target-tl"></div>
+            <div class="target-corner target-tr"></div>
+            <div class="target-corner target-bl"></div>
+            <div class="target-corner target-br"></div>
+            <span class="target-badge-telemetry">DIE PKG • 5nm TSMC</span>
             <!-- FEATURE 3: SILICON ISOTHERMAL HEATMAP TOPOGRAPHY -->
             <div class="thermal-heatmap-overlay" id="thermalHeatmapOverlay">
               <svg class="isothermal-contour-svg" viewBox="0 0 300 200" preserveAspectRatio="none">

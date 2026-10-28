@@ -393,7 +393,17 @@ export default function MultiArchitectureComparator() {
             </span>
           </div>
 
-          <div className={`chip-silicon-boundary ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : 'var(--accent-blue)', position: 'relative' }}>
+          <div className={`chip-silicon-boundary sonar-lidar-container cyber-tilt-card cyber-target-container ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : 'var(--accent-blue)', position: 'relative' }}>
+            {/* FEATURE 1: CYBER SONAR LIDAR SCANNER */}
+            <div className="lidar-scan-beam"></div>
+
+            {/* FEATURE 4: HUD TARGET CORNER BRACKETS */}
+            <div className="target-corner target-tl"></div>
+            <div className="target-corner target-tr"></div>
+            <div className="target-corner target-bl"></div>
+            <div className="target-corner target-br"></div>
+            <span className="target-badge-telemetry">DIE PKG • 5nm TSMC</span>
+
             {/* FEATURE 3: SILICON ISOTHERMAL HEATMAP OVERLAY */}
             <div className="thermal-heatmap-overlay">
               <svg className="isothermal-contour-svg" viewBox="0 0 300 200" preserveAspectRatio="none">
@@ -499,7 +509,17 @@ export default function MultiArchitectureComparator() {
             <span className="meta-tag" style={{ color: 'var(--accent-green)' }}>🛡️ Fault Isolation: Independent</span>
           </div>
 
-          <div className="motherboard-boundary">
+          <div className="motherboard-boundary sonar-lidar-container cyber-tilt-card cyber-target-container" style={{ position: 'relative' }}>
+            {/* FEATURE 1: CYBER SONAR LIDAR SCANNER */}
+            <div className="lidar-scan-beam"></div>
+
+            {/* FEATURE 4: HUD TARGET CORNER BRACKETS */}
+            <div className="target-corner target-tl"></div>
+            <div className="target-corner target-tr"></div>
+            <div className="target-corner target-bl"></div>
+            <div className="target-corner target-br"></div>
+            <span className="target-badge-telemetry" style={{ borderColor: 'rgba(157, 78, 221, 0.5)', color: '#c084fc' }}>DUAL SOCKET • LGA4677</span>
+
             <span className="motherboard-boundary-label">Motherboard Sockets Layout</span>
 
             <div className="cores-duo">

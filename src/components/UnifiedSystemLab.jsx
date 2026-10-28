@@ -203,7 +203,12 @@ export default function UnifiedSystemLab() {
 
         {/* TOP CORES */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '0.5rem' }}>
-          <div className={`hardware-node ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 0 ? 'node-master' : '')}`}>
+          <div className={`hardware-node cyber-tilt-card cyber-target-container ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 0 ? 'node-master target-active' : '')}`}>
+            <div className="target-corner target-tl"></div>
+            <div className="target-corner target-tr"></div>
+            <div className="target-corner target-bl"></div>
+            <div className="target-corner target-br"></div>
+            <span className="target-badge-telemetry">CORE 1</span>
             <div className="node-header">
               <span className="node-title" style={{ color: 'var(--accent-blue)' }}>Multicore Core 1</span>
               <span className={`badge-status ${isDmaBurstLock ? 'badge-red' : (stepIndex === 0 ? 'badge-green' : 'badge-amber')}`}>
@@ -220,7 +225,12 @@ export default function UnifiedSystemLab() {
             </div>
           </div>
 
-          <div className={`hardware-node ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 2 ? 'node-master' : '')}`}>
+          <div className={`hardware-node cyber-tilt-card cyber-target-container ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 2 ? 'node-master target-active' : '')}`}>
+            <div className="target-corner target-tl"></div>
+            <div className="target-corner target-tr"></div>
+            <div className="target-corner target-bl"></div>
+            <div className="target-corner target-br"></div>
+            <span className="target-badge-telemetry">CORE 2</span>
             <div className="node-header">
               <span className="node-title" style={{ color: 'var(--accent-purple)' }}>Multicore Core 2</span>
               <span className={`badge-status ${isDmaBurstLock ? 'badge-red' : (stepIndex === 2 ? 'badge-green' : 'badge-amber')}`}>
@@ -272,8 +282,15 @@ export default function UnifiedSystemLab() {
           </div>
         )}
 
-        {/* TURNSTILE BOX WITH KINETIC ARBITER */}
-        <div className={`turnstile-box card-hud-corner ${busSat > 75 ? 'hazard-stalled-overlay' : ''}`}>
+        {/* TURNSTILE BOX WITH KINETIC ARBITER, LIDAR SCAN & CYBER BRACKETS */}
+        <div className={`turnstile-box card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container ${busSat > 75 ? 'hazard-stalled-overlay' : ''}`}>
+          <div className="lidar-scan-beam"></div>
+          <div className="target-corner target-tl"></div>
+          <div className="target-corner target-tr"></div>
+          <div className="target-corner target-bl"></div>
+          <div className="target-corner target-br"></div>
+          <span className="target-badge-telemetry" style={{ borderColor: 'var(--accent-amber)', color: 'var(--accent-amber)' }}>BUS ARBITER</span>
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--accent-amber)', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
               <span className="iris-ring-rotor" style={{ fontSize: '1.15rem' }}>⚙️</span> Hardware Memory Bus Arbiter (Slide 18 Turnstile)
@@ -304,7 +321,12 @@ export default function UnifiedSystemLab() {
 
         {/* LOWER SECTION: DMA & RAM */}
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '1.5rem', alignItems: 'center', marginTop: '1rem' }}>
-          <div className={`hardware-node ${isDmaBurstLock || stepIndex === 1 ? 'node-master' : ''}`}>
+          <div className={`hardware-node cyber-tilt-card cyber-target-container ${isDmaBurstLock || stepIndex === 1 ? 'node-master target-active' : ''}`}>
+            <div className="target-corner target-tl"></div>
+            <div className="target-corner target-tr"></div>
+            <div className="target-corner target-bl"></div>
+            <div className="target-corner target-br"></div>
+            <span className="target-badge-telemetry" style={{ borderColor: 'var(--accent-green)', color: 'var(--accent-green)' }}>DMA 8237</span>
             <div className="node-header">
               <span className="node-title" style={{ color: 'var(--accent-green)' }}>DMA Controller (Station Master)</span>
               <span className={`badge-status ${isDmaBurstLock || stepIndex === 1 ? 'badge-green' : 'badge-amber'}`}>
@@ -320,11 +342,17 @@ export default function UnifiedSystemLab() {
               {isDmaBurstLock ? 'Bus: MASTER (Writing RAM)' : (stepIndex === 1 ? 'Bus: STEALING CYCLE' : 'Bus: REQUESTING (HOLD)')}
             </div>
             <div className={`wire-connector-line packet-stream-track ${isDmaBurstLock || stepIndex === 1 ? 'wire-dma-flow' : ''}`} style={{ marginTop: '0.5rem' }}>
-              {(isDmaBurstLock || stepIndex === 1) && <div className="floating-data-packet packet-ctrl"></div>}
+              {(isDmaBurstLock || stepIndex === 1) && <div className="floating-data-packet packet-ctrl comet-ribbon"></div>}
             </div>
           </div>
 
-          <div className="ram-container" style={{ background: 'var(--bg-surface-elevated)', border: '2px solid var(--accent-blue)', borderRadius: 'var(--radius-md)', padding: '1.25rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div className="ram-container sonar-lidar-container cyber-tilt-card cyber-target-container" style={{ background: 'var(--bg-surface-elevated)', border: '2px solid var(--accent-blue)', borderRadius: 'var(--radius-md)', padding: '1.25rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div className="lidar-scan-beam"></div>
+            <div className="target-corner target-tl"></div>
+            <div className="target-corner target-tr"></div>
+            <div className="target-corner target-bl"></div>
+            <div className="target-corner target-br"></div>
+            <span className="target-badge-telemetry">SHARED DRAM</span>
             <div className="memory-radar-scanner"></div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', position: 'relative', zIndex: 3 }}>
               <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)' }}>Shared Main Memory (DRAM Highway)</span>

@@ -271,7 +271,13 @@ export default function DmaSimulator() {
 
           <div className="schematic-box-row">
             {/* CPU NODE */}
-            <div className={`hardware-node card-hud-corner ${busOwner === 'CPU' ? 'node-master' : ''} ${cpuState === 'stall' ? 'hazard-stalled-overlay' : ''}`}>
+            <div className={`hardware-node card-hud-corner cyber-tilt-card cyber-target-container ${busOwner === 'CPU' ? 'node-master target-active' : ''} ${cpuState === 'stall' ? 'hazard-stalled-overlay' : ''}`}>
+              <div className="target-corner target-tl"></div>
+              <div className="target-corner target-tr"></div>
+              <div className="target-corner target-bl"></div>
+              <div className="target-corner target-br"></div>
+              <span className="target-badge-telemetry">CPU • 3.2GHz</span>
+
               <div className="node-header">
                 <span className="node-title">CPU (Processor)</span>
                 <span className={`badge-status ${cpuState === 'stall' ? 'badge-red' : 'badge-green'}`}>
@@ -332,7 +338,12 @@ export default function DmaSimulator() {
             </div>
 
             {/* DMA CONTROLLER NODE */}
-            <div className={`hardware-node card-hud-corner ${busOwner.includes('DMA') ? 'node-master' : ''}`} style={{ position: 'relative' }}>
+            <div className={`hardware-node card-hud-corner cyber-tilt-card cyber-target-container ${busOwner.includes('DMA') ? 'node-master target-active' : ''}`} style={{ position: 'relative' }}>
+              <div className="target-corner target-tl"></div>
+              <div className="target-corner target-tr"></div>
+              <div className="target-corner target-bl"></div>
+              <div className="target-corner target-br"></div>
+              <span className="target-badge-telemetry">DMA 8237</span>
               {busOwner.includes('DMA') && <div className="radar-ping-ring"></div>}
               <div className="node-header">
                 <span className="node-title">DMA Controller (8237)</span>
@@ -375,7 +386,12 @@ export default function DmaSimulator() {
             </div>
 
             {/* I/O PERIPHERAL NODE */}
-            <div className="hardware-node card-hud-corner">
+            <div className="hardware-node card-hud-corner cyber-tilt-card cyber-target-container">
+              <div className="target-corner target-tl"></div>
+              <div className="target-corner target-tr"></div>
+              <div className="target-corner target-bl"></div>
+              <div className="target-corner target-br"></div>
+              <span className="target-badge-telemetry">NVMe SSD</span>
               <div className="node-header">
                 <span className="node-title">I/O Peripheral</span>
                 <span className="badge-status badge-blue">BUFFERED</span>
@@ -485,8 +501,18 @@ export default function DmaSimulator() {
             </div>
           </div>
 
-          {/* RAM TARGET WITH RADAR SECTOR SWEEP & MATRIX DECRYPTION */}
-          <div className="ram-container card-hud-corner">
+          {/* RAM TARGET WITH RADAR SECTOR SWEEP, LIDAR SCAN & CYBER BRACKETS */}
+          <div className="ram-container card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container">
+            {/* FEATURE 1: CYBER SONAR LIDAR SCANNER */}
+            <div className="lidar-scan-beam"></div>
+
+            {/* FEATURE 4: HUD TARGET CORNER BRACKETS */}
+            <div className="target-corner target-tl"></div>
+            <div className="target-corner target-tr"></div>
+            <div className="target-corner target-bl"></div>
+            <div className="target-corner target-br"></div>
+            <span className="target-badge-telemetry">DRAM • 0x8000</span>
+
             {/* FEATURE 5: MEMORY RADAR SWEEP SCANNER */}
             <div className="memory-radar-scanner"></div>
 
@@ -516,7 +542,8 @@ export default function DmaSimulator() {
           </div>
 
           {/* FEATURE 4: INTEL 8237 DMA HARDWARE PINOUT & VOLTAGE TELEMETRY */}
-          <div className="ic-chip-container card-hud-corner">
+          <div className="ic-chip-container card-hud-corner sonar-lidar-container cyber-tilt-card">
+            <div className="lidar-scan-beam"></div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--accent-cyan)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
                 <Cpu size={15} /> Intel 8237 DMA Hardware Pinout & TTL Voltage (Slide 14)

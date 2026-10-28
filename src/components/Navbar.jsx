@@ -34,6 +34,20 @@ export default function Navbar({ activeTab, setActiveTab }) {
             </span>
           </div>
 
+          {/* FEATURE 2: LIVE CLOCK HARMONIC FFT SPECTRUM ANALYZER */}
+          <div className="cyber-fft-equalizer" title="Clock Harmonic Frequency Spectrum (3.2 GHz)">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div
+                key={i}
+                className="fft-bar"
+                style={{
+                  animationDelay: `${(i * 0.06).toFixed(2)}s`,
+                  animationDuration: `${0.75 + ((i % 4) * 0.18)}s`
+                }}
+              />
+            ))}
+          </div>
+
           {/* AUDIO SYNTHESIZER TOGGLE */}
           <button
             className={`sfx-toggle-btn ${sfxEnabled ? 'sfx-active' : ''}`}

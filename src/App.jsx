@@ -4,6 +4,23 @@ import DmaSimulator from './components/DmaSimulator';
 import MultiArchitectureComparator from './components/MultiArchitectureComparator';
 import UnifiedSystemLab from './components/UnifiedSystemLab';
 
+const OPCODE_STREAM_LEFT = [
+  '0x8000', 'DMA_BURST', 'HLDA=1', '0x4420', 'MOV AX,[BX]', '0x1000',
+  'IRQ_LINE_31', 'HOLD_REQ', '0x8024', 'L3_HIT:0.8ns', 'CYCLE_STEAL',
+  '0x6210', 'DACK_ACK', 'DREQ_LINE', '0x80FF', 'CACHE_SYNC', 'IO_READ',
+  'MEMW_STROBE', '0x0400', 'BUS_GRANT', '0x8000', 'DMA_BURST', 'HLDA=1',
+  '0x4420', 'MOV AX,[BX]', '0x1000', 'IRQ_LINE_31', 'HOLD_REQ', '0x8024',
+  'L3_HIT:0.8ns', 'CYCLE_STEAL', '0x6210', 'DACK_ACK', 'DREQ_LINE'
+];
+
+const OPCODE_STREAM_RIGHT = [
+  'SMP_BUS', '0x8A10', 'CORE1_RUN', 'SOCKET2_OK', '0x2100', 'ARBITER_WAIT',
+  'DRAM_CYCLE', '0x7FF0', 'SLIDE_15', '0x8840', 'CROSSBAR_RD', 'LAT_15ns',
+  '0x3020', 'OCTA_CORE', 'DIE_TEMP', '0x9000', 'DIST_MEM', 'SNOOP_BUS',
+  '0x1240', 'LOCK_PF', 'SMP_BUS', '0x8A10', 'CORE1_RUN', 'SOCKET2_OK',
+  '0x2100', 'ARBITER_WAIT', 'DRAM_CYCLE', '0x7FF0', 'SLIDE_15', '0x8840'
+];
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('dma');
   const [theme, setTheme] = useState('cyberpunk');
@@ -57,6 +74,23 @@ export default function App() {
         <div className="hud-reticle-box"></div>
         <div id="hudCoordText" className="hud-coord-text">LOC: X:0000 Y:0000 | 3.20GHz</div>
       </div>
+
+      {/* FEATURE 5: AMBIENT OPCODE DIGITAL STREAM (LEFT & RIGHT WATERFALLS) */}
+      <aside className="ambient-stream-gutter left" aria-hidden="true">
+        <div className="ambient-stream-content">
+          {OPCODE_STREAM_LEFT.map((op, i) => (
+            <span key={i}>{op}</span>
+          ))}
+        </div>
+      </aside>
+
+      <aside className="ambient-stream-gutter right" aria-hidden="true">
+        <div className="ambient-stream-content">
+          {OPCODE_STREAM_RIGHT.map((op, i) => (
+            <span key={i}>{op}</span>
+          ))}
+        </div>
+      </aside>
 
       <Navbar
         activeTab={activeTab}
