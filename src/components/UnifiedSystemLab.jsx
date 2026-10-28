@@ -361,16 +361,16 @@ export default function UnifiedSystemLab() {
             </div>
           </div>
 
-          <div className="ram-container sonar-lidar-container cyber-tilt-card cyber-target-container" style={{ background: 'var(--bg-surface-elevated)', border: '2px solid var(--accent-blue)', borderRadius: 'var(--radius-md)', padding: '1.25rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <div className="lidar-scan-beam"></div>
+          <div className="ram-container cyber-target-container" style={{ background: 'var(--bg-surface-elevated)', border: '2px solid var(--accent-blue)', borderRadius: 'var(--radius-md)', padding: '1.25rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
             <div className="target-corner target-tl"></div>
             <div className="target-corner target-tr"></div>
             <div className="target-corner target-bl"></div>
             <div className="target-corner target-br"></div>
-            <span className="target-badge-telemetry">SHARED DRAM</span>
-            <div className="memory-radar-scanner"></div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', position: 'relative', zIndex: 3 }}>
-              <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)' }}>Shared Main Memory (DRAM Highway)</span>
+              <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                Shared Main Memory (DRAM Highway)
+                <span className="badge-status badge-blue" style={{ fontSize: '0.72rem', padding: '0.15rem 0.5rem' }}>SHARED DRAM</span>
+              </span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--accent-cyan)', fontWeight: 700 }}>
                 {isDmaBurstLock ? 'Servicing: DMA Burst Write (0x8000 -> 0x8FFF)' : (stepIndex === 0 ? 'Servicing: Core 1 Read (0x4420)' : (stepIndex === 1 ? 'Servicing: DMA Direct Write (0x8024)' : 'Servicing: Core 2 Read (0x6210)'))}
               </span>

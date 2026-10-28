@@ -570,6 +570,10 @@ main {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transform: none !important;
+  perspective: none !important;
 }
 
 .ram-cells-grid {
@@ -2740,29 +2744,27 @@ main {
 
 .cyber-target-container:hover .target-corner,
 .cyber-target-container.target-active .target-corner {
-  width: 14px;
-  height: 14px;
   border-color: #00d2ff;
   filter: drop-shadow(0 0 5px #00d2ff);
 }
 
 .target-badge-telemetry {
   position: absolute;
-  top: -8px;
+  top: 8px;
   right: 12px;
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.06em;
   color: #00d2ff;
-  background: #000000;
+  background: rgba(4, 7, 17, 0.95);
   border: 1px solid rgba(0, 82, 255, 0.5);
-  padding: 0.05rem 0.4rem;
-  border-radius: 2px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
   box-shadow: 0 0 8px rgba(0, 82, 255, 0.3);
   z-index: 11;
   pointer-events: none;
-  opacity: 0.75;
+  opacity: 0.85;
   transition: opacity 0.2s ease, border-color 0.2s ease;
 }
 
@@ -2980,23 +2982,20 @@ main {
             </div>
           </div>
 
-          <!-- RAM BUFFER -->
-          <div class="ram-container card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container">
-            <!-- FEATURE 1: CYBER SONAR LIDAR SCANNER -->
-            <div class="lidar-scan-beam"></div>
-            <!-- FEATURE 4: HUD TARGET CORNER BRACKETS -->
+          <!-- ROCK-SOLID STABLE RAM BUFFER -->
+          <div class="ram-container card-hud-corner cyber-target-container" style="position: relative;">
             <div class="target-corner target-tl"></div>
             <div class="target-corner target-tr"></div>
             <div class="target-corner target-bl"></div>
             <div class="target-corner target-br"></div>
-            <span class="target-badge-telemetry">DRAM • 0x8000</span>
-            <!-- FEATURE 5: MEMORY RADAR SWEEP SCANNER -->
-            <div class="memory-radar-scanner"></div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary);">Main Memory DRAM Target Buffer (0x8000)</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; position: relative; z-index: 5;">
+              <span style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary); display: inline-flex; align-items: center; gap: 0.5rem;">
+                Main Memory DRAM Target Buffer (0x8000)
+                <span class="badge-status badge-blue" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">DRAM • 0x8000</span>
+              </span>
               <span id="labelRamProgress" style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: var(--accent-green);">0 / 16 Bytes Written</span>
             </div>
-            <div class="ram-cells-grid" id="ramCellsWrapper"></div>
+            <div class="ram-cells-grid" id="ramCellsWrapper" style="position: relative; z-index: 5;"></div>
           </div>
         </div>
 
@@ -3466,18 +3465,18 @@ main {
             </div>
           </div>
 
-          <!-- SHARED MAIN DRAM TARGET -->
-          <div class="ram-container card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container" style="background: var(--bg-surface-elevated); border: 2px solid var(--accent-blue); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; position: relative; overflow: hidden;">
-            <div class="lidar-scan-beam"></div>
+          <!-- ROCK-SOLID STABLE SHARED MAIN DRAM TARGET -->
+          <div class="ram-container card-hud-corner cyber-target-container" style="background: var(--bg-surface-elevated); border: 2px solid var(--accent-blue); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; position: relative; overflow: hidden;">
             <div class="target-corner target-tl"></div>
             <div class="target-corner target-tr"></div>
             <div class="target-corner target-bl"></div>
             <div class="target-corner target-br"></div>
-            <span class="target-badge-telemetry">SHARED DRAM</span>
-            <div class="memory-radar-scanner"></div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; position: relative; z-index: 5;">
-              <span style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">Shared Main Memory (DRAM Highway)</span>
+              <span style="font-size: 1rem; font-weight: 800; color: var(--text-primary); display: inline-flex; align-items: center; gap: 0.5rem;">
+                Shared Main Memory (DRAM Highway)
+                <span class="badge-status badge-blue" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">SHARED DRAM</span>
+              </span>
               <span id="synRamAccessLabel" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); font-weight: 700;">Servicing: Core 1 Read (0x4420)</span>
             </div>
             <div id="synWireRam" class="wire-connector-line packet-stream-track wire-flowing" style="position: relative; z-index: 5; height: 10px; margin: 0.5rem 0;">

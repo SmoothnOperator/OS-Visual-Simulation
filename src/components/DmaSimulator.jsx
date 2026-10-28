@@ -501,23 +501,19 @@ export default function DmaSimulator() {
             </div>
           </div>
 
-          {/* RAM TARGET WITH RADAR SECTOR SWEEP, LIDAR SCAN & CYBER BRACKETS */}
-          <div className="ram-container card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container">
-            {/* FEATURE 1: CYBER SONAR LIDAR SCANNER */}
-            <div className="lidar-scan-beam"></div>
-
-            {/* FEATURE 4: HUD TARGET CORNER BRACKETS */}
+          {/* ROCK-SOLID STABLE RAM BUFFER */}
+          <div className="ram-container card-hud-corner cyber-target-container" style={{ position: 'relative' }}>
+            {/* HUD TARGET CORNER BRACKETS */}
             <div className="target-corner target-tl"></div>
             <div className="target-corner target-tr"></div>
             <div className="target-corner target-bl"></div>
             <div className="target-corner target-br"></div>
-            <span className="target-badge-telemetry">DRAM • 0x8000</span>
 
-            {/* FEATURE 5: MEMORY RADAR SWEEP SCANNER */}
-            <div className="memory-radar-scanner"></div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 5 }}>
-              <span style={{ fontSize: '0.95rem', fontWeight: 800 }}>Main Memory DRAM Target Buffer (0x8000)</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 5, marginBottom: '0.4rem' }}>
+              <span style={{ fontSize: '0.95rem', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                Main Memory DRAM Target Buffer (0x8000)
+                <span className="badge-status badge-blue" style={{ fontSize: '0.72rem', padding: '0.15rem 0.5rem' }}>DRAM • 0x8000</span>
+              </span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-green)' }}>
                 {transferredBytes} / {blockSize} Bytes Written
               </span>
