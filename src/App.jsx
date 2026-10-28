@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import DmaSimulator from './components/DmaSimulator';
 import MultiArchitectureComparator from './components/MultiArchitectureComparator';
 import UnifiedSystemLab from './components/UnifiedSystemLab';
+import StartupBootScreen from './components/StartupBootScreen';
 
 const OPCODE_STREAM_LEFT = [
   '0x8000', 'DMA_BURST', 'HLDA=1', '0x4420', 'MOV AX,[BX]', '0x1000',
@@ -15,15 +16,16 @@ const OPCODE_STREAM_LEFT = [
 
 const OPCODE_STREAM_RIGHT = [
   'SMP_BUS', '0x8A10', 'CORE1_RUN', 'SOCKET2_OK', '0x2100', 'ARBITER_WAIT',
-  'DRAM_CYCLE', '0x7FF0', 'SLIDE_15', '0x8840', 'CROSSBAR_RD', 'LAT_15ns',
+  'DRAM_CYCLE', '0x7FF0', 'DMA_BURST', '0x8840', 'CROSSBAR_RD', 'LAT_15ns',
   '0x3020', 'OCTA_CORE', 'DIE_TEMP', '0x9000', 'DIST_MEM', 'SNOOP_BUS',
   '0x1240', 'LOCK_PF', 'SMP_BUS', '0x8A10', 'CORE1_RUN', 'SOCKET2_OK',
-  '0x2100', 'ARBITER_WAIT', 'DRAM_CYCLE', '0x7FF0', 'SLIDE_15', '0x8840'
+  '0x2100', 'ARBITER_WAIT', 'DRAM_CYCLE', '0x7FF0', 'CYCLE_ACC', '0x8840'
 ];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dma');
   const [theme, setTheme] = useState('cyberpunk');
+  const [showBootScreen, setShowBootScreen] = useState(true);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -68,6 +70,11 @@ export default function App() {
 
   return (
     <>
+      {/* STARTUP CYBER BOOT SEQUENCE & LOGO ANIMATION */}
+      {showBootScreen && (
+        <StartupBootScreen onComplete={() => setShowBootScreen(false)} />
+      )}
+
       {/* AEROSPACE HUD RETICLE OVERLAY */}
       <div id="hudCursorReticle" className="hud-crosshair-reticle">
         <div className="hud-crosshair-lines"></div>
@@ -95,6 +102,7 @@ export default function App() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onReboot={() => setShowBootScreen(true)}
       />
       <main>
         {activeTab === 'dma' && <DmaSimulator />}

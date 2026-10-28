@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Zap, Cpu, Layers, Volume2, VolumeX } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 
-export default function Navbar({ activeTab, setActiveTab }) {
+export default function Navbar({ activeTab, setActiveTab, onReboot }) {
   const [sfxEnabled, setSfxEnabled] = useState(false);
 
   const handleToggleSound = () => {
@@ -19,8 +19,20 @@ export default function Navbar({ activeTab, setActiveTab }) {
       
       <div className="header-branding">
         <div className="brand-row">
-          <span className="brand-title">
-            <Zap size={26} color="var(--accent-blue)" className="anim-clock-pulse" /> OS-ArchLab
+          <span
+            className="brand-title"
+            style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.65rem' }}
+            onClick={onReboot}
+            title="Click to replay system boot sequence & logo animation"
+          >
+            <div className="nav-logo-badge">
+              <svg width="18" height="18" viewBox="0 0 120 120" fill="none">
+                <rect x="18" y="18" width="84" height="84" rx="8" fill="#040918" stroke="#00d2ff" strokeWidth="6" />
+                <rect x="42" y="42" width="36" height="36" rx="4" fill="#0052ff" />
+                <text x="60" y="68" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="900" fontFamily="monospace">OS</text>
+              </svg>
+            </div>
+            OS-ArchLab
           </span>
           <div className="telemetry-ticker-bar">
             <span className="telemetry-item">
