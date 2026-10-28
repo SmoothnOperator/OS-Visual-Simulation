@@ -13,6 +13,7 @@ export default function MultiArchitectureComparator() {
 
   const [dieFault, setDieFault] = useState(false);
   const [socketFault, setSocketFault] = useState(false);
+  const [glitchActive, setGlitchActive] = useState(false);
 
   const [traceStep, setTraceStep] = useState(null); // 'c1', 'l3', 's1', 'arbiter', 'ram'
 
@@ -185,6 +186,8 @@ export default function MultiArchitectureComparator() {
     clearInterval(benchmarkTimerRef.current);
     soundFx.playThermalAlert();
     setDieFault(true);
+    setGlitchActive(true);
+    setTimeout(() => setGlitchActive(false), 380);
     setNarration({
       title: '💥 CRITICAL SILICON DIE FAILURE (Slide 17/20)',
       msg: 'Single point of failure demonstrated! Because all cores reside on the exact same silicon die (Slide 16), thermal breakdown halted EVERY core simultaneously. Slide 20: "Multicore processors are not as reliable as multiprocessors."'
@@ -195,6 +198,8 @@ export default function MultiArchitectureComparator() {
     clearInterval(benchmarkTimerRef.current);
     soundFx.playContentionSpark();
     setSocketFault(true);
+    setGlitchActive(true);
+    setTimeout(() => setGlitchActive(false), 380);
     setNarration({
       title: '🔌 FAULT TOLERANCE DEMONSTRATED (Slide 18 & 19)',
       msg: 'Hardware resilience proven! In multiprocessor systems, CPUs reside in physically distinct motherboard sockets (Slide 18). Even when Socket 2 failed, Socket 1 continued running without crashing! Slide 19 & 20: "Multiprocessors are more reliable as failure of one processor will not affect others."'
@@ -369,7 +374,7 @@ export default function MultiArchitectureComparator() {
       </div>
 
       {/* SCHEMATICS COMPARISON */}
-      <div className="comparison-grid">
+      <div className={`comparison-grid ${glitchActive ? 'hologram-glitch-active' : ''}`}>
         {/* MULTICORE PANE */}
         <div className="arch-spec-card">
           <div className="node-header">
@@ -388,13 +393,24 @@ export default function MultiArchitectureComparator() {
             </span>
           </div>
 
-          <div className={`chip-silicon-boundary ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : 'var(--accent-blue)' }}>
+          <div className={`chip-silicon-boundary ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : 'var(--accent-blue)', position: 'relative' }}>
+            {/* FEATURE 3: SILICON ISOTHERMAL HEATMAP OVERLAY */}
+            <div className="thermal-heatmap-overlay">
+              <svg className="isothermal-contour-svg" viewBox="0 0 300 200" preserveAspectRatio="none">
+                <ellipse cx="150" cy="100" rx="130" ry="80" fill="none" stroke={dieFault ? "rgba(255, 0, 85, 0.45)" : "rgba(0, 82, 255, 0.35)"} strokeWidth="1.5" strokeDasharray="6 4" />
+                <ellipse cx="150" cy="100" rx="90" ry="55" fill="none" stroke={dieFault ? "rgba(255, 0, 85, 0.65)" : "rgba(0, 210, 255, 0.45)"} strokeWidth="1.5" />
+                <ellipse cx="150" cy="100" rx="50" ry="30" fill={dieFault ? "rgba(255, 0, 85, 0.2)" : "rgba(0, 82, 255, 0.12)"} stroke={dieFault ? "#ff0055" : "rgba(0, 210, 255, 0.7)"} strokeWidth="2" />
+              </svg>
+            </div>
+
             <span className="chip-boundary-label">Single Silicon Die Package</span>
 
             <div
               className="cores-duo"
               style={{
-                gridTemplateColumns: coreCount === 8 ? 'repeat(4, 1fr)' : (coreCount === 4 ? 'repeat(2, 1fr)' : '1fr 1fr')
+                gridTemplateColumns: coreCount === 8 ? 'repeat(4, 1fr)' : (coreCount === 4 ? 'repeat(2, 1fr)' : '1fr 1fr'),
+                position: 'relative',
+                zIndex: 2
               }}
             >
               {Array.from({ length: coreCount }).map((_, idx) => (
@@ -404,6 +420,9 @@ export default function MultiArchitectureComparator() {
                 >
                   <div style={{ fontWeight: 800, fontSize: coreCount === 8 ? '0.88rem' : '1.05rem' }}>Core {idx + 1}</div>
                   <div className="cache-hierarchy-pill" style={{ fontSize: '0.72rem' }}>L1: 32K | L2: 512K</div>
+                  <div className={`core-temp-pill ${dieFault ? 'hot' : ''}`}>
+                    🌡️ {dieFault ? '105°C' : `${42 + idx * 5}°C`}
+                  </div>
                   <div style={{ fontSize: '0.78rem', color: dieFault ? 'var(--accent-red)' : 'var(--accent-green)', fontWeight: 700, marginTop: '0.35rem' }}>
                     {dieFault ? '🔥 CRASHED (MELTED)' : `Executing Thread ${idx + 1}`}
                   </div>

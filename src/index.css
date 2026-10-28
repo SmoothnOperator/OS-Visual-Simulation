@@ -2365,3 +2365,251 @@ main {
 
 .sfx-active .sfx-wave-bar:nth-child(2) { animation-delay: 0.15s; }
 .sfx-active .sfx-wave-bar:nth-child(3) { animation-delay: 0.3s; }
+
+/* =====================================================================
+   CLASSY CYBER INSTRUMENTATION SUITE (UPGRADE BATCH 2)
+   ===================================================================== */
+
+/* 35. FEATURE 1: LIVE MULTI-CHANNEL LOGIC ANALYZER OSCILLOSCOPE */
+.logic-analyzer-card {
+  background: #040711;
+  border: 1.5px solid rgba(0, 82, 255, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-top: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 82, 255, 0.08);
+}
+
+.logic-channels-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+.logic-channel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.logic-channel-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  width: 100px;
+  color: var(--accent-cyan);
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: 0.05em;
+}
+
+.logic-wave-track {
+  flex: 1;
+  height: 24px;
+  background: rgba(8, 14, 26, 0.8);
+  border: 1px solid rgba(0, 82, 255, 0.2);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes waveScrollStream {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-56px); }
+}
+
+.wave-stream-svg {
+  width: calc(100% + 112px);
+  height: 24px;
+  display: block;
+  animation: waveScrollStream 1.6s infinite linear;
+  will-change: transform;
+}
+
+/* 36. FEATURE 2: OPTIC FIBER COMET RIBBONS */
+.floating-data-packet.comet-ribbon {
+  width: 55px;
+  height: 5px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, rgba(0, 82, 255, 0.4), #0052ff, #00d2ff, #ffffff);
+  box-shadow: 0 0 14px #0052ff, 0 0 8px #00d2ff;
+}
+
+.floating-data-packet.comet-ribbon.burst-length {
+  width: 85px;
+}
+
+/* 37. FEATURE 3: SILICON ISOTHERMAL HEATMAP TOPOGRAPHY */
+.thermal-heatmap-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  opacity: 0.25;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.chip-silicon-boundary.thermal-critical .thermal-heatmap-overlay {
+  opacity: 0.85;
+}
+
+@keyframes isothermalBreath {
+  0%, 100% { transform: scale(1); opacity: 0.35; }
+  50% { transform: scale(1.06); opacity: 0.65; }
+}
+
+.isothermal-contour-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  animation: isothermalBreath 3s infinite ease-in-out;
+  will-change: transform, opacity;
+}
+
+.core-temp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background: rgba(0, 82, 255, 0.15);
+  border: 1px solid rgba(0, 82, 255, 0.35);
+  color: var(--accent-cyan);
+  margin-top: 0.25rem;
+}
+
+.core-temp-pill.hot {
+  background: rgba(255, 0, 85, 0.2);
+  border-color: #ff0055;
+  color: #ff0055;
+}
+
+/* 38. FEATURE 4: AEROSPACE HUD CROSSHAIR TRACKER */
+.hud-crosshair-reticle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: transform, opacity;
+}
+
+.hud-crosshair-lines {
+  position: absolute;
+  inset: 0;
+}
+
+.hud-crosshair-lines::before,
+.hud-crosshair-lines::after {
+  content: '';
+  position: absolute;
+  background: rgba(0, 210, 255, 0.4);
+}
+
+.hud-crosshair-lines::before {
+  top: 50%;
+  left: -12px;
+  right: -12px;
+  height: 1px;
+}
+
+.hud-crosshair-lines::after {
+  left: 50%;
+  top: -12px;
+  bottom: -12px;
+  width: 1px;
+}
+
+.hud-reticle-box {
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(0, 82, 255, 0.6);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(0, 82, 255, 0.4);
+}
+
+.hud-coord-text {
+  position: absolute;
+  top: 36px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: #00d2ff;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 0.15rem 0.45rem;
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  border-radius: 3px;
+  text-shadow: 0 0 6px #0052ff;
+}
+
+/* 39. FEATURE 5: MEMORY RADAR SWEEP SCANNER */
+.ram-container {
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes radarSweepRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.memory-radar-scanner {
+  position: absolute;
+  inset: -60%;
+  pointer-events: none;
+  opacity: 0.22;
+  z-index: 2;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg at 50% 50%, rgba(0, 210, 255, 0.6) 0deg, rgba(0, 82, 255, 0.25) 45deg, transparent 90deg, transparent 360deg);
+  animation: radarSweepRotate 5s infinite linear;
+  will-change: transform;
+}
+
+/* 40. FEATURE 6: HOLOGRAPHIC GLITCH DISPLACEMENT */
+@keyframes glitchFlicker {
+  0% { transform: translate(0, 0); filter: none; }
+  15% { transform: translate(-4px, 2px); filter: drop-shadow(-3px 0 #0052ff) drop-shadow(3px 0 #ff0055); }
+  30% { transform: translate(3px, -2px); filter: drop-shadow(3px 0 #00d2ff); }
+  45% { transform: translate(-2px, -1px); filter: drop-shadow(-2px 0 #ff0055); }
+  60% { transform: translate(4px, 1px); filter: drop-shadow(4px 0 #0052ff); }
+  75% { transform: translate(-1px, 2px); filter: none; }
+  90% { transform: translate(2px, -1px); filter: drop-shadow(-2px 0 #00d2ff); }
+  100% { transform: translate(0, 0); filter: none; }
+}
+
+.hologram-glitch-active {
+  animation: glitchFlicker 0.38s ease-in-out !important;
+  position: relative;
+}
+
+.hologram-glitch-active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 82, 255, 0.15) 0px,
+    rgba(0, 82, 255, 0.15) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}

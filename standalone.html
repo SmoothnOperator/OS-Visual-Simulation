@@ -2378,9 +2378,264 @@ main {
 .sfx-active .sfx-wave-bar:nth-child(2) { animation-delay: 0.15s; }
 .sfx-active .sfx-wave-bar:nth-child(3) { animation-delay: 0.3s; }
 
+/* =====================================================================
+   CLASSY CYBER INSTRUMENTATION SUITE (UPGRADE BATCH 2)
+   ===================================================================== */
+
+/* 35. FEATURE 1: LIVE MULTI-CHANNEL LOGIC ANALYZER OSCILLOSCOPE */
+.logic-analyzer-card {
+  background: #040711;
+  border: 1.5px solid rgba(0, 82, 255, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-top: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 82, 255, 0.08);
+}
+
+.logic-channels-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+.logic-channel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.logic-channel-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  width: 100px;
+  color: var(--accent-cyan);
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: 0.05em;
+}
+
+.logic-wave-track {
+  flex: 1;
+  height: 24px;
+  background: rgba(8, 14, 26, 0.8);
+  border: 1px solid rgba(0, 82, 255, 0.2);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes waveScrollStream {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-56px); }
+}
+
+.wave-stream-svg {
+  width: calc(100% + 112px);
+  height: 24px;
+  display: block;
+  animation: waveScrollStream 1.6s infinite linear;
+  will-change: transform;
+}
+
+/* 36. FEATURE 2: OPTIC FIBER COMET RIBBONS */
+.floating-data-packet.comet-ribbon {
+  width: 55px;
+  height: 5px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, rgba(0, 82, 255, 0.4), #0052ff, #00d2ff, #ffffff);
+  box-shadow: 0 0 14px #0052ff, 0 0 8px #00d2ff;
+}
+
+.floating-data-packet.comet-ribbon.burst-length {
+  width: 85px;
+}
+
+/* 37. FEATURE 3: SILICON ISOTHERMAL HEATMAP TOPOGRAPHY */
+.thermal-heatmap-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  opacity: 0.25;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.chip-silicon-boundary.thermal-critical .thermal-heatmap-overlay {
+  opacity: 0.85;
+}
+
+@keyframes isothermalBreath {
+  0%, 100% { transform: scale(1); opacity: 0.35; }
+  50% { transform: scale(1.06); opacity: 0.65; }
+}
+
+.isothermal-contour-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  animation: isothermalBreath 3s infinite ease-in-out;
+  will-change: transform, opacity;
+}
+
+.core-temp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background: rgba(0, 82, 255, 0.15);
+  border: 1px solid rgba(0, 82, 255, 0.35);
+  color: var(--accent-cyan);
+  margin-top: 0.25rem;
+}
+
+.core-temp-pill.hot {
+  background: rgba(255, 0, 85, 0.2);
+  border-color: #ff0055;
+  color: #ff0055;
+}
+
+/* 38. FEATURE 4: AEROSPACE HUD CROSSHAIR TRACKER */
+.hud-crosshair-reticle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: transform, opacity;
+}
+
+.hud-crosshair-lines {
+  position: absolute;
+  inset: 0;
+}
+
+.hud-crosshair-lines::before,
+.hud-crosshair-lines::after {
+  content: '';
+  position: absolute;
+  background: rgba(0, 210, 255, 0.4);
+}
+
+.hud-crosshair-lines::before {
+  top: 50%;
+  left: -12px;
+  right: -12px;
+  height: 1px;
+}
+
+.hud-crosshair-lines::after {
+  left: 50%;
+  top: -12px;
+  bottom: -12px;
+  width: 1px;
+}
+
+.hud-reticle-box {
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(0, 82, 255, 0.6);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(0, 82, 255, 0.4);
+}
+
+.hud-coord-text {
+  position: absolute;
+  top: 36px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: #00d2ff;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 0.15rem 0.45rem;
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  border-radius: 3px;
+  text-shadow: 0 0 6px #0052ff;
+}
+
+/* 39. FEATURE 5: MEMORY RADAR SWEEP SCANNER */
+.ram-container {
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes radarSweepRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.memory-radar-scanner {
+  position: absolute;
+  inset: -60%;
+  pointer-events: none;
+  opacity: 0.22;
+  z-index: 2;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg at 50% 50%, rgba(0, 210, 255, 0.6) 0deg, rgba(0, 82, 255, 0.25) 45deg, transparent 90deg, transparent 360deg);
+  animation: radarSweepRotate 5s infinite linear;
+  will-change: transform;
+}
+
+/* 40. FEATURE 6: HOLOGRAPHIC GLITCH DISPLACEMENT */
+@keyframes glitchFlicker {
+  0% { transform: translate(0, 0); filter: none; }
+  15% { transform: translate(-4px, 2px); filter: drop-shadow(-3px 0 #0052ff) drop-shadow(3px 0 #ff0055); }
+  30% { transform: translate(3px, -2px); filter: drop-shadow(3px 0 #00d2ff); }
+  45% { transform: translate(-2px, -1px); filter: drop-shadow(-2px 0 #ff0055); }
+  60% { transform: translate(4px, 1px); filter: drop-shadow(4px 0 #0052ff); }
+  75% { transform: translate(-1px, 2px); filter: none; }
+  90% { transform: translate(2px, -1px); filter: drop-shadow(-2px 0 #00d2ff); }
+  100% { transform: translate(0, 0); filter: none; }
+}
+
+.hologram-glitch-active {
+  animation: glitchFlicker 0.38s ease-in-out !important;
+  position: relative;
+}
+
+.hologram-glitch-active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 82, 255, 0.15) 0px,
+    rgba(0, 82, 255, 0.15) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
   </style>
 </head>
 <body>
+
+  <!-- FEATURE 4: AEROSPACE HUD CROSSHAIR RETICLE (100% GPU-DIRECT COMPOSITED) -->
+  <div id="hudCursorReticle" class="hud-crosshair-reticle">
+    <div class="hud-crosshair-lines"></div>
+    <div class="hud-reticle-box"></div>
+    <div id="hudCoordText" class="hud-coord-text">LOC: X:0000 Y:0000 | 3.20GHz</div>
+  </div>
 
   <!-- HEADER -->
   <header>
@@ -2516,23 +2771,25 @@ main {
           <div class="bus-system-container">
             <div class="bus-track">
               <span class="bus-name-badge">CONTROL BUS:</span>
-              <div id="wireCtrl" class="bus-physical-line"></div>
+              <div id="wireCtrl" class="bus-physical-line packet-stream-track"><div class="floating-data-packet comet-ribbon packet-ctrl"></div></div>
               <span id="stateCtrl" class="bus-state-display" style="color: var(--accent-green);">HLDA=0, IOR=0, MEMW=0</span>
             </div>
             <div class="bus-track">
               <span class="bus-name-badge">ADDRESS BUS:</span>
-              <div id="wireAddr" class="bus-physical-line"></div>
+              <div id="wireAddr" class="bus-physical-line packet-stream-track"><div class="floating-data-packet comet-ribbon"></div></div>
               <span id="stateAddr" class="bus-state-display" style="color: var(--accent-blue);">0x0400 (CPU Driven)</span>
             </div>
             <div class="bus-track">
               <span class="bus-name-badge">DATA BUS:</span>
-              <div id="wireData" class="bus-physical-line"></div>
+              <div id="wireData" class="bus-physical-line packet-stream-track"><div class="floating-data-packet comet-ribbon packet-amber"></div></div>
               <span id="stateData" class="bus-state-display" style="color: var(--accent-amber);">IDLE / NO TRANSFER</span>
             </div>
           </div>
 
           <!-- RAM BUFFER -->
-          <div class="ram-container">
+          <div class="ram-container card-hud-corner">
+            <!-- FEATURE 5: MEMORY RADAR SWEEP SCANNER -->
+            <div class="memory-radar-scanner"></div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary);">Main Memory DRAM Target Buffer (0x8000)</span>
               <span id="labelRamProgress" style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: var(--accent-green);">0 / 16 Bytes Written</span>
@@ -2669,7 +2926,7 @@ main {
       </div>
 
       <!-- DUAL SCHEMATICS -->
-      <div class="comparison-grid">
+      <div class="comparison-grid" id="compGridContainer">
         <!-- MULTICORE PANE -->
         <div class="arch-spec-card">
           <div class="node-header">
@@ -2686,7 +2943,15 @@ main {
             <span class="meta-tag" id="tagDieTemp" style="color: var(--accent-amber);">🌡️ Die Temp: 48°C (Normal)</span>
           </div>
 
-          <div class="chip-silicon-boundary" id="siliconBoundary">
+          <div class="chip-silicon-boundary" id="siliconBoundary" style="position: relative;">
+            <!-- FEATURE 3: SILICON ISOTHERMAL HEATMAP TOPOGRAPHY -->
+            <div class="thermal-heatmap-overlay" id="thermalHeatmapOverlay">
+              <svg class="isothermal-contour-svg" viewBox="0 0 300 200" preserveAspectRatio="none">
+                <ellipse id="isoEllipse1" cx="150" cy="100" rx="130" ry="80" fill="none" stroke="rgba(0, 82, 255, 0.35)" stroke-width="1.5" stroke-dasharray="6 4" />
+                <ellipse id="isoEllipse2" cx="150" cy="100" rx="90" ry="55" fill="none" stroke="rgba(0, 210, 255, 0.45)" stroke-width="1.5" />
+                <ellipse id="isoEllipse3" cx="150" cy="100" rx="50" ry="30" fill="rgba(0, 82, 255, 0.12)" stroke="rgba(0, 210, 255, 0.7)" stroke-width="2" />
+              </svg>
+            </div>
             <span class="chip-boundary-label">Single Silicon Die Package</span>
 
             <div class="cores-duo" id="coresGridWrapper">
@@ -3187,6 +3452,30 @@ main {
       document.getElementById('valDmaDest').innerText = `0x${(0x8000 + transferredBytes).toString(16).toUpperCase()}`;
       document.getElementById('valCpuPc').innerText = `0x${(0x0400 + currentClock * 4).toString(16).toUpperCase().padStart(4, '0')}`;
 
+      // Update Oscilloscope Channels
+      const chHoldPath = document.getElementById('chHoldPath');
+      const chHldaPath = document.getElementById('chHldaPath');
+      const chMemwPath = document.getElementById('chMemwPath');
+      const chHoldLabel = document.getElementById('chHoldLabel');
+      const chHldaLabel = document.getElementById('chHldaLabel');
+      const chMemwLabel = document.getElementById('chMemwLabel');
+
+      if (busOwner.includes('DMA')) {
+        if (chHoldPath) chHoldPath.setAttribute('d', 'M0 4 L560 4');
+        if (chHldaPath) chHldaPath.setAttribute('d', 'M0 4 L560 4');
+        if (chMemwPath) chMemwPath.setAttribute('d', 'M0 4 L560 4');
+        if (chHoldLabel) { chHoldLabel.innerText = 'HIGH'; chHoldLabel.style.color = 'var(--accent-blue)'; }
+        if (chHldaLabel) { chHldaLabel.innerText = 'GRANT'; chHldaLabel.style.color = 'var(--accent-green)'; }
+        if (chMemwLabel) { chMemwLabel.innerText = 'ACTIVE (+5V)'; chMemwLabel.style.color = 'var(--accent-amber)'; }
+      } else {
+        if (chHoldPath) chHoldPath.setAttribute('d', 'M0 20 L560 20');
+        if (chHldaPath) chHldaPath.setAttribute('d', 'M0 20 L560 20');
+        if (chMemwPath) chMemwPath.setAttribute('d', 'M0 20 L560 20');
+        if (chHoldLabel) { chHoldLabel.innerText = 'LOW'; chHoldLabel.style.color = 'var(--text-muted)'; }
+        if (chHldaLabel) { chHldaLabel.innerText = 'IDLE'; chHldaLabel.style.color = 'var(--text-muted)'; }
+        if (chMemwLabel) { chMemwLabel.innerText = 'LOW'; chMemwLabel.style.color = 'var(--text-muted)'; }
+      }
+
       // Update Visuals
       if (busOwner.includes('DMA')) {
         document.getElementById('nodeDmac').className = 'hardware-node node-master';
@@ -3364,6 +3653,7 @@ main {
         core.innerHTML = `
           <div style="font-weight: 800; font-size: ${count === 8 ? '0.88rem' : '1.05rem'};">Core ${i}</div>
           <div class="cache-hierarchy-pill" style="font-size: 0.72rem;">L1: 32K | L2: 512K</div>
+          <div class="core-temp-pill" id="tempCore${i}">🌡️ ${42 + i * 5}°C</div>
           <div id="statusCore${i}" style="font-size: 0.78rem; color: var(--accent-green); font-weight: 700; margin-top: 0.35rem;">Active</div>
         `;
         grid.appendChild(core);
@@ -3525,10 +3815,28 @@ main {
         if (c) {
           c.className = 'processing-unit crashed-unit';
           const st = document.getElementById(`statusCore${i}`);
-          if (st) { st.innerText = 'CRASHED'; st.style.color = 'var(--accent-red)'; }
+          if (st) { st.innerText = 'CRASHED (MELTED)'; st.style.color = 'var(--accent-red)'; }
+          const tp = document.getElementById(`tempCore${i}`);
+          if (tp) { tp.className = 'core-temp-pill hot'; tp.innerText = '🌡️ 105°C'; }
         }
       }
-      document.getElementById('siliconBoundary').style.borderColor = 'var(--accent-red)';
+      const grid = document.getElementById('compGridContainer');
+      if (grid) {
+        grid.classList.add('hologram-glitch-active');
+        setTimeout(() => grid.classList.remove('hologram-glitch-active'), 380);
+      }
+      const sb = document.getElementById('siliconBoundary');
+      if (sb) {
+        sb.classList.add('thermal-critical');
+        sb.style.borderColor = 'var(--accent-red)';
+      }
+      const e1 = document.getElementById('isoEllipse1');
+      const e2 = document.getElementById('isoEllipse2');
+      const e3 = document.getElementById('isoEllipse3');
+      if (e1) e1.setAttribute('stroke', 'rgba(255, 0, 85, 0.5)');
+      if (e2) e2.setAttribute('stroke', 'rgba(255, 0, 85, 0.7)');
+      if (e3) { e3.setAttribute('fill', 'rgba(255, 0, 85, 0.25)'); e3.setAttribute('stroke', '#ff0055'); }
+
       document.getElementById('tagDieTemp').innerText = '🔥 CRITICAL: 105°C (Die Melted)';
       document.getElementById('tagDieTemp').style.color = 'var(--accent-red)';
 
@@ -3538,6 +3846,11 @@ main {
 
     function triggerSocketPull() {
       if (multiBenchmarkTimer) clearInterval(multiBenchmarkTimer);
+      const grid = document.getElementById('compGridContainer');
+      if (grid) {
+        grid.classList.add('hologram-glitch-active');
+        setTimeout(() => grid.classList.remove('hologram-glitch-active'), 380);
+      }
       document.getElementById('boxSocket2').className = 'processing-unit crashed-unit';
       document.getElementById('statusSocket2').innerText = 'OFFLINE (Socket 2 Disconnected)';
       document.getElementById('statusSocket2').style.color = 'var(--accent-red)';
@@ -3553,7 +3866,19 @@ main {
       if (multiBenchmarkTimer) clearInterval(multiBenchmarkTimer);
       clearTimeout(traceTimer);
       document.getElementById('multiBenchmarkHud').style.display = 'none';
-      document.getElementById('siliconBoundary').style.borderColor = '#0284c7';
+      const sb = document.getElementById('siliconBoundary');
+      if (sb) {
+        sb.classList.remove('thermal-critical');
+        sb.style.borderColor = 'var(--accent-blue)';
+      }
+      const grid = document.getElementById('compGridContainer');
+      if (grid) grid.classList.remove('hologram-glitch-active');
+      const e1 = document.getElementById('isoEllipse1');
+      const e2 = document.getElementById('isoEllipse2');
+      const e3 = document.getElementById('isoEllipse3');
+      if (e1) e1.setAttribute('stroke', 'rgba(0, 82, 255, 0.35)');
+      if (e2) e2.setAttribute('stroke', 'rgba(0, 210, 255, 0.45)');
+      if (e3) { e3.setAttribute('fill', 'rgba(0, 82, 255, 0.12)'); e3.setAttribute('stroke', 'rgba(0, 210, 255, 0.7)'); }
 
       changeCoreCount();
 
@@ -3880,6 +4205,33 @@ main {
       setupRamGrid();
       drawGantt();
     };
+
+    // FEATURE 4: AEROSPACE HUD CROSSHAIR TRACKER (100% GPU-DIRECT)
+    (function initHudReticle() {
+      const reticle = document.getElementById('hudCursorReticle');
+      const coordText = document.getElementById('hudCoordText');
+      if (!reticle || !coordText) return;
+
+      let rafId = null;
+      let targetX = 0, targetY = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            reticle.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+            reticle.style.opacity = '0.75';
+            coordText.textContent = `LOC: X:${String(targetX).padStart(4, '0')} Y:${String(targetY).padStart(4, '0')} | 3.20GHz`;
+            rafId = null;
+          });
+        }
+      }, { passive: true });
+
+      document.addEventListener('mouseleave', () => {
+        reticle.style.opacity = '0';
+      });
+    })();
   </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, SkipForward, RotateCcw, Cpu, Layers } from 'lucide-react';
+import { Play, Pause, SkipForward, RotateCcw, Cpu, Layers, Activity } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 
 export default function DmaSimulator() {
@@ -430,19 +430,19 @@ export default function DmaSimulator() {
             </svg>
           </div>
 
-          {/* BUS SYSTEM WITH CONTINUOUS PHOTON STREAMS */}
+          {/* BUS SYSTEM WITH CONTINUOUS OPTIC FIBER COMET RIBBONS */}
           <div className="bus-system-container card-hud-corner">
             <div className="bus-track">
               <span className="bus-name-badge">CONTROL BUS:</span>
               <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-ctrl' : ''}`}>
                 {busOwner.includes('DMA') ? (
                   <>
-                    <div className="floating-data-packet packet-ctrl packet-p1"></div>
-                    <div className="floating-data-packet packet-ctrl packet-p2"></div>
-                    <div className="floating-data-packet packet-ctrl packet-p3"></div>
+                    <div className={`floating-data-packet comet-ribbon packet-ctrl packet-p1 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
+                    <div className={`floating-data-packet comet-ribbon packet-ctrl packet-p2 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
+                    <div className={`floating-data-packet comet-ribbon packet-ctrl packet-p3 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
                   </>
                 ) : (
-                  <div className="floating-data-packet packet-ctrl" style={{ animationDuration: '2.5s' }}></div>
+                  <div className="floating-data-packet comet-ribbon packet-ctrl" style={{ animationDuration: '2.5s' }}></div>
                 )}
               </div>
               <span className="bus-state-display" style={{ color: 'var(--accent-green)' }}>
@@ -454,12 +454,12 @@ export default function DmaSimulator() {
               <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-data' : ''}`}>
                 {busOwner.includes('DMA') ? (
                   <>
-                    <div className="floating-data-packet packet-p1"></div>
-                    <div className="floating-data-packet packet-p2"></div>
-                    <div className="floating-data-packet packet-p3"></div>
+                    <div className={`floating-data-packet comet-ribbon packet-p1 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
+                    <div className={`floating-data-packet comet-ribbon packet-p2 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
+                    <div className={`floating-data-packet comet-ribbon packet-p3 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
                   </>
                 ) : (
-                  <div className="floating-data-packet" style={{ animationDuration: '2s' }}></div>
+                  <div className="floating-data-packet comet-ribbon" style={{ animationDuration: '2s' }}></div>
                 )}
               </div>
               <span className="bus-state-display" style={{ color: 'var(--accent-blue)' }}>
@@ -471,12 +471,12 @@ export default function DmaSimulator() {
               <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-data' : ''}`}>
                 {busOwner.includes('DMA') ? (
                   <>
-                    <div className="floating-data-packet packet-amber packet-p1"></div>
-                    <div className="floating-data-packet packet-amber packet-p2"></div>
-                    <div className="floating-data-packet packet-amber packet-p3"></div>
+                    <div className={`floating-data-packet comet-ribbon packet-amber packet-p1 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
+                    <div className={`floating-data-packet comet-ribbon packet-amber packet-p2 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
+                    <div className={`floating-data-packet comet-ribbon packet-amber packet-p3 ${mode === 'burst' ? 'burst-length' : ''}`}></div>
                   </>
                 ) : (
-                  <div className="floating-data-packet packet-amber" style={{ animationDuration: '2.2s' }}></div>
+                  <div className="floating-data-packet comet-ribbon packet-amber" style={{ animationDuration: '2.2s' }}></div>
                 )}
               </div>
               <span className="bus-state-display" style={{ color: 'var(--accent-amber)' }}>
@@ -485,15 +485,18 @@ export default function DmaSimulator() {
             </div>
           </div>
 
-          {/* RAM TARGET WITH MATRIX DECRYPTION */}
+          {/* RAM TARGET WITH RADAR SECTOR SWEEP & MATRIX DECRYPTION */}
           <div className="ram-container card-hud-corner">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {/* FEATURE 5: MEMORY RADAR SWEEP SCANNER */}
+            <div className="memory-radar-scanner"></div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 5 }}>
               <span style={{ fontSize: '0.95rem', fontWeight: 800 }}>Main Memory DRAM Target Buffer (0x8000)</span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-green)' }}>
                 {transferredBytes} / {blockSize} Bytes Written
               </span>
             </div>
-            <div className="ram-cells-grid">
+            <div className="ram-cells-grid" style={{ position: 'relative', zIndex: 5 }}>
               {Array.from({ length: blockSize }).map((_, idx) => {
                 const isWritingNow = idx === transferredBytes - 1 && isRunning;
                 return (
@@ -700,6 +703,94 @@ export default function DmaSimulator() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </div>
+
+      {/* FEATURE 1: LIVE 4-CHANNEL LOGIC ANALYZER OSCILLOSCOPE */}
+      <div className="logic-analyzer-card card-hud-corner">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--accent-blue)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Activity size={16} /> Live Hardware Logic Analyzer & Digital Bus Waveforms
+          </span>
+          <span className="badge-status badge-blue" style={{ fontSize: '0.74rem' }}>
+            {isRunning ? 'STREAMING REAL-TIME BUS TIMING' : 'TRIGGER ARMED: READY'}
+          </span>
+        </div>
+
+        <div className="logic-channels-grid">
+          {/* CH1: CLK */}
+          <div className="logic-channel-row">
+            <div className="logic-channel-label">
+              <span>CH1 [CLK]</span>
+              <span style={{ color: 'var(--accent-cyan)' }}>3.2 GHz</span>
+            </div>
+            <div className="logic-wave-track">
+              <svg className={`wave-stream-svg ${isRunning ? '' : 'paused'}`} viewBox="0 0 560 24" preserveAspectRatio="none">
+                <path
+                  d="M0 20 L14 20 L14 4 L28 4 L28 20 L42 20 L42 4 L56 4 L56 20 L70 20 L70 4 L84 4 L84 20 L98 20 L98 4 L112 4 L112 20 L126 20 L126 4 L140 4 L140 20 L154 20 L154 4 L168 4 L168 20 L182 20 L182 4 L196 4 L196 20 L210 20 L210 4 L224 4 L224 20 L238 20 L238 4 L252 4 L252 20 L266 20 L266 4 L280 4 L280 20 L294 20 L294 4 L308 4 L308 20 L322 20 L322 4 L336 4 L336 20 L350 20 L350 4 L364 4 L364 20 L378 20 L378 4 L392 4 L392 20 L406 20 L406 4 L420 4 L420 20 L434 20 L434 4 L448 4 L448 20 L462 20 L462 4 L476 4 L476 20 L490 20 L490 4 L504 4 L504 20 L518 20 L518 4 L532 4 L532 20 L546 20 L546 4 L560 4"
+                  fill="none"
+                  stroke="var(--accent-cyan)"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* CH2: HOLD */}
+          <div className="logic-channel-row">
+            <div className="logic-channel-label">
+              <span>CH2 [HOLD]</span>
+              <span style={{ color: busOwner.includes('DMA') ? 'var(--accent-blue)' : 'var(--text-muted)' }}>{busOwner.includes('DMA') ? 'HIGH' : 'LOW'}</span>
+            </div>
+            <div className="logic-wave-track">
+              <svg className={`wave-stream-svg ${isRunning ? '' : 'paused'}`} viewBox="0 0 560 24" preserveAspectRatio="none">
+                <path
+                  d={busOwner.includes('DMA') ? "M0 4 L560 4" : "M0 20 L560 20"}
+                  fill="none"
+                  stroke="var(--accent-blue)"
+                  strokeWidth="2.5"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* CH3: HLDA */}
+          <div className="logic-channel-row">
+            <div className="logic-channel-label">
+              <span>CH3 [HLDA]</span>
+              <span style={{ color: busOwner.includes('DMA') ? 'var(--accent-green)' : 'var(--text-muted)' }}>{busOwner.includes('DMA') ? 'GRANT' : 'IDLE'}</span>
+            </div>
+            <div className="logic-wave-track">
+              <svg className={`wave-stream-svg ${isRunning ? '' : 'paused'}`} viewBox="0 0 560 24" preserveAspectRatio="none">
+                <path
+                  d={busOwner.includes('DMA') ? "M0 4 L560 4" : "M0 20 L560 20"}
+                  fill="none"
+                  stroke="var(--accent-green)"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* CH4: MEMW */}
+          <div className="logic-channel-row">
+            <div className="logic-channel-label">
+              <span>CH4 [MEMW]</span>
+              <span style={{ color: 'var(--accent-amber)' }}>{busOwner.includes('DMA') ? 'STROBE' : 'PULLUP'}</span>
+            </div>
+            <div className="logic-wave-track">
+              <svg className={`wave-stream-svg ${isRunning ? '' : 'paused'}`} viewBox="0 0 560 24" preserveAspectRatio="none">
+                <path
+                  d={busOwner.includes('DMA')
+                    ? "M0 4 L28 4 L28 20 L42 20 L42 4 L84 4 L84 20 L98 20 L98 4 L140 4 L140 20 L154 20 L154 4 L196 4 L196 20 L210 20 L210 4 L252 4 L252 20 L266 20 L266 4 L308 4 L308 20 L322 20 L322 4 L364 4 L364 20 L378 20 L378 4 L420 4 L420 20 L434 20 L434 4 L476 4 L476 20 L490 20 L490 4 L532 4 L532 20 L546 20 L546 4 L560 4"
+                    : "M0 4 L560 4"}
+                  fill="none"
+                  stroke="var(--accent-amber)"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>

@@ -324,18 +324,19 @@ export default function UnifiedSystemLab() {
             </div>
           </div>
 
-          <div style={{ background: 'var(--bg-surface-elevated)', border: '2px solid var(--accent-blue)', borderRadius: 'var(--radius-md)', padding: '1.25rem', textAlign: 'center' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+          <div className="ram-container" style={{ background: 'var(--bg-surface-elevated)', border: '2px solid var(--accent-blue)', borderRadius: 'var(--radius-md)', padding: '1.25rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div className="memory-radar-scanner"></div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', position: 'relative', zIndex: 3 }}>
               <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)' }}>Shared Main Memory (DRAM Highway)</span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--accent-cyan)', fontWeight: 700 }}>
                 {isDmaBurstLock ? 'Servicing: DMA Burst Write (0x8000 -> 0x8FFF)' : (stepIndex === 0 ? 'Servicing: Core 1 Read (0x4420)' : (stepIndex === 1 ? 'Servicing: DMA Direct Write (0x8024)' : 'Servicing: Core 2 Read (0x6210)'))}
               </span>
             </div>
-            <div className={`wire-connector-line packet-stream-track ${isDmaBurstLock || stepIndex === 1 ? 'wire-dma-flow' : 'wire-flowing'}`}>
-              <div className="floating-data-packet packet-p1"></div>
-              <div className="floating-data-packet packet-amber packet-p2"></div>
+            <div className={`wire-connector-line packet-stream-track ${isDmaBurstLock || stepIndex === 1 ? 'wire-dma-flow' : 'wire-flowing'}`} style={{ position: 'relative', zIndex: 3 }}>
+              <div className="floating-data-packet packet-p1 comet-ribbon"></div>
+              <div className="floating-data-packet packet-amber packet-p2 comet-ribbon"></div>
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem', position: 'relative', zIndex: 3 }}>
               Single physical bandwidth pool shared across all processors and peripheral controllers
             </div>
           </div>
