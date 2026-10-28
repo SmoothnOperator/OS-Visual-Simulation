@@ -11,37 +11,41 @@
 
   <style>
 :root {
-  /* Clean Academic Minimalist (Stanford/MIT Educational Lab Portal) */
-  --bg-base: #f8fafc;
-  --bg-surface: #ffffff;
-  --bg-surface-elevated: #f1f5f9;
-  --bg-surface-active: #e2e8f0;
+  /* Midnight Black Core Architecture */
+  --bg-base: #020408;
+  --bg-surface: #070b14;
+  --bg-surface-elevated: #0c1322;
+  --bg-surface-active: #14203a;
   
-  --border-subtle: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --border-focus: #93c5fd;
+  --border-subtle: rgba(0, 82, 255, 0.22);
+  --border-strong: rgba(0, 82, 255, 0.45);
+  --border-focus: #0052ff;
 
-  --accent-blue: #2563eb;       /* Stanford/MIT Royal Blue */
-  --accent-blue-hover: #1d4ed8;
-  --accent-blue-light: #eff6ff;
+  /* Electric Cobalt Blue */
+  --accent-blue: #0052ff;
+  --accent-blue-hover: #003ecb;
+  --accent-blue-light: rgba(0, 82, 255, 0.16);
+  --accent-cobalt: #0052ff;
+  --accent-cyan: #00d2ff;
   
-  --accent-cyan: #0284c7;       /* Technical Sky Blue */
-  --accent-green: #059669;      /* Emerald Bus Grant / IRQ */
-  --accent-green-light: #ecfdf5;
+  /* Electric Acid Lime */
+  --accent-green: #ccff00;
+  --accent-green-light: rgba(204, 255, 0, 0.16);
+  --accent-lime: #ccff00;
   
-  --accent-amber: #d97706;      /* Academic Amber Arbiter / Warning */
-  --accent-amber-light: #fffbeb;
+  --accent-amber: #ffb703;
+  --accent-amber-light: rgba(255, 183, 3, 0.16);
   
-  --accent-red: #e11d48;        /* Crimson CPU Stall / Thermal Fault */
-  --accent-red-light: #fff1f2;
+  --accent-red: #ff0055;
+  --accent-red-light: rgba(255, 0, 85, 0.16);
   
-  --accent-purple: #7c3aed;     /* Multiprocessor Violet */
-  --accent-purple-light: #f5f3ff;
+  --accent-purple: #9d4edd;
+  --accent-purple-light: rgba(157, 78, 221, 0.16);
 
-  --text-primary: #0f172a;      /* High-contrast Slate 900 */
-  --text-secondary: #334155;    /* Clear Slate 700 */
-  --text-muted: #64748b;        /* Subtle Slate 500 */
-  --text-inverse: #ffffff;
+  --text-primary: #f0fdf4;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #020408;
 
   --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
@@ -50,10 +54,10 @@
   --radius-md: 12px;
   --radius-lg: 16px;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
-  --shadow-elevated: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
-  --shadow-hover: 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.85), 0 0 1px 1px rgba(0, 82, 255, 0.22);
+  --shadow-elevated: 0 12px 35px -5px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 82, 255, 0.2);
+  --shadow-hover: 0 16px 40px -4px rgba(0, 82, 255, 0.3);
 }
 
 * {
@@ -65,10 +69,10 @@
 body {
   background-color: var(--bg-base);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 40%),
-    radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.04) 0px, transparent 40%),
-    linear-gradient(rgba(226, 232, 240, 0.5) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(226, 232, 240, 0.5) 1px, transparent 1px);
+    radial-gradient(at 0% 0%, rgba(0, 82, 255, 0.2) 0px, transparent 40%),
+    radial-gradient(at 100% 100%, rgba(204, 255, 0, 0.08) 0px, transparent 40%),
+    linear-gradient(rgba(0, 82, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 82, 255, 0.08) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
   color: var(--text-primary);
   font-family: var(--font-main);
@@ -86,9 +90,9 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER - Clean Academic Portal Bar */
+/* HEADER - Midnight Black & Cobalt Bar */
 header {
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(3, 7, 18, 0.95);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
   padding: 1rem 2.2rem;
@@ -1066,59 +1070,69 @@ main {
    THEME 2: DEEP CYBERPUNK / NEON SCI-FI
    ===================================================================== */
 [data-theme="cyberpunk"] {
-  --bg-base: #070b14;
-  --bg-surface: #0f172a;
-  --bg-surface-elevated: #1e293b;
-  --bg-surface-active: #334155;
-  --border-subtle: #1e293b;
-  --border-strong: #334155;
-  --border-focus: #38bdf8;
+  /* Midnight Black Core Surface Architecture */
+  --bg-base: #020408;              /* True Midnight Black Void */
+  --bg-surface: #070b14;           /* Midnight Black Obsidian */
+  --bg-surface-elevated: #0c1322;  /* Midnight Elevated Container */
+  --bg-surface-active: #14203a;    /* Cobalt Midnight Active */
+  --border-subtle: rgba(0, 82, 255, 0.22); /* Hairline Electric Cobalt Border */
+  --border-strong: rgba(0, 82, 255, 0.45); /* Solid Electric Cobalt Border */
+  --border-focus: #0052ff;         /* Electric Cobalt Focus Glow */
 
-  --accent-blue: #38bdf8;
-  --accent-blue-hover: #0284c7;
-  --accent-blue-light: rgba(56, 189, 248, 0.15);
-  --accent-cyan: #06b6d4;
-  --accent-green: #10b981;
-  --accent-green-light: rgba(16, 185, 129, 0.15);
-  --accent-amber: #f59e0b;
-  --accent-amber-light: rgba(245, 158, 11, 0.15);
-  --accent-red: #f43f5e;
-  --accent-red-light: rgba(244, 63, 94, 0.15);
-  --accent-purple: #c084fc;
-  --accent-purple-light: rgba(192, 132, 252, 0.15);
+  /* High-Voltage Electric Cobalt Blue */
+  --accent-blue: #0052ff;          /* Piercing Electric Cobalt Blue */
+  --accent-blue-hover: #003ecb;    /* Deep Cobalt Blue */
+  --accent-blue-light: rgba(0, 82, 255, 0.16);
+  --accent-cobalt: #0052ff;        /* Pure Electric Cobalt */
+  --accent-cyan: #00d2ff;          /* High-Luminance Cobalt Cyan */
 
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  /* Piercing Electric Acid Lime */
+  --accent-green: #ccff00;         /* Electric Acid Lime */
+  --accent-green-light: rgba(204, 255, 0, 0.16);
+  --accent-lime: #ccff00;          /* Pure Acid Lime */
+
+  /* Harmonized Warning & Stall Indicators */
+  --accent-amber: #ffb703;         /* Golden Amber Warning */
+  --accent-amber-light: rgba(255, 183, 3, 0.16);
+  --accent-red: #ff0055;           /* Electric Crimson Stall */
+  --accent-red-light: rgba(255, 0, 85, 0.16);
+  --accent-purple: #9d4edd;        /* Electric Violet Multiprocessor */
+  --accent-purple-light: rgba(157, 78, 221, 0.16);
+
+  /* High-Luminance Typography */
+  --text-primary: #f0fdf4;         /* High-contrast Ice White */
+  --text-secondary: #94a3b8;       /* Cobalt-tinted Slate */
+  --text-muted: #64748b;           /* Technical Muted Gray */
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.85), 0 0 1px 1px rgba(0, 82, 255, 0.22);
 }
 
 [data-theme="cyberpunk"] body {
-  background-color: #070b14;
+  background-color: #020408;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%),
-    linear-gradient(rgba(30, 41, 59, 0.35) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+    radial-gradient(at 0% 0%, rgba(0, 82, 255, 0.2) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(204, 255, 0, 0.08) 0px, transparent 50%),
+    linear-gradient(rgba(0, 82, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 82, 255, 0.08) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
   color: var(--text-primary);
 }
 
 [data-theme="cyberpunk"] header {
-  background: rgba(11, 17, 32, 0.92);
-  border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  background: rgba(3, 7, 18, 0.95);
+  border-bottom: 1px solid rgba(0, 82, 255, 0.35);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.85), 0 0 15px rgba(0, 82, 255, 0.12);
 }
 
 [data-theme="cyberpunk"] .brand-badge {
-  background: linear-gradient(135deg, #0284c7, #6366f1);
+  background: linear-gradient(135deg, #0052ff, #00d2ff);
   color: #ffffff;
   border: none;
+  box-shadow: 0 0 12px rgba(0, 82, 255, 0.4);
 }
 
 [data-theme="cyberpunk"] .narration-banner {
-  background: linear-gradient(90deg, #1e293b, #0f172a);
-  border: 1px solid var(--border-strong);
+  background: linear-gradient(90deg, #0c1322, #070b14);
+  border: 1px solid rgba(0, 82, 255, 0.35);
 }
 
 [data-theme="cyberpunk"] .select-dropdown,
@@ -1135,33 +1149,63 @@ main {
   border-color: var(--border-strong);
 }
 
+[data-theme="cyberpunk"] .btn-primary {
+  background: linear-gradient(135deg, #0052ff, #1a68ff) !important;
+  color: #ffffff !important;
+  border-color: #0052ff !important;
+  box-shadow: 0 0 18px rgba(0, 82, 255, 0.45) !important;
+}
+
+[data-theme="cyberpunk"] .btn-primary:hover {
+  background: linear-gradient(135deg, #0041cc, #0052ff) !important;
+  box-shadow: 0 0 24px rgba(0, 82, 255, 0.65) !important;
+}
+
+[data-theme="cyberpunk"] .tab-btn.active {
+  background: linear-gradient(135deg, #0042cc, #0052ff) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 18px rgba(0, 82, 255, 0.6), inset 0 0 8px rgba(204, 255, 0, 0.25) !important;
+  border: 1px solid rgba(0, 210, 255, 0.5) !important;
+}
+
+[data-theme="cyberpunk"] .tab-btn:hover:not(.active) {
+  color: #ccff00;
+  background: rgba(0, 82, 255, 0.12);
+}
+
 [data-theme="cyberpunk"] .memory-cell.written {
-  background: #064e3b !important;
-  color: #6ee7b7 !important;
-  border-color: #10b981 !important;
+  background: rgba(204, 255, 0, 0.1) !important;
+  color: #ccff00 !important;
+  border-color: #ccff00 !important;
+  box-shadow: 0 0 12px rgba(204, 255, 0, 0.4), inset 0 0 8px rgba(204, 255, 0, 0.15) !important;
+  font-weight: 800 !important;
+  text-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
 }
 
 [data-theme="cyberpunk"] .hardware-node.node-master {
-  background: rgba(16, 185, 129, 0.12) !important;
-  border-color: #10b981;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  background: rgba(0, 82, 255, 0.14) !important;
+  border-color: #0052ff !important;
+  box-shadow: 0 0 24px rgba(0, 82, 255, 0.5), inset 0 0 12px rgba(0, 82, 255, 0.2) !important;
 }
 
 [data-theme="cyberpunk"] .hardware-node.node-stalled {
-  background: rgba(244, 63, 94, 0.12) !important;
-  border-color: #f43f5e;
+  background: rgba(255, 0, 85, 0.14) !important;
+  border-color: #ff0055 !important;
+  box-shadow: 0 0 18px rgba(255, 0, 85, 0.3) !important;
 }
 
 [data-theme="cyberpunk"] .bus-system-container,
 [data-theme="cyberpunk"] .syn-highway-card,
 [data-theme="cyberpunk"] .era-visual-box {
-  background: #060b17 !important;
-  border-color: var(--border-strong);
+  background: #03060f !important;
+  border-color: rgba(0, 82, 255, 0.35) !important;
+  box-shadow: inset 0 0 25px rgba(0, 82, 255, 0.08) !important;
 }
 
 [data-theme="cyberpunk"] .bus-physical-line,
 [data-theme="cyberpunk"] .wire-connector-line {
-  background: #17233d !important;
+  background: #0d1830 !important;
+  border-color: rgba(0, 82, 255, 0.3) !important;
 }
 
 [data-theme="cyberpunk"] .gantt-slot {
@@ -1169,58 +1213,80 @@ main {
 }
 
 [data-theme="cyberpunk"] .slot-cpu-running {
-  background: rgba(56, 189, 248, 0.2);
+  background: rgba(0, 82, 255, 0.22);
   color: #7dd3fc;
-  border-color: #0284c7;
+  border-color: #0052ff;
+  box-shadow: 0 0 10px rgba(0, 82, 255, 0.35);
 }
 
 [data-theme="cyberpunk"] .slot-cpu-stalled {
-  background: rgba(244, 63, 94, 0.25);
+  background: rgba(255, 0, 85, 0.25);
   color: #fda4af;
-  border-color: #e11d48;
+  border-color: #ff0055;
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.35);
 }
 
 [data-theme="cyberpunk"] .slot-dma-transfer {
-  background: rgba(16, 185, 129, 0.25);
-  color: #6ee7b7;
-  border-color: #10b981;
+  background: rgba(204, 255, 0, 0.22);
+  color: #ccff00;
+  border-color: #ccff00;
+  box-shadow: 0 0 10px rgba(204, 255, 0, 0.35);
+  font-weight: 700;
+}
+
+[data-theme="cyberpunk"] .badge-green {
+  background: rgba(204, 255, 0, 0.12) !important;
+  color: #ccff00 !important;
+  border-color: rgba(204, 255, 0, 0.4) !important;
+  box-shadow: 0 0 8px rgba(204, 255, 0, 0.25) !important;
+}
+
+[data-theme="cyberpunk"] .badge-blue {
+  background: rgba(0, 82, 255, 0.16) !important;
+  color: #7dd3fc !important;
+  border-color: rgba(0, 82, 255, 0.45) !important;
+  box-shadow: 0 0 8px rgba(0, 82, 255, 0.25) !important;
 }
 
 [data-theme="cyberpunk"] .on-chip-l3-cache {
-  background: rgba(56, 189, 248, 0.12);
-  border-color: #38bdf8;
-  color: #38bdf8;
+  background: rgba(0, 82, 255, 0.14);
+  border-color: #0052ff;
+  color: #7dd3fc;
+  box-shadow: 0 0 15px rgba(0, 82, 255, 0.3);
 }
 
 [data-theme="cyberpunk"] .system-bus-arbiter {
-  background: rgba(245, 158, 11, 0.12);
-  border-color: #f59e0b;
-  color: #f59e0b;
+  background: rgba(255, 183, 3, 0.14);
+  border-color: #ffb703;
+  color: #ffb703;
 }
 
 [data-theme="cyberpunk"] .turnstile-slot {
   background: var(--bg-base);
+  border-color: var(--border-subtle);
 }
 
 [data-theme="cyberpunk"] .turnstile-slot.slot-active {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
+  background: rgba(204, 255, 0, 0.18);
+  color: #ccff00;
+  border-color: #ccff00;
+  box-shadow: 0 0 10px rgba(204, 255, 0, 0.25);
 }
 
 [data-theme="cyberpunk"] .turnstile-slot.slot-queued {
-  background: rgba(245, 158, 11, 0.15);
+  background: rgba(255, 183, 3, 0.15);
   color: #fde68a;
 }
 
 [data-theme="cyberpunk"] .analogy-box {
-  background: #0f172a !important;
-  border-color: var(--border-strong) !important;
+  background: #0c1322 !important;
+  border-color: rgba(0, 82, 255, 0.35) !important;
 }
 
 [data-theme="cyberpunk"] .cache-hierarchy-pill {
   background: var(--bg-base);
-  color: var(--accent-amber);
-  border-color: var(--border-subtle);
+  color: #ccff00;
+  border-color: rgba(204, 255, 0, 0.3);
 }
 
 [data-theme="cyberpunk"] .distributed-ram-node {
@@ -1235,12 +1301,13 @@ main {
 }
 
 [data-theme="cyberpunk"] .chip-silicon-boundary {
-  background: rgba(56, 189, 248, 0.04);
-  border-color: var(--accent-blue);
+  background: rgba(0, 82, 255, 0.06);
+  border-color: #0052ff;
+  box-shadow: inset 0 0 20px rgba(0, 82, 255, 0.15);
 }
 
 [data-theme="cyberpunk"] .motherboard-boundary {
-  background: rgba(192, 132, 252, 0.04);
+  background: rgba(157, 78, 221, 0.04);
   border-color: var(--accent-purple);
 }
 
@@ -1813,8 +1880,8 @@ main {
   left: 0;
   width: 35%;
   height: 2.5px;
-  background: linear-gradient(90deg, transparent, var(--accent-cyan), #ffffff, var(--accent-green), transparent);
-  box-shadow: 0 0 14px var(--accent-cyan), 0 0 28px var(--accent-green);
+  background: linear-gradient(90deg, transparent, #0052ff, #ccff00, #00d2ff, transparent);
+  box-shadow: 0 0 16px #0052ff, 0 0 26px #ccff00;
   animation: headerPulseLaser 3.5s infinite ease-in-out;
   pointer-events: none;
 }
@@ -1829,10 +1896,10 @@ main {
   letter-spacing: 0.08em;
   color: var(--accent-cyan);
   padding: 0.25rem 0.8rem;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(7, 11, 20, 0.9);
+  border: 1px solid rgba(0, 82, 255, 0.35);
   border-radius: 9999px;
-  box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.1);
+  box-shadow: inset 0 0 10px rgba(0, 82, 255, 0.15);
 }
 
 .telemetry-item {
@@ -2079,15 +2146,15 @@ main {
 
 @keyframes stagePulseNeon {
   0%, 100% {
-    background: rgba(6, 182, 212, 0.18);
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
-    color: #ffffff;
+    background: rgba(0, 82, 255, 0.2);
+    border-color: #0052ff;
+    box-shadow: 0 0 10px rgba(0, 82, 255, 0.5);
+    color: #ccff00;
   }
   50% {
-    background: rgba(6, 182, 212, 0.35);
-    border-color: #ffffff;
-    box-shadow: 0 0 18px var(--accent-cyan);
+    background: rgba(0, 82, 255, 0.38);
+    border-color: #00d2ff;
+    box-shadow: 0 0 18px #0052ff;
     color: #ffffff;
   }
 }
@@ -2098,15 +2165,15 @@ main {
 
 @keyframes pipelineFrozenStrobe {
   0%, 100% {
-    background: rgba(225, 29, 72, 0.2);
-    border-color: #f43f5e;
-    box-shadow: 0 0 8px rgba(225, 29, 72, 0.5);
+    background: rgba(255, 0, 85, 0.2);
+    border-color: #ff0055;
+    box-shadow: 0 0 8px rgba(255, 0, 85, 0.5);
     color: #fda4af;
   }
   50% {
-    background: rgba(225, 29, 72, 0.4);
+    background: rgba(255, 0, 85, 0.4);
     border-color: #ffffff;
-    box-shadow: 0 0 16px #f43f5e;
+    box-shadow: 0 0 16px #ff0055;
     color: #ffffff;
   }
 }
@@ -2117,11 +2184,11 @@ main {
 
 /* 31. FEATURE 3: MATRIX HEX DECRYPTION & EXPANDING SHOCKWAVE */
 @keyframes hexDecryptionMatrix {
-  0% { color: #38bdf8; text-shadow: 0 0 12px #38bdf8; transform: scale(1.15); }
-  25% { color: #f59e0b; text-shadow: 0 0 15px #f59e0b; }
-  50% { color: #10b981; text-shadow: 0 0 20px #10b981, 0 0 35px #ffffff; transform: scale(1.2); }
-  75% { color: #ec4899; text-shadow: 0 0 15px #ec4899; }
-  100% { color: #10b981; transform: scale(1); }
+  0% { color: #0052ff; text-shadow: 0 0 12px #0052ff; transform: scale(1.15); }
+  25% { color: #00d2ff; text-shadow: 0 0 15px #00d2ff; }
+  50% { color: #ccff00; text-shadow: 0 0 20px #ccff00, 0 0 35px #ffffff; transform: scale(1.2); }
+  75% { color: #aaff00; text-shadow: 0 0 15px #aaff00; }
+  100% { color: #ccff00; transform: scale(1); }
 }
 
 .matrix-hex-scramble {
@@ -2132,15 +2199,15 @@ main {
 
 @keyframes particleShockwaveRing {
   0% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.9), 0 0 25px rgba(16, 185, 129, 0.8);
+    box-shadow: 0 0 0 0 rgba(204, 255, 0, 0.9), 0 0 25px rgba(204, 255, 0, 0.8);
     transform: scale(1.2);
   }
   70% {
-    box-shadow: 0 0 0 22px rgba(16, 185, 129, 0), 0 0 45px rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 0 22px rgba(204, 255, 0, 0), 0 0 45px rgba(0, 82, 255, 0.5);
     transform: scale(1.08);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    box-shadow: 0 0 0 0 rgba(204, 255, 0, 0);
     transform: scale(1);
   }
 }
@@ -2152,12 +2219,12 @@ main {
 
 /* 32. FEATURE 4: 40-PIN INTEL 8237 DIP IC PINOUT & VOLTAGE GAUGES */
 .ic-chip-container {
-  background: #090e1a;
-  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  background: #040813;
+  border: 1.5px solid rgba(0, 82, 255, 0.4);
   border-radius: var(--radius-sm);
   padding: 0.85rem;
   margin-top: 1rem;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(56, 189, 248, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 82, 255, 0.1);
 }
 
 .ic-pinout-grid {
@@ -2171,7 +2238,7 @@ main {
   display: flex;
   flex-direction: column;
   padding: 0.35rem 0.5rem;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(12, 19, 34, 0.9);
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
   font-family: var(--font-mono);
@@ -2194,12 +2261,12 @@ main {
 }
 
 .pin-led.high {
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981, 0 0 16px #34d399;
+  background: #ccff00;
+  box-shadow: 0 0 8px #ccff00, 0 0 16px #ccff00;
 }
 
 .pin-led.low {
-  background: #334155;
+  background: #1e293b;
   box-shadow: none;
 }
 
@@ -2210,7 +2277,8 @@ main {
 }
 
 .pin-voltage-text.high {
-  color: #34d399;
+  color: #ccff00;
+  text-shadow: 0 0 6px rgba(204, 255, 0, 0.6);
 }
 
 .pin-voltage-text.low {
@@ -2226,13 +2294,13 @@ main {
 }
 
 .speedo-card {
-  background: rgba(11, 18, 33, 0.85);
-  border: 1.5px solid var(--border-strong);
+  background: rgba(7, 11, 20, 0.9);
+  border: 1.5px solid rgba(0, 82, 255, 0.35);
   border-radius: var(--radius-md);
   padding: 1.1rem 1.4rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 82, 255, 0.06);
 }
 
 .speedo-dial-svg {
@@ -2253,28 +2321,28 @@ main {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1.5px solid rgba(56, 189, 248, 0.3);
+  background: rgba(7, 11, 20, 0.9);
+  border: 1.5px solid rgba(0, 82, 255, 0.4);
   padding: 0.35rem 0.8rem;
   border-radius: 9999px;
   font-family: var(--font-mono);
   font-size: 0.74rem;
   font-weight: 700;
-  color: var(--accent-cyan);
+  color: #00d2ff;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .sfx-toggle-btn:hover {
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+  border-color: #ccff00;
+  box-shadow: 0 0 15px rgba(204, 255, 0, 0.4);
 }
 
 .sfx-toggle-btn.sfx-active {
-  background: rgba(6, 182, 212, 0.15);
-  border-color: var(--accent-cyan);
-  color: #ffffff;
-  box-shadow: 0 0 12px var(--accent-cyan);
+  background: rgba(0, 82, 255, 0.18);
+  border-color: #ccff00;
+  color: #ccff00;
+  box-shadow: 0 0 14px rgba(204, 255, 0, 0.45);
 }
 
 .sfx-wave-bars {
@@ -2286,7 +2354,7 @@ main {
 
 .sfx-wave-bar {
   width: 2px;
-  background: var(--accent-cyan);
+  background: #ccff00;
   border-radius: 1px;
 }
 

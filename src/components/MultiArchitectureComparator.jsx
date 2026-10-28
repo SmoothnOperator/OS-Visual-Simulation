@@ -293,8 +293,8 @@ export default function MultiArchitectureComparator() {
                 <span style={{ color: 'var(--accent-blue)' }}>Multicore Workload Progress:</span>
                 <span style={{ color: 'var(--accent-green)', fontFamily: 'var(--font-mono)' }}>{mcProgress}%</span>
               </div>
-              <div style={{ height: '12px', background: '#e2e8f0', borderRadius: '6px', overflow: 'hidden' }}>
-                <div style={{ width: `${mcProgress}%`, height: '100%', background: 'linear-gradient(90deg, #0284c7, #10b981)', transition: 'width 0.15s ease' }}></div>
+              <div style={{ height: '12px', background: 'rgba(0, 82, 255, 0.15)', border: '1px solid rgba(0, 82, 255, 0.3)', borderRadius: '6px', overflow: 'hidden' }}>
+                <div style={{ width: `${mcProgress}%`, height: '100%', background: 'linear-gradient(90deg, var(--accent-blue), var(--accent-green))', boxShadow: '0 0 10px rgba(204, 255, 0, 0.5)', transition: 'width 0.15s ease' }}></div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
                 <span>Interconnect: <strong style={{ color: 'var(--accent-green)' }}>On-Die Crossbar (0.8ns)</strong></span>
@@ -307,8 +307,8 @@ export default function MultiArchitectureComparator() {
                 <span style={{ color: 'var(--accent-purple)' }}>Multiprocessor Workload Progress:</span>
                 <span style={{ color: 'var(--accent-amber)', fontFamily: 'var(--font-mono)' }}>{mpProgress}%</span>
               </div>
-              <div style={{ height: '12px', background: '#e2e8f0', borderRadius: '6px', overflow: 'hidden' }}>
-                <div style={{ width: `${mpProgress}%`, height: '100%', background: 'linear-gradient(90deg, #8b5cf6, #f59e0b)', transition: 'width 0.15s ease' }}></div>
+              <div style={{ height: '12px', background: 'rgba(157, 78, 221, 0.15)', border: '1px solid rgba(157, 78, 221, 0.3)', borderRadius: '6px', overflow: 'hidden' }}>
+                <div style={{ width: `${mpProgress}%`, height: '100%', background: 'linear-gradient(90deg, var(--accent-purple), var(--accent-amber))', transition: 'width 0.15s ease' }}></div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
                 <span>Interconnect: <strong style={{ color: 'var(--accent-amber)' }}>Motherboard Bus Arbiter (15ns)</strong></span>
@@ -332,10 +332,10 @@ export default function MultiArchitectureComparator() {
           </div>
           
           <svg viewBox="0 0 200 115" className="speedo-dial-svg">
-            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="#1e293b" strokeWidth="14" strokeLinecap="round" />
-            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="var(--accent-cyan)" strokeWidth="14" strokeDasharray="235" strokeDashoffset={dieFault ? 235 : 45} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease', filter: 'drop-shadow(0 0 8px var(--accent-cyan))' }} />
-            <circle cx="100" cy="100" r="9" fill="#0f172a" stroke="var(--accent-cyan)" strokeWidth="3" />
-            <line x1="100" y1="100" x2="100" y2="35" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 6px var(--accent-cyan))', transformOrigin: '100px 100px', transform: `rotate(${dieFault ? -90 : (benchmarkRunning ? 68 : 55)}deg)`, transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
+            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="#0b1325" strokeWidth="14" strokeLinecap="round" />
+            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="var(--accent-blue)" strokeWidth="14" strokeDasharray="235" strokeDashoffset={dieFault ? 235 : 45} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease', filter: 'drop-shadow(0 0 10px var(--accent-blue))' }} />
+            <circle cx="100" cy="100" r="9" fill="#020408" stroke="var(--accent-green)" strokeWidth="3" />
+            <line x1="100" y1="100" x2="100" y2="35" stroke="var(--accent-green)" strokeWidth="3.5" strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 8px var(--accent-green))', transformOrigin: '100px 100px', transform: `rotate(${dieFault ? -90 : (benchmarkRunning ? 68 : 55)}deg)`, transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
           </svg>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
             <span>0 GB/s</span>
@@ -355,10 +355,10 @@ export default function MultiArchitectureComparator() {
           </div>
           
           <svg viewBox="0 0 200 115" className="speedo-dial-svg">
-            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="#1e293b" strokeWidth="14" strokeLinecap="round" />
-            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="var(--accent-amber)" strokeWidth="14" strokeDasharray="235" strokeDashoffset={socketFault ? 190 : 140} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease', filter: 'drop-shadow(0 0 8px var(--accent-amber))' }} />
-            <circle cx="100" cy="100" r="9" fill="#0f172a" stroke="var(--accent-amber)" strokeWidth="3" />
-            <line x1="100" y1="100" x2="100" y2="35" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 6px var(--accent-amber))', transformOrigin: '100px 100px', transform: `rotate(${socketFault ? -55 : (benchmarkRunning ? -20 : -35)}deg)`, transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
+            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="#0b1325" strokeWidth="14" strokeLinecap="round" />
+            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="var(--accent-amber)" strokeWidth="14" strokeDasharray="235" strokeDashoffset={socketFault ? 190 : 140} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease', filter: 'drop-shadow(0 0 10px var(--accent-amber))' }} />
+            <circle cx="100" cy="100" r="9" fill="#020408" stroke="var(--accent-blue)" strokeWidth="3" />
+            <line x1="100" y1="100" x2="100" y2="35" stroke="var(--accent-blue)" strokeWidth="3.5" strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 8px var(--accent-blue))', transformOrigin: '100px 100px', transform: `rotate(${socketFault ? -55 : (benchmarkRunning ? -20 : -35)}deg)`, transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
           </svg>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
             <span>0 GB/s</span>
@@ -388,7 +388,7 @@ export default function MultiArchitectureComparator() {
             </span>
           </div>
 
-          <div className={`chip-silicon-boundary ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : '#0284c7' }}>
+          <div className={`chip-silicon-boundary ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : 'var(--accent-blue)' }}>
             <span className="chip-boundary-label">Single Silicon Die Package</span>
 
             <div
