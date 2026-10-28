@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Zap, AlertTriangle, RefreshCw, Eye, Search, Gauge } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 
@@ -22,6 +22,10 @@ export default function MultiArchitectureComparator() {
   });
 
   const benchmarkTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => clearInterval(benchmarkTimerRef.current);
+  }, []);
 
   const handleCoreCountChange = (count) => {
     const num = parseInt(count, 10);

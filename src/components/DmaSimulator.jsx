@@ -24,21 +24,20 @@ export default function DmaSimulator() {
   });
 
   const timerRef = useRef(null);
+  const stepCycleRef = useRef(null);
+  stepCycleRef.current = stepCycle;
 
-  // Stop simulation on unmount
-  useEffect(() => {
-    return () => clearInterval(timerRef.current);
-  }, []);
-
-  // Update interval when running or speed changes
+  // Rock-solid non-thrashing interval
   useEffect(() => {
     if (isRunning) {
-      clearInterval(timerRef.current);
-      timerRef.current = setInterval(stepCycle, speed);
-    } else {
-      clearInterval(timerRef.current);
+      const intervalId = setInterval(() => {
+        if (stepCycleRef.current) {
+          stepCycleRef.current();
+        }
+      }, speed);
+      return () => clearInterval(intervalId);
     }
-  }, [isRunning, speed, transferredBytes, currentClock, mode, blockSize, cpuWorkCycles, cpuStallCycles, ganttHistory]);
+  }, [isRunning, speed]);
 
   const handleModeChange = (newMode) => {
     setMode(newMode);

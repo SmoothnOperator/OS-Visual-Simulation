@@ -14,19 +14,19 @@ export default function UnifiedSystemLab() {
   });
 
   const timerRef = useRef(null);
-
-  useEffect(() => {
-    return () => clearInterval(timerRef.current);
-  }, []);
+  const stepSimulationRef = useRef(null);
+  stepSimulationRef.current = stepSimulation;
 
   useEffect(() => {
     if (isRunning) {
-      clearInterval(timerRef.current);
-      timerRef.current = setInterval(stepSimulation, 900);
-    } else {
-      clearInterval(timerRef.current);
+      const intervalId = setInterval(() => {
+        if (stepSimulationRef.current) {
+          stepSimulationRef.current();
+        }
+      }, 900);
+      return () => clearInterval(intervalId);
     }
-  }, [isRunning, stepIndex, scenario, stress]);
+  }, [isRunning]);
 
   const handleScenarioChange = (newScenario) => {
     setScenario(newScenario);
