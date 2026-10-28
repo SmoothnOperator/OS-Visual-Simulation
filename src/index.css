@@ -2501,6 +2501,7 @@ main {
 
 /* 38. FEATURE 4: AEROSPACE HUD CROSSHAIR TRACKER */
 .hud-crosshair-reticle {
+  display: none !important;
   position: fixed;
   top: 0;
   left: 0;
