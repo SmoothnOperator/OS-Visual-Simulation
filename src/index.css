@@ -690,8 +690,8 @@ main {
 .gantt-blocks-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 3px;
 }
 
 .gantt-slot {

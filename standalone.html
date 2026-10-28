@@ -702,8 +702,8 @@ main {
 .gantt-blocks-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 3px;
 }
 
 .gantt-slot {
@@ -4393,7 +4393,7 @@ body.cinema-mode-active main {
         <div class="card-heading" style="flex-wrap: wrap; gap: 0.75rem;">
           <div style="display: flex; align-items: center; gap: 0.65rem;">
             <span style="font-size: 1rem; font-weight: 800; color: #ffffff;">Cycle-by-Cycle Waveform & Bus Arbitration Timing</span>
-            <span class="badge-status badge-blue" style="font-size: 0.7rem;">20-CYCLE OSCILLOSCOPE LOGIC</span>
+            <span class="badge-status badge-blue" style="font-size: 0.7rem;">24-CYCLE OSCILLOSCOPE LOGIC</span>
           </div>
           <div class="timing-legend-row">
             <span class="legend-chip legend-blue">⚡ CPU EXEC</span>
@@ -5020,7 +5020,7 @@ body.cinema-mode-active main {
 
       // Gantt History
       ganttRecords.push({ cycle: currentClock, cpu: cpuState, bus: busOwner, dma: dmaState });
-      if (ganttRecords.length > 20) ganttRecords.shift();
+      if (ganttRecords.length > 24) ganttRecords.shift();
 
       refreshMetrics();
       drawGantt();
@@ -5081,7 +5081,7 @@ body.cinema-mode-active main {
       if (busG) busG.innerHTML = '';
       if (dmaG) dmaG.innerHTML = '';
 
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 24; i++) {
         const item = ganttRecords[i];
         const isCurrent = i === ganttRecords.length - 1 && isRunning;
 

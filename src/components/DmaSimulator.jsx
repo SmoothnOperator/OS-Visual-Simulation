@@ -200,7 +200,7 @@ export default function DmaSimulator() {
 
     setGanttHistory(prev => {
       const updated = [...prev, newRecord];
-      if (updated.length > 20) updated.shift();
+      if (updated.length > 24) updated.shift();
       return updated;
     });
 
@@ -733,7 +733,7 @@ export default function DmaSimulator() {
         <div className="card-heading" style={{ flexWrap: 'wrap', gap: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <span style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff' }}>Cycle-by-Cycle Waveform & Bus Arbitration Timing</span>
-            <span className="badge-status badge-blue" style={{ fontSize: '0.7rem' }}>20-CYCLE OSCILLOSCOPE LOGIC</span>
+            <span className="badge-status badge-blue" style={{ fontSize: '0.7rem' }}>24-CYCLE OSCILLOSCOPE LOGIC</span>
           </div>
           <div className="timing-legend-row">
             <span className="legend-chip legend-blue">⚡ CPU EXEC</span>
@@ -749,7 +749,7 @@ export default function DmaSimulator() {
             <Clock size={13} /> CLK Cycle (T):
           </div>
           <div className="gantt-blocks-grid">
-            {Array.from({ length: 20 }).map((_, idx) => {
+            {Array.from({ length: 24 }).map((_, idx) => {
               const item = ganttHistory[idx];
               const isCurrent = idx === ganttHistory.length - 1 && isRunning;
               return (
@@ -771,7 +771,7 @@ export default function DmaSimulator() {
             Digital Clock (CLK):
           </div>
           <div className="gantt-blocks-grid gantt-wave-grid">
-            {Array.from({ length: 20 }).map((_, idx) => (
+            {Array.from({ length: 24 }).map((_, idx) => (
               <div key={idx} className="gantt-wave-cell">
                 <svg viewBox="0 0 32 14" className="gantt-clock-pulse-svg">
                   <path
@@ -790,7 +790,7 @@ export default function DmaSimulator() {
         <div className="gantt-row">
           <div className="gantt-title">CPU Status:</div>
           <div className="gantt-blocks-grid">
-            {Array.from({ length: 20 }).map((_, idx) => {
+            {Array.from({ length: 24 }).map((_, idx) => {
               const item = ganttHistory[idx];
               const isCurrent = idx === ganttHistory.length - 1 && isRunning;
               return (
@@ -810,7 +810,7 @@ export default function DmaSimulator() {
         <div className="gantt-row">
           <div className="gantt-title">Bus Mastership:</div>
           <div className="gantt-blocks-grid">
-            {Array.from({ length: 20 }).map((_, idx) => {
+            {Array.from({ length: 24 }).map((_, idx) => {
               const item = ganttHistory[idx];
               const isCurrent = idx === ganttHistory.length - 1 && isRunning;
               return (
@@ -830,7 +830,7 @@ export default function DmaSimulator() {
         <div className="gantt-row">
           <div className="gantt-title">DMA Controller:</div>
           <div className="gantt-blocks-grid">
-            {Array.from({ length: 20 }).map((_, idx) => {
+            {Array.from({ length: 24 }).map((_, idx) => {
               const item = ganttHistory[idx];
               const isCurrent = idx === ganttHistory.length - 1 && isRunning;
               return (
