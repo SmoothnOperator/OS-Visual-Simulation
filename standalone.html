@@ -227,6 +227,21 @@ header {
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
 
+/* TAB PANES (STANDALONE HTML & MULTI-VIEW ROUTING) */
+.tab-pane {
+  display: none !important;
+}
+
+.tab-pane.active {
+  display: block !important;
+  animation: tabFadeIn 0.25s ease-out;
+}
+
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* MAIN CONTENT */
 main {
   flex: 1;
@@ -2377,13 +2392,13 @@ main {
     </div>
 
     <nav class="nav-tabs">
-      <button class="tab-btn active" onclick="navigateTab('dma')">
+      <button class="tab-btn active" id="tabBtnDma" onclick="navigateTab('dma')">
         <span>📡</span> DMA Modes
       </button>
-      <button class="tab-btn" onclick="navigateTab('multicore')">
+      <button class="tab-btn" id="tabBtnMulticore" onclick="navigateTab('multicore')">
         <span>⚙️</span> Multicore vs Multiprocessor
       </button>
-      <button class="tab-btn" onclick="navigateTab('unified')">
+      <button class="tab-btn" id="tabBtnUnified" onclick="navigateTab('unified')">
         <span>🔬</span> Unified System Lab
       </button>
     </nav>
@@ -2982,18 +2997,28 @@ main {
     function navigateTab(tabName) {
       activeTabId = tabName;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => {
+        p.classList.remove('active');
+        p.style.display = 'none';
+      });
 
-      if (tabName === 'dma') {
-        document.querySelectorAll('.tab-btn')[0].classList.add('active');
-        document.getElementById('pane-dma').classList.add('active');
-      } else if (tabName === 'multicore') {
-        document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        document.getElementById('pane-multicore').classList.add('active');
-      } else if (tabName === 'unified') {
-        document.querySelectorAll('.tab-btn')[2].classList.add('active');
-        document.getElementById('pane-unified').classList.add('active');
+      const paneMap = {
+        'dma': { btn: 'tabBtnDma', pane: 'pane-dma' },
+        'multicore': { btn: 'tabBtnMulticore', pane: 'pane-multicore' },
+        'unified': { btn: 'tabBtnUnified', pane: 'pane-unified' }
+      };
+
+      const target = paneMap[tabName];
+      if (target) {
+        const btn = document.getElementById(target.btn);
+        const pane = document.getElementById(target.pane);
+        if (btn) btn.classList.add('active');
+        if (pane) {
+          pane.classList.add('active');
+          pane.style.display = 'block';
+        }
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // --- RAM GRID INITIALIZER ---
@@ -3851,6 +3876,7 @@ main {
     window.onload = function() {
       const savedTheme = localStorage.getItem('os_lab_theme') || 'cyberpunk';
       switchTheme(savedTheme);
+      navigateTab('dma');
       setupRamGrid();
       drawGantt();
     };

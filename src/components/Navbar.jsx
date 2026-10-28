@@ -56,28 +56,34 @@ export default function Navbar({ activeTab, setActiveTab }) {
 
       <nav className="nav-tabs">
         <button
+          id="tabBtnDma"
           className={`tab-btn btn-cyber-kinetic ${activeTab === 'dma' ? 'active' : ''}`}
           onClick={() => {
-            soundFx.playClick();
+            try { soundFx.playClick(); } catch (e) {}
             setActiveTab('dma');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         >
           <Cpu size={18} /> DMA Modes
         </button>
         <button
+          id="tabBtnMulticore"
           className={`tab-btn btn-cyber-kinetic ${activeTab === 'multicore' ? 'active' : ''}`}
           onClick={() => {
-            soundFx.playClick();
+            try { soundFx.playClick(); } catch (e) {}
             setActiveTab('multicore');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         >
           <Layers size={18} /> Multicore vs Multiprocessor
         </button>
         <button
+          id="tabBtnUnified"
           className={`tab-btn btn-cyber-kinetic ${activeTab === 'unified' ? 'active' : ''}`}
           onClick={() => {
-            soundFx.playClick();
+            try { soundFx.playClick(); } catch (e) {}
             setActiveTab('unified');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         >
           <Zap size={18} /> Unified System Lab
