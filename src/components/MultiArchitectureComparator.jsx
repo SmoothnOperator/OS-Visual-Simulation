@@ -393,7 +393,7 @@ export default function MultiArchitectureComparator() {
             </span>
           </div>
 
-          <div className={`chip-silicon-boundary sonar-lidar-container cyber-tilt-card cyber-target-container ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : 'var(--accent-blue)', position: 'relative' }}>
+          <div className={`chip-silicon-boundary sonar-lidar-container cyber-target-container ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : 'var(--accent-blue)', position: 'relative' }}>
             {/* FEATURE 1: CYBER SONAR LIDAR SCANNER */}
             <div className="lidar-scan-beam"></div>
 
@@ -509,7 +509,7 @@ export default function MultiArchitectureComparator() {
             <span className="meta-tag" style={{ color: 'var(--accent-green)' }}>🛡️ Fault Isolation: Independent</span>
           </div>
 
-          <div className="motherboard-boundary sonar-lidar-container cyber-tilt-card cyber-target-container" style={{ position: 'relative' }}>
+          <div className="motherboard-boundary sonar-lidar-container cyber-target-container" style={{ position: 'relative' }}>
             {/* FEATURE 1: CYBER SONAR LIDAR SCANNER */}
             <div className="lidar-scan-beam"></div>
 

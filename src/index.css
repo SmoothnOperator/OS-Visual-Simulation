@@ -408,7 +408,7 @@ main {
 
 .schematic-box-row {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
@@ -420,6 +420,8 @@ main {
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
   gap: 0.85rem;
   transition: all 0.25s ease;
   position: relative;

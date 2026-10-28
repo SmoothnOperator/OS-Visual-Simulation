@@ -203,14 +203,9 @@ export default function UnifiedSystemLab() {
 
         {/* TOP CORES */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '0.5rem' }}>
-          <div className={`hardware-node cyber-tilt-card cyber-target-container ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 0 ? 'node-master target-active' : '')}`}>
-            <div className="target-corner target-tl"></div>
-            <div className="target-corner target-tr"></div>
-            <div className="target-corner target-bl"></div>
-            <div className="target-corner target-br"></div>
-            <span className="target-badge-telemetry">CORE 1</span>
+          <div className={`hardware-node card-hud-corner ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 0 ? 'node-master' : '')}`}>
             <div className="node-header">
-              <span className="node-title" style={{ color: 'var(--accent-blue)' }}>Multicore Core 1</span>
+              <span className="node-title" style={{ color: 'var(--accent-blue)' }}>Multicore Core 1 (3.2GHz)</span>
               <span className={`badge-status ${isDmaBurstLock ? 'badge-red' : (stepIndex === 0 ? 'badge-green' : 'badge-amber')}`}>
                 {isDmaBurstLock ? 'STALLED' : (stepIndex === 0 ? 'COMPUTING' : 'YIELDED')}
               </span>
@@ -233,14 +228,9 @@ export default function UnifiedSystemLab() {
             </div>
           </div>
 
-          <div className={`hardware-node cyber-tilt-card cyber-target-container ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 2 ? 'node-master target-active' : '')}`}>
-            <div className="target-corner target-tl"></div>
-            <div className="target-corner target-tr"></div>
-            <div className="target-corner target-bl"></div>
-            <div className="target-corner target-br"></div>
-            <span className="target-badge-telemetry">CORE 2</span>
+          <div className={`hardware-node card-hud-corner ${isDmaBurstLock ? 'node-stalled' : (stepIndex === 2 ? 'node-master' : '')}`}>
             <div className="node-header">
-              <span className="node-title" style={{ color: 'var(--accent-purple)' }}>Multicore Core 2</span>
+              <span className="node-title" style={{ color: 'var(--accent-purple)' }}>Multicore Core 2 (3.2GHz)</span>
               <span className={`badge-status ${isDmaBurstLock ? 'badge-red' : (stepIndex === 2 ? 'badge-green' : 'badge-amber')}`}>
                 {isDmaBurstLock ? 'STALLED' : (stepIndex === 2 ? 'COMPUTING' : 'QUEUED')}
               </span>
@@ -298,13 +288,8 @@ export default function UnifiedSystemLab() {
         )}
 
         {/* TURNSTILE BOX WITH KINETIC ARBITER, LIDAR SCAN & CYBER BRACKETS */}
-        <div className={`turnstile-box card-hud-corner sonar-lidar-container cyber-tilt-card cyber-target-container ${busSat > 75 ? 'hazard-stalled-overlay' : ''}`}>
+        <div className={`turnstile-box card-hud-corner sonar-lidar-container ${busSat > 75 ? 'hazard-stalled-overlay' : ''}`}>
           <div className="lidar-scan-beam"></div>
-          <div className="target-corner target-tl"></div>
-          <div className="target-corner target-tr"></div>
-          <div className="target-corner target-bl"></div>
-          <div className="target-corner target-br"></div>
-          <span className="target-badge-telemetry" style={{ borderColor: 'var(--accent-amber)', color: 'var(--accent-amber)' }}>BUS ARBITER</span>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--accent-amber)', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
@@ -336,14 +321,9 @@ export default function UnifiedSystemLab() {
 
         {/* LOWER SECTION: DMA & RAM */}
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '1.5rem', alignItems: 'center', marginTop: '1rem' }}>
-          <div className={`hardware-node cyber-tilt-card cyber-target-container ${isDmaBurstLock || stepIndex === 1 ? 'node-master target-active' : ''}`}>
-            <div className="target-corner target-tl"></div>
-            <div className="target-corner target-tr"></div>
-            <div className="target-corner target-bl"></div>
-            <div className="target-corner target-br"></div>
-            <span className="target-badge-telemetry" style={{ borderColor: 'var(--accent-green)', color: 'var(--accent-green)' }}>DMA 8237</span>
+          <div className={`hardware-node card-hud-corner ${isDmaBurstLock || stepIndex === 1 ? 'node-master' : ''}`}>
             <div className="node-header">
-              <span className="node-title" style={{ color: 'var(--accent-green)' }}>DMA Controller (Station Master)</span>
+              <span className="node-title" style={{ color: 'var(--accent-green)' }}>DMA Controller (8237)</span>
               <span className={`badge-status ${isDmaBurstLock || stepIndex === 1 ? 'badge-green' : 'badge-amber'}`}>
                 {isDmaBurstLock ? 'BURSTING' : (stepIndex === 1 ? 'TRANSFERRING' : 'HOLD_REQ')}
               </span>
