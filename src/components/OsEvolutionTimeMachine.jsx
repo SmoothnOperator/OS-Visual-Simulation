@@ -7,7 +7,7 @@ const ERAS = [
     gen: '1st Gen (1940s-50s)',
     title: 'Vacuum Tubes & Plugboards',
     tech: 'ENIAC (1945), UNIVAC (1951)',
-    slideRef: 'Module 1, Slide 23 & 35',
+    eraTag: '1st Gen: Vacuum Tubes',
     hardware: '20,000 Vacuum Tubes, Physical Plugboard Wires',
     ioMode: 'Manual Programmed I/O (No OS, No DMA)',
     cpuClock: '100 kHz',
@@ -16,7 +16,7 @@ const ERAS = [
     wastedCpu: 92,
     packaging: 'Entire Room (30 Tons)',
     cost: '$500,000 (1950 USD)',
-    summary: 'Slide 35: Programmers plugged physical wires into plugboards and reserved time on wall sign-up sheets. The CPU directly drove mechanical card readers, wasting 92% of its cycles waiting on human and mechanical delays.',
+    summary: 'First Generation: Programmers plugged physical wires into plugboards and reserved time on wall sign-up sheets. The CPU directly drove mechanical card readers, wasting 92% of its cycles waiting on human and mechanical delays.',
     simulationTitle: 'ENIAC Punch-Card Read Cycle',
     dmaPresent: false,
     multicorePresent: false
@@ -26,7 +26,7 @@ const ERAS = [
     gen: '2nd Gen (1950s-60s)',
     title: 'Transistors & Batch Systems',
     tech: 'IBM 7094 Mainframe',
-    slideRef: 'Module 1, Slide 23 & 36',
+    eraTag: '2nd Gen: Transistors & Batch',
     hardware: 'Discrete Transistors, Magnetic Core Memory',
     ioMode: 'Batch Systems (Separate I/O & Compute Machines)',
     cpuClock: '2 MHz',
@@ -35,7 +35,7 @@ const ERAS = [
     wastedCpu: 78,
     packaging: 'Several Large Cabinets',
     cost: '$2,000,000 (1962 USD)',
-    summary: 'Slide 36: Transistors made computers dependable. Programs were grouped into "jobs" and read from magnetic tape. However, the CPU still stalled on tape transfers until the entire batch completed.',
+    summary: 'Second Generation: Transistors made computers dependable. Programs were grouped into "jobs" and read from magnetic tape. However, the CPU still stalled on tape transfers until the entire batch completed.',
     simulationTitle: 'IBM 7094 Tape Reel Batch Feed',
     dmaPresent: false,
     multicorePresent: false
@@ -45,7 +45,7 @@ const ERAS = [
     gen: '3rd Gen (1960s-70s)',
     title: 'Integrated Circuits & DMA Birth',
     tech: 'IBM System/360, UNIX',
-    slideRef: 'Module 1, Slide 23 & 37',
+    eraTag: '3rd Gen: ICs & DMA',
     hardware: 'Small-Scale Integrated Circuits (ICs), Magnetic Disks',
     ioMode: 'Direct Memory Access (DMA) + Spooling & Time-Sharing',
     cpuClock: '10 MHz',
@@ -54,7 +54,7 @@ const ERAS = [
     wastedCpu: 22,
     packaging: 'Single Air-Conditioned Server Room',
     cost: '$250,000 (1970 USD)',
-    summary: 'Slide 37: THE TURNING POINT! Integrated circuits enabled the invention of DMA ("Station Master") and Multiprogramming. While DMA copied disk sectors to RAM, the CPU switched to another program! CPU utilization jumped from 22% to 78%!',
+    summary: 'Third Generation: THE TURNING POINT! Integrated circuits enabled the invention of DMA ("Station Master") and Multiprogramming. While DMA copied disk sectors to RAM, the CPU switched to another program! CPU utilization jumped from 22% to 78%!',
     simulationTitle: 'IBM System/360 DMA Spooling Cycle',
     dmaPresent: true,
     multicorePresent: false
@@ -64,7 +64,7 @@ const ERAS = [
     gen: '4th Gen (1980s-90s)',
     title: 'Microchips & Multiprocessors',
     tech: 'Personal Computers, Intel x86, UNIX SMP',
-    slideRef: 'Module 1, Slide 23 & 38',
+    eraTag: '4th Gen: Multiprocessors',
     hardware: 'VLSI Microprocessors, Multi-Socket Motherboards',
     ioMode: 'PCI Bus Master DMA + Symmetric Multiprocessors (SMP)',
     cpuClock: '100 MHz - 1 GHz',
@@ -73,7 +73,7 @@ const ERAS = [
     wastedCpu: 12,
     packaging: 'Desktop Tower / Server Rack',
     cost: '$2,500 (1995 USD)',
-    summary: 'Slide 38 & 18: Microchips put a full CPU on a single silicon chip. Multiple physical CPUs were plugged into motherboard sockets (Symmetric Multiprocessing) sharing the system bus through a Bus Arbiter.',
+    summary: 'Fourth Generation: Microchips put a full CPU on a single silicon chip. Multiple physical CPUs were plugged into motherboard sockets (Symmetric Multiprocessing) sharing the system bus through a Bus Arbiter.',
     simulationTitle: 'Dual-Socket SMP Bus Arbitration',
     dmaPresent: true,
     multicorePresent: false,
@@ -84,7 +84,7 @@ const ERAS = [
     gen: '5th Gen (2000s-Present)',
     title: 'Multicore & NVMe Direct DMA',
     tech: 'Modern PCs, Cloud Datacenters, Smartphones',
-    slideRef: 'Module 1, Slide 16, 23 & 39',
+    eraTag: '5th Gen: Multicore Era',
     hardware: 'Ultra Large Scale Integration (ULSI), 4-16 Cores on 1 Die',
     ioMode: 'PCIe 5.0 Direct NVMe DMA + Shared On-Chip L3 Cache',
     cpuClock: '3.5 - 5.5 GHz',
@@ -93,7 +93,7 @@ const ERAS = [
     wastedCpu: 4,
     packaging: '140 mm² Silicon Die (Pocket Sized)',
     cost: '$350 (2026 USD)',
-    summary: 'Slide 16 & 39: Multiple execution cores reside on a single integrated silicon chip sharing an ultra-fast on-chip L3 cache. Ultra-high speed direct DMA transfers gigabytes of data per second with virtually zero CPU stalls.',
+    summary: 'Fifth Generation: Multiple execution cores reside on a single integrated silicon chip sharing an ultra-fast on-chip L3 cache. Ultra-high speed direct DMA transfers gigabytes of data per second with virtually zero CPU stalls.',
     simulationTitle: 'Octa-Core On-Chip L3 + NVMe Direct Stream',
     dmaPresent: true,
     multicorePresent: true
@@ -158,7 +158,7 @@ export default function OsEvolutionTimeMachine() {
           </div>
         </div>
         <div className="narration-text">
-          <div className="narration-title">{era.gen}: {era.title} ({era.slideRef})</div>
+          <div className="narration-title">{era.gen}: {era.title}</div>
           <div className="narration-message">{era.summary}</div>
         </div>
       </div>
@@ -297,7 +297,7 @@ export default function OsEvolutionTimeMachine() {
         <div className="glass-card">
           <div className="card-heading">
             <span>Historical Telemetry & Specs</span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--accent-amber)', fontWeight: 700 }}>Slide Citations</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--accent-amber)', fontWeight: 700 }}>Architectural Era</span>
           </div>
 
           <div className="era-telemetry-grid">

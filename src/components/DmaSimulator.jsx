@@ -69,11 +69,11 @@ export default function DmaSimulator() {
     setDmaState('idle');
     setGanttHistory([]);
 
-    let note = 'Burst Mode (Slide 15): Transfers entire block continuously. CPU is stalled throughout.';
+    let note = 'Burst Mode: Transfers entire block continuously. CPU is stalled throughout.';
     if (targetMode === 'stealing') {
-      note = 'Cycle Stealing Mode (Slide 15): DMA steals 1 clock cycle for 1 byte, then yields back to CPU.';
+      note = 'Cycle Stealing Mode: DMA steals 1 clock cycle for 1 byte, then yields back to CPU.';
     } else if (targetMode === 'transparent') {
-      note = 'Transparent Mode (Slide 15): DMA sneaks cycles only during CPU internal ALU execution. Zero CPU stalls!';
+      note = 'Transparent Mode: DMA sneaks cycles only during CPU internal ALU execution. Zero CPU stalls!';
     }
 
     setNarration({
@@ -88,7 +88,7 @@ export default function DmaSimulator() {
       clearInterval(timerRef.current);
       setNarration({
         title: 'DMA Sequence Completed (Interrupt Triggered)',
-        msg: `Slide 14 Step 6: All ${blockSize} bytes written to RAM. DMA releases bus and fires completion interrupt (IRQ) to CPU.`
+        msg: `Step 6: All ${blockSize} bytes written to RAM. DMA releases bus and fires completion interrupt (IRQ) to CPU.`
       });
       return;
     }
@@ -186,9 +186,9 @@ export default function DmaSimulator() {
             value={mode}
             onChange={(e) => handleModeChange(e.target.value)}
           >
-            <option value="burst">Burst Mode (Block Transfer - Slide 15)</option>
-            <option value="stealing">Cycle Stealing Mode (1 Byte/Cycle - Slide 15)</option>
-            <option value="transparent">Transparent Mode (CPU Idle Cycles Only - Slide 15)</option>
+            <option value="burst">Burst Mode (Block Transfer)</option>
+            <option value="stealing">Cycle Stealing Mode (1 Byte/Cycle)</option>
+            <option value="transparent">Transparent Mode (CPU Idle Cycles Only)</option>
           </select>
         </div>
 
@@ -239,7 +239,7 @@ export default function DmaSimulator() {
         {/* SCHEMATIC */}
         <div className="glass-card">
           <div className="card-heading">
-            <span>Hardware Interconnect & Register State (Slide 14)</span>
+            <span>Hardware Interconnect & Register State</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div className="anim-clock-pulse" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid var(--accent-blue)', padding: '0.2rem 0.65rem', borderRadius: '9999px', fontSize: '0.76rem', color: 'var(--accent-blue)', fontWeight: 800 }}>
                 ⚡ CLK TICK #{currentClock}
@@ -507,7 +507,7 @@ export default function DmaSimulator() {
             <div className="lidar-scan-beam"></div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--accent-cyan)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                <Cpu size={15} /> Intel 8237 DMA Hardware Pinout & TTL Voltage (Slide 14)
+                <Cpu size={15} /> Intel 8237 DMA Hardware Pinout & TTL Voltage
               </span>
               <span className="badge-status badge-green" style={{ fontSize: '0.72rem' }}>
                 {busOwner.includes('DMA') ? 'ACTIVE BUS MASTERSHIP' : 'STANDBY SNOOPING'}
@@ -622,7 +622,7 @@ export default function DmaSimulator() {
           </div>
 
           <div className="stat-card">
-            <span className="stat-label">Slide 15 Theoretical Core</span>
+            <span className="stat-label">Theoretical Transfer Formula</span>
             <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--accent-amber)' }}>
               {mode === 'burst' ? 'Burst Mode' : (mode === 'stealing' ? 'Cycle Stealing' : 'Transparent Mode')}
             </div>
@@ -639,7 +639,7 @@ export default function DmaSimulator() {
       <div className="timeline-card">
         <div className="oscilloscope-beam"></div>
         <div className="card-heading">
-          <span>Cycle-by-Cycle Waveform & Bus Arbitration Timing (Slide 15)</span>
+          <span>Cycle-by-Cycle Waveform & Bus Arbitration Timing</span>
           <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Displaying Last 20 System Clocks</span>
         </div>
 

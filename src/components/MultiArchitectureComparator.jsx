@@ -18,7 +18,7 @@ export default function MultiArchitectureComparator() {
   const [traceStep, setTraceStep] = useState(null); // 'c1', 'l3', 's1', 'arbiter', 'ram'
 
   const [narration, setNarration] = useState({
-    title: 'Architectural Comparison Engine (Slide 16 vs 18)',
+    title: 'Architectural Comparison Engine',
     msg: 'Standby. Multicore houses multiple cores on a single silicon die sharing L3 cache. Multiprocessors connect separate CPU chips across the motherboard bus arbiter. Click any button above to test!'
   });
 
@@ -35,18 +35,18 @@ export default function MultiArchitectureComparator() {
 
     if (num === 2) {
       setNarration({
-        title: 'Multicore Configuration: Dual-Core (Slide 16)',
-        msg: 'Slide 16: Two cores integrated on a single silicon die sharing L3 cache. Optimal power density and thermal balance.'
+        title: 'Multicore Configuration: Dual-Core',
+        msg: 'Two cores integrated on a single silicon die sharing L3 cache. Optimal power density and thermal balance.'
       });
     } else if (num === 4) {
       setNarration({
-        title: 'Multicore Configuration: Quad-Core (Slide 16)',
+        title: 'Multicore Configuration: Quad-Core',
         msg: 'Quad-core configuration. Higher parallel throughput, but thermal heat starts concentrating on the single die.'
       });
     } else if (num === 8) {
       setNarration({
-        title: 'Multicore Configuration: Octa-Core (Slide 17 Contention)',
-        msg: 'Slide 17 Disadvantage Proven: "Increasing cores causes software interference due to resource sharing" & high heat generation in concentrated die area!'
+        title: 'Multicore Configuration: Octa-Core Contention',
+        msg: 'Contention Analysis: "Increasing cores causes software interference due to resource sharing" & high heat generation in concentrated die area!'
       });
     }
   };
@@ -56,12 +56,12 @@ export default function MultiArchitectureComparator() {
     if (mode === 'smp') {
       setNarration({
         title: 'Multiprocessor: Shared Memory (Symmetric - SMP)',
-        msg: 'Slide 18: In Symmetric Multiprocessors (SMP), all processors share a single main memory pool over the same system bus. High contention at the Bus Arbiter.'
+        msg: 'In Symmetric Multiprocessors (SMP), all processors share a single main memory pool over the same system bus. High contention at the Bus Arbiter.'
       });
     } else {
       setNarration({
         title: 'Multiprocessor: Distributed Memory Organization',
-        msg: 'Slide 18: "Each processor in a distributed memory multiprocessor has its own private memory where computation takes place. The system bus connects processors to communicate with each other."'
+        msg: 'In Distributed Memory (NUMA), "Each processor has its own private memory where computation takes place. The system bus connects processors to communicate with each other."'
       });
     }
   };
@@ -77,7 +77,7 @@ export default function MultiArchitectureComparator() {
 
     if (workloadType === 'single') {
       setNarration({
-        title: 'Benchmark: Single Multi-Threaded Program (Slide 20 Proof)',
+        title: 'Benchmark: Single Multi-Threaded Program',
         msg: 'Workload: Single High-Performance Render. Multicore cores share thread memory directly inside L3 cache without off-chip bus serialization.'
       });
 
@@ -90,7 +90,7 @@ export default function MultiArchitectureComparator() {
         if (mcCurrent >= 100 && mpCurrent < 100) {
           setNarration({
             title: 'Multicore Won Decisively (2.2x Faster)',
-            msg: 'Slide 20 proven: "Multicore executes a single program faster" because tightly-coupled threads communicate over on-chip cache!'
+            msg: 'Execution Verified: "Multicore executes a single program faster" because tightly-coupled threads communicate over on-chip cache!'
           });
         }
 
@@ -98,14 +98,14 @@ export default function MultiArchitectureComparator() {
           clearInterval(benchmarkTimerRef.current);
           setBenchmarkRunning(false);
           setNarration({
-            title: 'Benchmark Finished: Slide 20 Verified',
+            title: 'Benchmark Finished: Multicore Speedup Verified',
             msg: 'Multicore completed in 1.1s. Multiprocessor required 2.4s due to external bus arbiter overhead.'
           });
         }
       }, 150);
     } else {
       setNarration({
-        title: 'Benchmark: Multiple Independent Server Jobs (Slide 20 Proof)',
+        title: 'Benchmark: Multiple Independent Server Jobs',
         msg: 'Workload: Multiple Independent Server Jobs (Web Server + DB Server). Multiprocessor has distinct physical CPU pipelines with zero cache contention.'
       });
 
@@ -118,7 +118,7 @@ export default function MultiArchitectureComparator() {
         if (mpCurrent >= 100 && mcCurrent < 100) {
           setNarration({
             title: 'Multiprocessor Won: High Independent Throughput',
-            msg: 'Slide 20 proven: "Multiprocessor executes multiple programs faster" because separate physical sockets isolate independent process spaces with zero software interference!'
+            msg: 'Execution Verified: "Multiprocessor executes multiple programs faster" because separate physical sockets isolate independent process spaces with zero software interference!'
           });
         }
 
@@ -137,7 +137,7 @@ export default function MultiArchitectureComparator() {
   const traceMemoryAccess = () => {
     setTraceStep('c1');
     setNarration({
-      title: 'Memory Access Trace: Multicore vs Multiprocessor (Slide 20 Proof)',
+      title: 'Memory Access Trace: Multicore vs Multiprocessor',
       msg: 'Step 1: Core 1 requests a memory block. Check L1/L2 caches...'
     });
 
@@ -145,7 +145,7 @@ export default function MultiArchitectureComparator() {
       setTraceStep('l3');
       setNarration({
         title: 'Multicore Cache Hit (0.8ns)',
-        msg: 'MULTICORE CACHE HIT: L3 Cache on the single silicon die responded in 0.8ns! Zero data traveled over the motherboard bus. Slide 20 verified: "Multicore has less traffic."'
+        msg: 'MULTICORE CACHE HIT: L3 Cache on the single silicon die responded in 0.8ns! Zero data traveled over the motherboard bus. Verified: "Multicore has less bus traffic."'
       });
     }, 700);
 
@@ -169,7 +169,7 @@ export default function MultiArchitectureComparator() {
       setTraceStep('ram');
       setNarration({
         title: 'Main RAM Serviced (65ns)',
-        msg: 'MAIN RAM SERVICED: Total access latency 65ns with heavy bus line utilization. Slide 20 verified: "Multiprocessor has more traffic."'
+        msg: 'MAIN RAM SERVICED: Total access latency 65ns with heavy bus line utilization. Verified: "Multiprocessor has more bus traffic."'
       });
     }, 3200);
 
@@ -189,8 +189,8 @@ export default function MultiArchitectureComparator() {
     setGlitchActive(true);
     setTimeout(() => setGlitchActive(false), 380);
     setNarration({
-      title: '💥 CRITICAL SILICON DIE FAILURE (Slide 17/20)',
-      msg: 'Single point of failure demonstrated! Because all cores reside on the exact same silicon die (Slide 16), thermal breakdown halted EVERY core simultaneously. Slide 20: "Multicore processors are not as reliable as multiprocessors."'
+      title: '💥 CRITICAL SILICON DIE FAILURE',
+      msg: 'Single point of failure demonstrated! Because all cores reside on the exact same silicon die, thermal breakdown halted EVERY core simultaneously: Multicore processors share silicon fate.'
     });
   };
 
@@ -201,8 +201,8 @@ export default function MultiArchitectureComparator() {
     setGlitchActive(true);
     setTimeout(() => setGlitchActive(false), 380);
     setNarration({
-      title: '🔌 FAULT TOLERANCE DEMONSTRATED (Slide 18 & 19)',
-      msg: 'Hardware resilience proven! In multiprocessor systems, CPUs reside in physically distinct motherboard sockets (Slide 18). Even when Socket 2 failed, Socket 1 continued running without crashing! Slide 19 & 20: "Multiprocessors are more reliable as failure of one processor will not affect others."'
+      title: '🔌 FAULT TOLERANCE DEMONSTRATED',
+      msg: 'Hardware resilience proven! In multiprocessor systems, CPUs reside in physically distinct motherboard sockets. Even when Socket 2 failed, Socket 1 continued running without crashing: Multiprocessors are more reliable as failure of one processor will not affect others.'
     });
   };
 
@@ -215,7 +215,7 @@ export default function MultiArchitectureComparator() {
     setSocketFault(false);
     setTraceStep(null);
     setNarration({
-      title: 'Architectural Comparison Engine (Slide 16 vs 18)',
+      title: 'Architectural Comparison Engine',
       msg: 'Both architectures restored. Select Core Count, Workload Type, or Memory Mode to test!'
     });
   };
@@ -234,7 +234,7 @@ export default function MultiArchitectureComparator() {
             value={coreCount}
             onChange={(e) => handleCoreCountChange(e.target.value)}
           >
-            <option value="2">2 Cores (Dual-Core - Slide 16)</option>
+            <option value="2">2 Cores (Dual-Core)</option>
             <option value="4">4 Cores (Quad-Core)</option>
             <option value="8">8 Cores (Octa-Core)</option>
           </select>
@@ -379,7 +379,7 @@ export default function MultiArchitectureComparator() {
         <div className="arch-spec-card">
           <div className="node-header">
             <div>
-              <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-blue)' }}>Multicore Architecture (Slide 16)</div>
+              <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-blue)' }}>Multicore Architecture</div>
               <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>Multiple execution cores on a SINGLE integrated silicon chip</div>
             </div>
             <span className="badge-status badge-blue">ON-CHIP CROSSBAR</span>
@@ -473,8 +473,8 @@ export default function MultiArchitectureComparator() {
           </div>
 
           <div style={{ background: 'rgba(2, 132, 199, 0.08)', borderRadius: 'var(--radius-md)', padding: '1.1rem', fontSize: '0.92rem', lineHeight: 1.6 }}>
-            <strong style={{ color: 'var(--accent-green)' }}>Slide 17 Advantages:</strong> Faster clock speed, energy efficient, fast inter-core communication, less external bus traffic.<br />
-            <strong style={{ color: 'var(--accent-red)' }}>Slide 17 Disadvantages:</strong> Thermal hotspots, shared cache interference, single silicon failure disables all cores.
+            <strong style={{ color: 'var(--accent-green)' }}>Multicore Advantages:</strong> Faster clock speed, energy efficient, fast inter-core communication, less external bus traffic.<br />
+            <strong style={{ color: 'var(--accent-red)' }}>Multicore Disadvantages:</strong> Thermal hotspots, shared cache interference, single silicon failure disables all cores.
           </div>
         </div>
 
@@ -482,7 +482,7 @@ export default function MultiArchitectureComparator() {
         <div className="arch-spec-card">
           <div className="node-header">
             <div>
-              <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-purple)' }}>Multiprocessor Architecture (Slide 18)</div>
+              <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-purple)' }}>Multiprocessor Architecture</div>
               <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>Two or more SEPARATE physical CPU sockets on motherboard</div>
             </div>
             <span className="badge-status" style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#c084fc', border: '1px solid #a855f7' }}>
@@ -491,7 +491,7 @@ export default function MultiArchitectureComparator() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(168, 85, 247, 0.1)', border: '1px solid var(--border-strong)', padding: '0.5rem 0.9rem', borderRadius: 'var(--radius-sm)' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-purple)' }}>Slide 18 Memory Mode:</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-purple)' }}>Memory Interconnect Mode:</span>
             <select
               className="select-dropdown"
               style={{ padding: '0.3rem 0.6rem', fontSize: '0.82rem' }}
@@ -556,7 +556,7 @@ export default function MultiArchitectureComparator() {
             <div className={`system-bus-arbiter ${traceStep === 'arbiter' ? 'trace-highlight-amber' : ''}`}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.45rem' }}>
                 <span className="iris-ring-rotor" style={{ fontSize: '1rem' }}>⚙️</span>
-                <span>System Bus Arbiter & Shared Memory Pathway (Slide 18)</span>
+                <span>System Bus Arbiter & Shared Memory Pathway</span>
               </div>
               <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--accent-amber)', marginTop: '0.25rem' }}>
                 Arbitrates access to memory & I/O → Serializes off-chip requests
@@ -578,19 +578,19 @@ export default function MultiArchitectureComparator() {
               <div className="distributed-ram-grid">
                 <div className="distributed-ram-node">
                   Socket 1 Local RAM<br />
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Fast Private Memory (Slide 18)</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Fast Private Memory</span>
                 </div>
                 <div className="distributed-ram-node">
                   Socket 2 Local RAM<br />
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Fast Private Memory (Slide 18)</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Fast Private Memory</span>
                 </div>
               </div>
             )}
           </div>
 
           <div style={{ background: 'rgba(168, 85, 247, 0.08)', borderRadius: 'var(--radius-md)', padding: '1.1rem', fontSize: '0.92rem', lineHeight: 1.6 }}>
-            <strong style={{ color: 'var(--accent-green)' }}>Slide 19 Advantages:</strong> High fault tolerance (failure of 1 CPU does not affect others), high multi-job throughput.<br />
-            <strong style={{ color: 'var(--accent-red)' }}>Slide 19 Disadvantages:</strong> Heavy bus traffic, complex coordination, expensive hardware.
+            <strong style={{ color: 'var(--accent-green)' }}>Multiprocessor Advantages:</strong> High fault tolerance (failure of 1 CPU does not affect others), high multi-job throughput.<br />
+            <strong style={{ color: 'var(--accent-red)' }}>Multiprocessor Disadvantages:</strong> Heavy bus traffic, complex coordination, expensive hardware.
           </div>
         </div>
       </div>

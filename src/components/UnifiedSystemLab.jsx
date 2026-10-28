@@ -40,7 +40,7 @@ export default function UnifiedSystemLab() {
     } else if (newScenario === 'database') {
       setNarration({
         title: 'Scenario B: Database Transaction Checkpoint (DMA Burst Mode)',
-        msg: 'Burst Mode in action: DMA locks down the entire memory bus to flush transaction logs to NVMe SSD. All CPU cores are forced into wait-states until the burst completes (Slide 15)!'
+        msg: 'Burst Mode in action: DMA locks down the entire memory bus to flush transaction logs to NVMe SSD. All CPU cores are forced into wait-states until the burst completes!'
       });
     } else if (newScenario === 'streaming') {
       setNarration({
@@ -57,7 +57,7 @@ export default function UnifiedSystemLab() {
     const busSat = Math.min(98, Math.round(val * 1.15));
     setNarration({
       title: `Memory Pressure Adjusted to ${val}%`,
-      msg: `As processor memory request rate rises, bus contention jumps to ${busSat}%. Stalls multiply at the arbiter turnstile (Slide 19/24 memory bottleneck).`
+      msg: `As processor memory request rate rises, bus contention jumps to ${busSat}%. Stalls multiply at the arbiter turnstile (Hardware Memory Bottleneck).`
     });
   };
 
@@ -84,7 +84,7 @@ export default function UnifiedSystemLab() {
     if (scenario === 'database') {
       if (nextStep === 1 || nextStep === 2) {
         setNarration({
-          title: 'Arbiter Phase: DMA Burst Lock (Slide 15 Verification)',
+          title: 'Arbiter Phase: DMA Burst Lock (Active Master)',
           msg: 'Burst Mode demonstrated: DMA Controller claimed the entire bus to dump database logs. Notice both Core 1 and Core 2 are STALLED (red) with 0% compute throughput!'
         });
         return;
@@ -98,7 +98,7 @@ export default function UnifiedSystemLab() {
       });
     } else if (nextStep === 1) {
       setNarration({
-        title: 'Arbiter Turnstile: DMA Cycle Stealing Active (Slide 15)',
+        title: 'Arbiter Turnstile: DMA Cycle Stealing Active',
         msg: 'DMA Controller steals exactly 1 clock cycle to transfer a data packet to RAM. It will immediately yield the bus on next clock to prevent starving Core 2.'
       });
     } else if (nextStep === 2) {
@@ -293,7 +293,7 @@ export default function UnifiedSystemLab() {
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--accent-amber)', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
-              <span className="iris-ring-rotor" style={{ fontSize: '1.15rem' }}>⚙️</span> Hardware Memory Bus Arbiter (Slide 18 Turnstile)
+              <span className="iris-ring-rotor" style={{ fontSize: '1.15rem' }}>⚙️</span> Hardware Memory Bus Arbiter (Turnstile Contention)
             </span>
             <span className={`badge-status ${isDmaBurstLock || stepIndex === 1 ? 'badge-green' : 'badge-blue'}`} style={{ fontSize: '0.82rem' }}>
               {isDmaBurstLock ? 'DMA Bus Master (Bursting)' : (stepIndex === 0 ? 'Core 1 Granted' : (stepIndex === 1 ? 'DMA Stole Cycle' : 'Core 2 Granted'))}
