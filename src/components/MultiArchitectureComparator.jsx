@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Zap, AlertTriangle, RefreshCw, Eye, Search } from 'lucide-react';
+import { Zap, AlertTriangle, RefreshCw, Eye, Search, Gauge } from 'lucide-react';
+import { soundFx } from '../utils/audioSynthesizer';
 
 export default function MultiArchitectureComparator() {
   const [coreCount, setCoreCount] = useState(2);
@@ -178,6 +179,7 @@ export default function MultiArchitectureComparator() {
 
   const triggerDieOverheat = () => {
     clearInterval(benchmarkTimerRef.current);
+    soundFx.playThermalAlert();
     setDieFault(true);
     setNarration({
       title: '💥 CRITICAL SILICON DIE FAILURE (Slide 17/20)',
@@ -187,6 +189,7 @@ export default function MultiArchitectureComparator() {
 
   const triggerSocketPull = () => {
     clearInterval(benchmarkTimerRef.current);
+    soundFx.playContentionSpark();
     setSocketFault(true);
     setNarration({
       title: '🔌 FAULT TOLERANCE DEMONSTRATED (Slide 18 & 19)',
@@ -311,6 +314,55 @@ export default function MultiArchitectureComparator() {
           </div>
         </div>
       )}
+
+      {/* FEATURE 5: DUAL NEON TACHOMETER / SPEEDOMETER HUD GAUGES */}
+      <div className="speedo-gauges-row">
+        <div className="speedo-card card-hud-corner">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+            <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-blue)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Gauge size={16} /> Multicore L3 Interconnect Speedometer
+            </span>
+            <span className="badge-status badge-green" style={{ fontSize: '0.74rem' }}>
+              {dieFault ? '0 MB/s (DEAD)' : (benchmarkRunning ? '7,800 MB/s' : '7,200 MB/s')}
+            </span>
+          </div>
+          
+          <svg viewBox="0 0 200 115" className="speedo-dial-svg">
+            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="#1e293b" strokeWidth="14" strokeLinecap="round" />
+            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="var(--accent-cyan)" strokeWidth="14" strokeDasharray="235" strokeDashoffset={dieFault ? 235 : 45} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease', filter: 'drop-shadow(0 0 8px var(--accent-cyan))' }} />
+            <circle cx="100" cy="100" r="9" fill="#0f172a" stroke="var(--accent-cyan)" strokeWidth="3" />
+            <line x1="100" y1="100" x2="100" y2="35" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 6px var(--accent-cyan))', transformOrigin: '100px 100px', transform: `rotate(${dieFault ? -90 : (benchmarkRunning ? 68 : 55)}deg)`, transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
+          </svg>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+            <span>0 GB/s</span>
+            <span style={{ color: 'var(--accent-green)', fontWeight: 700 }}>0.8ns L3 (LOW LATENCY)</span>
+            <span>10 GB/s</span>
+          </div>
+        </div>
+
+        <div className="speedo-card card-hud-corner">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+            <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-purple)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Gauge size={16} /> Multiprocessor Bus Throughput Speedometer
+            </span>
+            <span className="badge-status badge-amber" style={{ fontSize: '0.74rem' }}>
+              {socketFault ? '420 MB/s (DEGRADED)' : (benchmarkRunning ? '1,100 MB/s' : '850 MB/s')}
+            </span>
+          </div>
+          
+          <svg viewBox="0 0 200 115" className="speedo-dial-svg">
+            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="#1e293b" strokeWidth="14" strokeLinecap="round" />
+            <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="var(--accent-amber)" strokeWidth="14" strokeDasharray="235" strokeDashoffset={socketFault ? 190 : 140} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease', filter: 'drop-shadow(0 0 8px var(--accent-amber))' }} />
+            <circle cx="100" cy="100" r="9" fill="#0f172a" stroke="var(--accent-amber)" strokeWidth="3" />
+            <line x1="100" y1="100" x2="100" y2="35" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 6px var(--accent-amber))', transformOrigin: '100px 100px', transform: `rotate(${socketFault ? -55 : (benchmarkRunning ? -20 : -35)}deg)`, transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
+          </svg>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+            <span>0 GB/s</span>
+            <span style={{ color: 'var(--accent-amber)', fontWeight: 700 }}>15-65ns (CONTENTION)</span>
+            <span>10 GB/s</span>
+          </div>
+        </div>
+      </div>
 
       {/* SCHEMATICS COMPARISON */}
       <div className="comparison-grid">

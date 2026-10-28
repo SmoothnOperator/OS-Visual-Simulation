@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, SkipForward, RotateCcw } from 'lucide-react';
+import { soundFx } from '../utils/audioSynthesizer';
 
 export default function UnifiedSystemLab() {
   const [scenario, setScenario] = useState('gaming');
@@ -73,6 +74,12 @@ export default function UnifiedSystemLab() {
   const stepSimulation = () => {
     const nextStep = (stepIndex + 1) % 3;
     setStepIndex(nextStep);
+
+    if (busSat > 70) {
+      soundFx.playContentionSpark();
+    } else {
+      soundFx.playClockTick();
+    }
 
     if (scenario === 'database') {
       if (nextStep === 1 || nextStep === 2) {
@@ -250,6 +257,20 @@ export default function UnifiedSystemLab() {
             ) : null}
           </div>
         </div>
+
+        {/* FEATURE 1: CRACKLING SVG LIGHTNING BOLTS & CONTENTION PLASMA */}
+        {busSat > 70 && (
+          <div style={{ position: 'relative', height: '36px', margin: '-0.3rem 0' }}>
+            <svg width="100%" height="36" viewBox="0 0 400 36" preserveAspectRatio="none" className="lightning-arc-svg">
+              <path d="M 20 18 L 80 5 L 110 28 L 170 8 L 220 30 L 280 10 L 340 25 L 380 18" fill="none" stroke="#f43f5e" strokeWidth="2.5" />
+              <path d="M 20 18 L 90 28 L 130 10 L 190 32 L 240 12 L 300 28 L 350 12 L 380 18" fill="none" stroke="#fbbf24" strokeWidth="1.5" />
+              <path d="M 50 18 L 140 20 L 210 16 L 290 20 L 360 18" fill="none" stroke="#ffffff" strokeWidth="1" />
+            </svg>
+            <div style={{ position: 'absolute', top: '7px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(225, 29, 72, 0.95)', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800, padding: '0.15rem 0.75rem', borderRadius: '9999px', boxShadow: '0 0 15px #f43f5e', letterSpacing: '0.05em' }}>
+              ⚡ CONTENTION PLASMA SURGE: HIGH BUS PRESSURE ({busSat}%)
+            </div>
+          </div>
+        )}
 
         {/* TURNSTILE BOX WITH KINETIC ARBITER */}
         <div className={`turnstile-box card-hud-corner ${busSat > 75 ? 'hazard-stalled-overlay' : ''}`}>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, SkipForward, RotateCcw } from 'lucide-react';
+import { Play, Pause, SkipForward, RotateCcw, Cpu, Layers } from 'lucide-react';
+import { soundFx } from '../utils/audioSynthesizer';
 
 export default function DmaSimulator() {
   const [mode, setMode] = useState('burst');
@@ -140,6 +141,12 @@ export default function DmaSimulator() {
     setBusOwner(nextBusOwner);
     setCpuState(nextCpuState);
     setDmaState(nextDmaState);
+
+    if (nextTransferred > transferredBytes) {
+      soundFx.playDmaByteTransfer();
+    } else {
+      soundFx.playClockTick();
+    }
 
     setNarration({
       title: `Clock Cycle ${nextClock} Execution`,
@@ -307,6 +314,22 @@ export default function DmaSimulator() {
                   </div>
                 )}
               </div>
+
+              {/* 4-STAGE INSTRUCTION PIPELINE CONVEYOR */}
+              <div className="pipeline-conveyor-container" title="CPU Instruction Pipeline Execution Stages">
+                <div className={`pipeline-stage-box ${cpuState === 'stall' ? 'stage-frozen' : (currentClock % 4 === 1 ? 'stage-active' : '')}`}>
+                  {cpuState === 'stall' ? '🔒 FETCH' : '1. FETCH'}
+                </div>
+                <div className={`pipeline-stage-box ${cpuState === 'stall' ? 'stage-frozen' : (currentClock % 4 === 2 ? 'stage-active' : '')}`}>
+                  {cpuState === 'stall' ? '🔒 DECODE' : '2. DECODE'}
+                </div>
+                <div className={`pipeline-stage-box ${cpuState === 'stall' ? 'stage-frozen' : (currentClock % 4 === 3 ? 'stage-active' : '')}`}>
+                  {cpuState === 'stall' ? '🔒 EXEC' : '3. EXEC'}
+                </div>
+                <div className={`pipeline-stage-box ${cpuState === 'stall' ? 'stage-frozen' : (currentClock % 4 === 0 ? 'stage-active' : '')}`}>
+                  {cpuState === 'stall' ? '🔒 WRITE' : '4. WRITE'}
+                </div>
+              </div>
             </div>
 
             {/* DMA CONTROLLER NODE */}
@@ -463,8 +486,8 @@ export default function DmaSimulator() {
             </div>
           </div>
 
-          {/* RAM TARGET */}
-          <div className="ram-container">
+          {/* RAM TARGET WITH MATRIX DECRYPTION */}
+          <div className="ram-container card-hud-corner">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '0.95rem', fontWeight: 800 }}>Main Memory DRAM Target Buffer (0x8000)</span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-green)' }}>
@@ -472,14 +495,111 @@ export default function DmaSimulator() {
               </span>
             </div>
             <div className="ram-cells-grid">
-              {Array.from({ length: blockSize }).map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`memory-cell ${idx < transferredBytes ? 'written' : ''} ${idx === transferredBytes - 1 ? 'pulse-write' : ''}`}
-                >
-                  0x{(0x8000 + idx).toString(16).toUpperCase().slice(-3)}
+              {Array.from({ length: blockSize }).map((_, idx) => {
+                const isWritingNow = idx === transferredBytes - 1 && isRunning;
+                return (
+                  <div
+                    key={idx}
+                    className={`memory-cell ${idx < transferredBytes ? 'written' : ''} ${isWritingNow ? 'pulse-write matrix-hex-scramble shockwave-blast' : ''}`}
+                    title={`DRAM Address 0x${(0x8000 + idx).toString(16).toUpperCase()}`}
+                  >
+                    {isWritingNow 
+                      ? `0x${((idx * 47 + currentClock * 19) % 256).toString(16).toUpperCase().padStart(2, '0')}`
+                      : `0x${(0x8000 + idx).toString(16).toUpperCase().slice(-3)}`
+                    }
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* FEATURE 4: INTEL 8237 DMA HARDWARE PINOUT & VOLTAGE TELEMETRY */}
+          <div className="ic-chip-container card-hud-corner">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--accent-cyan)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Cpu size={15} /> Intel 8237 DMA Hardware Pinout & TTL Voltage (Slide 14)
+              </span>
+              <span className="badge-status badge-green" style={{ fontSize: '0.72rem' }}>
+                {busOwner.includes('DMA') ? 'ACTIVE BUS MASTERSHIP' : 'STANDBY SNOOPING'}
+              </span>
+            </div>
+
+            <div className="ic-pinout-grid">
+              <div className="ic-pin-card">
+                <div className="ic-pin-header">
+                  <span>Pin 10 (HOLD)</span>
+                  <div className={`pin-led ${busOwner.includes('DMA') ? 'high' : 'low'}`}></div>
                 </div>
-              ))}
+                <div className={`pin-voltage-text ${busOwner.includes('DMA') ? 'high' : 'low'}`}>
+                  {busOwner.includes('DMA') ? '+5.0V (HIGH - Bus Req)' : '0.0V (LOW)'}
+                </div>
+              </div>
+
+              <div className="ic-pin-card">
+                <div className="ic-pin-header">
+                  <span>Pin 36 (HLDA)</span>
+                  <div className={`pin-led ${busOwner.includes('DMA') ? 'high' : 'low'}`}></div>
+                </div>
+                <div className={`pin-voltage-text ${busOwner.includes('DMA') ? 'high' : 'low'}`}>
+                  {busOwner.includes('DMA') ? '+5.0V (HIGH - Bus Grant)' : '0.0V (LOW)'}
+                </div>
+              </div>
+
+              <div className="ic-pin-card">
+                <div className="ic-pin-header">
+                  <span>Pin 18 (DREQ)</span>
+                  <div className="pin-led high"></div>
+                </div>
+                <div className="pin-voltage-text high">+5.0V (HIGH - NVMe Req)</div>
+              </div>
+
+              <div className="ic-pin-card">
+                <div className="ic-pin-header">
+                  <span>Pin 25 (DACK)</span>
+                  <div className={`pin-led ${busOwner.includes('DMA') ? 'high' : 'low'}`}></div>
+                </div>
+                <div className={`pin-voltage-text ${busOwner.includes('DMA') ? 'high' : 'low'}`}>
+                  {busOwner.includes('DMA') ? '+5.0V (HIGH - DACK Assert)' : '0.0V (LOW)'}
+                </div>
+              </div>
+
+              <div className="ic-pin-card">
+                <div className="ic-pin-header">
+                  <span>Pin 4 (MEMW)</span>
+                  <div className={`pin-led ${busOwner.includes('DMA') ? 'high' : 'low'}`}></div>
+                </div>
+                <div className={`pin-voltage-text ${busOwner.includes('DMA') ? 'high' : 'low'}`}>
+                  {busOwner.includes('DMA') ? '+5.0V (RAM Write Active)' : '0.0V (LOW)'}
+                </div>
+              </div>
+
+              <div className="ic-pin-card">
+                <div className="ic-pin-header">
+                  <span>Pin 3 (MEMR)</span>
+                  <div className="pin-led low"></div>
+                  <div className="pin-voltage-text low">0.0V (LOW)</div>
+                </div>
+              </div>
+
+              <div className="ic-pin-card">
+                <div className="ic-pin-header">
+                  <span>Pin 1 (IOR)</span>
+                  <div className={`pin-led ${busOwner.includes('DMA') ? 'high' : 'low'}`}></div>
+                </div>
+                <div className={`pin-voltage-text ${busOwner.includes('DMA') ? 'high' : 'low'}`}>
+                  {busOwner.includes('DMA') ? '+5.0V (NVMe Egress)' : '0.0V (LOW)'}
+                </div>
+              </div>
+
+              <div className="ic-pin-card">
+                <div className="ic-pin-header">
+                  <span>Pin 31 (TC/IRQ)</span>
+                  <div className={`pin-led ${transferredBytes >= blockSize ? 'high' : 'low'}`}></div>
+                </div>
+                <div className={`pin-voltage-text ${transferredBytes >= blockSize ? 'high' : 'low'}`}>
+                  {transferredBytes >= blockSize ? '+5.0V (IRQ Interrupt)' : '0.0V (LOW)'}
+                </div>
+              </div>
             </div>
           </div>
         </div>
