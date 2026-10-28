@@ -201,15 +201,15 @@ export default function DmaSimulator() {
 
         <div className="control-cluster">
           <button
-            className={`btn ${isRunning ? 'btn-danger' : 'btn-primary'}`}
+            className={`btn btn-cyber-kinetic ${isRunning ? 'btn-danger' : 'btn-primary'}`}
             onClick={toggleExecution}
           >
             {isRunning ? <><Pause size={16} /> Pause</> : <><Play size={16} /> Start Transfer</>}
           </button>
-          <button className="btn btn-secondary" onClick={stepCycle}>
+          <button className="btn btn-secondary btn-cyber-kinetic" onClick={stepCycle}>
             <SkipForward size={16} /> Step Cycle
           </button>
-          <button className="btn btn-secondary" onClick={() => resetSimulation(mode, blockSize)}>
+          <button className="btn btn-secondary btn-cyber-kinetic" onClick={() => resetSimulation(mode, blockSize)}>
             <RotateCcw size={16} /> Reset
           </button>
         </div>
@@ -265,11 +265,11 @@ export default function DmaSimulator() {
 
           <div className="schematic-box-row">
             {/* CPU NODE */}
-            <div className={`hardware-node ${busOwner === 'CPU' ? 'node-master' : (cpuState === 'stall' ? 'node-stalled' : '')}`}>
+            <div className={`hardware-node card-hud-corner ${busOwner === 'CPU' ? 'node-master' : ''} ${cpuState === 'stall' ? 'hazard-stalled-overlay' : ''}`}>
               <div className="node-header">
                 <span className="node-title">CPU (Processor)</span>
                 <span className={`badge-status ${cpuState === 'stall' ? 'badge-red' : 'badge-green'}`}>
-                  {cpuState === 'stall' ? 'STALLED' : 'RUNNING'}
+                  {cpuState === 'stall' ? '⚠️ STALLED' : 'RUNNING'}
                 </span>
               </div>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
@@ -279,21 +279,25 @@ export default function DmaSimulator() {
                 <tbody>
                   <tr>
                     <td className="reg-label">Program Counter:</td>
-                    <td className="reg-value">0x{(0x0400 + currentClock * 4).toString(16).toUpperCase().padStart(4, '0')}</td>
+                    <td className="reg-value reg-val-live">0x{(0x0400 + currentClock * 4).toString(16).toUpperCase().padStart(4, '0')}</td>
                   </tr>
                   <tr>
                     <td className="reg-label">HOLD In (Req):</td>
-                    <td className="reg-value">{busOwner.includes('DMA') ? '1 (Active)' : '0 (Low)'}</td>
+                    <td className="reg-value" style={{ color: busOwner.includes('DMA') ? 'var(--accent-red)' : 'inherit' }}>
+                      {busOwner.includes('DMA') ? '1 (Active Lock)' : '0 (Low)'}
+                    </td>
                   </tr>
                   <tr>
                     <td className="reg-label">HLDA Out (Grant):</td>
-                    <td className="reg-value">{busOwner.includes('DMA') ? '1 (Granted)' : '0 (Low)'}</td>
+                    <td className="reg-value" style={{ color: busOwner.includes('DMA') ? 'var(--accent-red)' : 'inherit' }}>
+                      {busOwner.includes('DMA') ? '1 (Buses Tri-Stated)' : '0 (Low)'}
+                    </td>
                   </tr>
                 </tbody>
               </table>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.2rem' }}>
-                <span style={{ fontSize: '0.82rem', color: cpuState === 'stall' ? 'var(--accent-red)' : 'var(--accent-blue)', fontWeight: 600 }}>
-                  {cpuState === 'stall' ? 'CPU waiting for bus release' : 'Executing user process'}
+                <span style={{ fontSize: '0.82rem', color: cpuState === 'stall' ? 'var(--accent-red)' : 'var(--accent-blue)', fontWeight: 700 }}>
+                  {cpuState === 'stall' ? '⚡ CPU BUS LOCKED' : '⚡ EXECUTING COMPUTE'}
                 </span>
                 {cpuState !== 'stall' && (
                   <div className="audio-equalizer" style={{ height: '14px' }}>
@@ -306,30 +310,33 @@ export default function DmaSimulator() {
             </div>
 
             {/* DMA CONTROLLER NODE */}
-            <div className={`hardware-node ${busOwner.includes('DMA') ? 'node-master' : ''}`}>
+            <div className={`hardware-node card-hud-corner ${busOwner.includes('DMA') ? 'node-master' : ''}`} style={{ position: 'relative' }}>
+              {busOwner.includes('DMA') && <div className="radar-ping-ring"></div>}
               <div className="node-header">
-                <span className="node-title">DMA Controller</span>
+                <span className="node-title">DMA Controller (8237)</span>
                 <span className={`badge-status ${busOwner.includes('DMA') ? 'badge-green' : 'badge-amber'}`}>
-                  {transferredBytes >= blockSize ? 'DONE / IRQ' : (busOwner.includes('DMA') ? 'ACTIVE' : 'IDLE')}
+                  {transferredBytes >= blockSize ? 'DONE / IRQ' : (busOwner.includes('DMA') ? 'ACTIVE MASTER' : 'IDLE')}
                 </span>
               </div>
               <table className="register-table">
                 <tbody>
                   <tr>
                     <td className="reg-label">Source Register:</td>
-                    <td className="reg-value">0x1000 (Disk)</td>
+                    <td className="reg-value">0x1000 (NVMe)</td>
                   </tr>
                   <tr>
                     <td className="reg-label">Dest Register:</td>
-                    <td className="reg-value">0x{(0x8000 + transferredBytes).toString(16).toUpperCase()}</td>
+                    <td className="reg-value reg-val-live">0x{(0x8000 + transferredBytes).toString(16).toUpperCase()}</td>
                   </tr>
                   <tr>
                     <td className="reg-label">Byte Count Reg:</td>
-                    <td className="reg-value">{blockSize - transferredBytes}</td>
+                    <td className="reg-value reg-val-live">{blockSize - transferredBytes}</td>
                   </tr>
                   <tr>
                     <td className="reg-label">Bus Master:</td>
-                    <td className="reg-value">{busOwner.includes('DMA') ? 'YES' : 'NO'}</td>
+                    <td className="reg-value" style={{ color: busOwner.includes('DMA') ? 'var(--accent-green)' : 'inherit', fontWeight: 700 }}>
+                      {busOwner.includes('DMA') ? 'YES (CLAIMED)' : 'NO (IDLE)'}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -346,12 +353,12 @@ export default function DmaSimulator() {
             </div>
 
             {/* I/O PERIPHERAL NODE */}
-            <div className="hardware-node">
+            <div className="hardware-node card-hud-corner">
               <div className="node-header">
                 <span className="node-title">I/O Peripheral</span>
                 <span className="badge-status badge-blue">BUFFERED</span>
               </div>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>NVMe SSD Buffer</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>NVMe SSD FIFO Buffer</p>
               <table className="register-table">
                 <tbody>
                   <tr>
@@ -359,12 +366,12 @@ export default function DmaSimulator() {
                     <td className="reg-value">{blockSize} Bytes</td>
                   </tr>
                   <tr>
-                    <td className="reg-label">DREQ Signal:</td>
+                    <td className="reg-label">DREQ Line:</td>
                     <td className="reg-value" style={{ color: 'var(--accent-green)' }}>1 (Active)</td>
                   </tr>
                   <tr>
-                    <td className="reg-label">DACK Signal:</td>
-                    <td className="reg-value">{busOwner.includes('DMA') ? '1' : '0'}</td>
+                    <td className="reg-label">DACK Line:</td>
+                    <td className="reg-value">{busOwner.includes('DMA') ? '1 (Ack)' : '0'}</td>
                   </tr>
                 </tbody>
               </table>
@@ -401,12 +408,20 @@ export default function DmaSimulator() {
             </svg>
           </div>
 
-          {/* BUS SYSTEM */}
-          <div className="bus-system-container">
+          {/* BUS SYSTEM WITH CONTINUOUS PHOTON STREAMS */}
+          <div className="bus-system-container card-hud-corner">
             <div className="bus-track">
               <span className="bus-name-badge">CONTROL BUS:</span>
               <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-ctrl' : ''}`}>
-                {busOwner.includes('DMA') && <div className="floating-data-packet packet-ctrl"></div>}
+                {busOwner.includes('DMA') ? (
+                  <>
+                    <div className="floating-data-packet packet-ctrl packet-p1"></div>
+                    <div className="floating-data-packet packet-ctrl packet-p2"></div>
+                    <div className="floating-data-packet packet-ctrl packet-p3"></div>
+                  </>
+                ) : (
+                  <div className="floating-data-packet packet-ctrl" style={{ animationDuration: '2.5s' }}></div>
+                )}
               </div>
               <span className="bus-state-display" style={{ color: 'var(--accent-green)' }}>
                 {busOwner.includes('DMA') ? 'HOLD=1, HLDA=1, MEMW=1' : 'HLDA=0, IOR=0, MEMR=1'}
@@ -415,19 +430,35 @@ export default function DmaSimulator() {
             <div className="bus-track">
               <span className="bus-name-badge">ADDRESS BUS:</span>
               <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-data' : ''}`}>
-                {busOwner.includes('DMA') && <div className="floating-data-packet"></div>}
+                {busOwner.includes('DMA') ? (
+                  <>
+                    <div className="floating-data-packet packet-p1"></div>
+                    <div className="floating-data-packet packet-p2"></div>
+                    <div className="floating-data-packet packet-p3"></div>
+                  </>
+                ) : (
+                  <div className="floating-data-packet" style={{ animationDuration: '2s' }}></div>
+                )}
               </div>
               <span className="bus-state-display" style={{ color: 'var(--accent-blue)' }}>
-                {busOwner.includes('DMA') ? `0x${currentRamAddr.toString(16).toUpperCase()} (DMA)` : '0x0400 (PC)'}
+                {busOwner.includes('DMA') ? `0x${currentRamAddr.toString(16).toUpperCase()} (DMA Direct)` : '0x0400 (PC)'}
               </span>
             </div>
             <div className="bus-track">
               <span className="bus-name-badge">DATA BUS:</span>
               <div className={`bus-physical-line packet-stream-track ${busOwner.includes('DMA') ? 'active-data' : ''}`}>
-                {busOwner.includes('DMA') && <div className="floating-data-packet packet-amber"></div>}
+                {busOwner.includes('DMA') ? (
+                  <>
+                    <div className="floating-data-packet packet-amber packet-p1"></div>
+                    <div className="floating-data-packet packet-amber packet-p2"></div>
+                    <div className="floating-data-packet packet-amber packet-p3"></div>
+                  </>
+                ) : (
+                  <div className="floating-data-packet packet-amber" style={{ animationDuration: '2.2s' }}></div>
+                )}
               </div>
               <span className="bus-state-display" style={{ color: 'var(--accent-amber)' }}>
-                {busOwner.includes('DMA') ? `BYTE ${transferredBytes} -> RAM` : 'CPU Read'}
+                {busOwner.includes('DMA') ? `BYTE ${transferredBytes} -> RAM TARGET` : 'CPU Read'}
               </span>
             </div>
           </div>

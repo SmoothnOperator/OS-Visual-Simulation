@@ -231,21 +231,31 @@ export default function UnifiedSystemLab() {
           </div>
         </div>
 
-        {/* CONNECTING WIRES TO ARBITER */}
+        {/* CONNECTING WIRES TO ARBITER WITH MULTI-PHOTON STREAM */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
           <div className={`wire-connector-line packet-stream-track ${stepIndex === 0 && !isDmaBurstLock ? 'wire-flowing' : ''}`}>
-            {stepIndex === 0 && !isDmaBurstLock && <div className="floating-data-packet"></div>}
+            {stepIndex === 0 && !isDmaBurstLock ? (
+              <>
+                <div className="floating-data-packet packet-p1"></div>
+                <div className="floating-data-packet packet-p2"></div>
+              </>
+            ) : null}
           </div>
           <div className={`wire-connector-line packet-stream-track ${stepIndex === 2 && !isDmaBurstLock ? 'wire-flowing' : ''}`}>
-            {stepIndex === 2 && !isDmaBurstLock && <div className="floating-data-packet packet-amber"></div>}
+            {stepIndex === 2 && !isDmaBurstLock ? (
+              <>
+                <div className="floating-data-packet packet-amber packet-p1"></div>
+                <div className="floating-data-packet packet-amber packet-p2"></div>
+              </>
+            ) : null}
           </div>
         </div>
 
-        {/* TURNSTILE BOX */}
-        <div className="turnstile-box">
+        {/* TURNSTILE BOX WITH KINETIC ARBITER */}
+        <div className={`turnstile-box card-hud-corner ${busSat > 75 ? 'hazard-stalled-overlay' : ''}`}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--accent-amber)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span className="turnstile-rotor">⚙️</span> Hardware Memory Bus Arbiter (Slide 18 Turnstile)
+            <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--accent-amber)', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+              <span className="iris-ring-rotor" style={{ fontSize: '1.15rem' }}>⚙️</span> Hardware Memory Bus Arbiter (Slide 18 Turnstile)
             </span>
             <span className={`badge-status ${isDmaBurstLock || stepIndex === 1 ? 'badge-green' : 'badge-blue'}`} style={{ fontSize: '0.82rem' }}>
               {isDmaBurstLock ? 'DMA Bus Master (Bursting)' : (stepIndex === 0 ? 'Core 1 Granted' : (stepIndex === 1 ? 'DMA Stole Cycle' : 'Core 2 Granted'))}
@@ -256,9 +266,9 @@ export default function UnifiedSystemLab() {
           </div>
 
           <div className="turnstile-queue">
-            <div className="turnstile-slot slot-active">
-              <span style={{ fontSize: '0.7rem', textTransform: 'uppercase' }}>1. Active Master</span>
-              <span>{isDmaBurstLock ? 'DMA Controller (LOCK)' : (stepIndex === 0 ? 'Core 1' : (stepIndex === 1 ? 'DMA (Steal)' : 'Core 2'))}</span>
+            <div className="turnstile-slot slot-active anim-laser-active">
+              <span style={{ fontSize: '0.7rem', textTransform: 'uppercase' }}>1. Active Master ⚡</span>
+              <span style={{ fontWeight: 800 }}>{isDmaBurstLock ? 'DMA Controller (LOCK)' : (stepIndex === 0 ? 'Core 1' : (stepIndex === 1 ? 'DMA (Steal)' : 'Core 2'))}</span>
             </div>
             <div className="turnstile-slot slot-queued">
               <span style={{ fontSize: '0.7rem', textTransform: 'uppercase' }}>2. Next In Line</span>
@@ -301,7 +311,8 @@ export default function UnifiedSystemLab() {
               </span>
             </div>
             <div className={`wire-connector-line packet-stream-track ${isDmaBurstLock || stepIndex === 1 ? 'wire-dma-flow' : 'wire-flowing'}`}>
-              <div className="floating-data-packet" style={{ animationDuration: '0.8s' }}></div>
+              <div className="floating-data-packet packet-p1"></div>
+              <div className="floating-data-packet packet-amber packet-p2"></div>
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
               Single physical bandwidth pool shared across all processors and peripheral controllers

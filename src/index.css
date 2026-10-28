@@ -1779,3 +1779,242 @@ main {
 .spark-alert {
   animation: electricSpark 0.45s infinite ease-in-out;
 }
+
+/* =====================================================================
+   HYPER-ANIMATED SCI-FI TELEMETRY & KINETIC VISUALS (GRAVITAS UPGRADE)
+   ===================================================================== */
+
+/* 18. TOP HEADER LASER PULSE SCANNER */
+@keyframes headerPulseLaser {
+  0% { transform: translateX(-100%); opacity: 0; }
+  30% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateX(200%); opacity: 0; }
+}
+
+.header-laser-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 35%;
+  height: 2.5px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), #ffffff, var(--accent-green), transparent);
+  box-shadow: 0 0 14px var(--accent-cyan), 0 0 28px var(--accent-green);
+  animation: headerPulseLaser 3.5s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* 19. LIVE MICRO-TELEMETRY TICKER IN NAVBAR */
+.telemetry-ticker-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--accent-cyan);
+  padding: 0.25rem 0.8rem;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 9999px;
+  box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.1);
+}
+
+.telemetry-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.telemetry-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 8px var(--accent-green);
+  animation: electricSpark 1.2s infinite ease-in-out;
+}
+
+.telemetry-dot.amber {
+  background: var(--accent-amber);
+  box-shadow: 0 0 8px var(--accent-amber);
+}
+
+/* 20. MULTI-PHASE CONTINUOUS PHOTON STREAMS */
+@keyframes packetSlideFast {
+  0% { left: -10%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 110%; opacity: 0; }
+}
+
+.floating-data-packet.packet-p1 {
+  animation: packetSlideFast 0.9s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-data-packet.packet-p2 {
+  animation: packetSlideFast 1.1s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  animation-delay: 0.35s;
+}
+
+.floating-data-packet.packet-p3 {
+  animation: packetSlideFast 1.3s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  animation-delay: 0.7s;
+}
+
+/* 21. CPU STALL HAZARD STRIPES & WARNING SCANNER */
+@keyframes hazardStripeShift {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 0; }
+}
+
+.hazard-stalled-overlay {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(225, 29, 72, 0.08),
+    rgba(225, 29, 72, 0.08) 10px,
+    rgba(225, 29, 72, 0.22) 10px,
+    rgba(225, 29, 72, 0.22) 20px
+  ) !important;
+  background-size: 40px 40px !important;
+  animation: hazardStripeShift 1s infinite linear, stalledNodeBreathe 1s infinite ease-in-out !important;
+  border-color: #f43f5e !important;
+}
+
+/* 22. THERMAL DIE CRACK / OVERHEAT VIBRATION */
+@keyframes dieMeltShake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-2px, 1px) rotate(-0.5deg); }
+  30% { transform: translate(2px, -2px) rotate(0.5deg); }
+  45% { transform: translate(-3px, -1px) rotate(-0.3deg); }
+  60% { transform: translate(3px, 2px) rotate(0.4deg); }
+  75% { transform: translate(-1px, 2px) rotate(-0.2deg); }
+  90% { transform: translate(2px, -1px) rotate(0.3deg); }
+}
+
+.chip-silicon-boundary.thermal-critical {
+  animation: dieMeltShake 0.4s infinite ease-in-out, thermalShimmer 0.7s infinite ease-in-out !important;
+  border-color: #e11d48 !important;
+  box-shadow: 0 0 45px rgba(225, 29, 72, 0.8), inset 0 0 35px rgba(245, 158, 11, 0.5) !important;
+}
+
+/* 23. COUNTER-ROTATING DUAL IRIS FOR CACHE RING & ARBITER */
+@keyframes orbitCW {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes orbitCCW {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.crossbar-ring-pulse.pulse-reverse {
+  background: linear-gradient(90deg, transparent, var(--accent-purple), #ffffff, var(--accent-purple), transparent);
+  box-shadow: 0 0 15px var(--accent-purple);
+  animation: packetSlideX 1.1s infinite linear reverse;
+}
+
+.iris-ring-rotor {
+  display: inline-block;
+  animation: orbitCW 2.5s infinite linear;
+}
+
+.iris-ring-rotor.reverse {
+  animation: orbitCCW 3.5s infinite linear;
+}
+
+/* 24. RADAR PING EXPANSION BEACON */
+@keyframes radarPing {
+  0% { transform: scale(0.6); opacity: 1; }
+  80% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.radar-ping-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  margin-left: -11px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-cyan);
+  box-shadow: 0 0 12px var(--accent-cyan);
+  animation: radarPing 1.6s infinite cubic-bezier(0, 0.2, 0.8, 1);
+  pointer-events: none;
+}
+
+/* 25. BUTTON KINETIC HOVER & LASER EDGES */
+.btn-cyber-kinetic {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-cyber-kinetic:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--accent-blue), 0 4px 15px rgba(37, 99, 235, 0.4);
+}
+
+.btn-cyber-kinetic:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* 26. OSCILLOSCOPE PHOSPHOR AFTERGLOW SCANLINE */
+.oscilloscope-beam {
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(6, 182, 212, 0.2) 20%, 
+    var(--accent-cyan) 45%, 
+    #ffffff 50%, 
+    var(--accent-cyan) 55%, 
+    rgba(6, 182, 212, 0.2) 80%, 
+    transparent 100%
+  ) !important;
+  box-shadow: 
+    0 0 8px var(--accent-cyan), 
+    0 0 18px var(--accent-cyan), 
+    0 0 35px rgba(6, 182, 212, 0.6) !important;
+  width: 3px !important;
+}
+
+/* 27. LIVE REGISTER VALUE SHIMMER PULSE */
+@keyframes regValPulse {
+  0%, 100% { color: var(--accent-cyan); }
+  50% { color: #ffffff; text-shadow: 0 0 10px var(--accent-cyan); }
+}
+
+.reg-val-live {
+  animation: regValPulse 1.8s infinite ease-in-out;
+}
+
+/* 28. CORNER HUD RETICLE ACCENTS */
+.card-hud-corner {
+  position: relative;
+}
+
+.card-hud-corner::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid var(--accent-blue);
+  border-left: 2px solid var(--accent-blue);
+  pointer-events: none;
+}
+
+.card-hud-corner::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid var(--accent-cyan);
+  border-right: 2px solid var(--accent-cyan);
+  pointer-events: none;
+}

@@ -332,7 +332,7 @@ export default function MultiArchitectureComparator() {
             </span>
           </div>
 
-          <div className={`chip-silicon-boundary ${coreCount === 8 || dieFault ? 'thermal-active' : ''}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : '#0284c7' }}>
+          <div className={`chip-silicon-boundary ${dieFault ? 'thermal-critical' : (coreCount === 8 ? 'thermal-active' : '')}`} style={{ borderColor: dieFault ? 'var(--accent-red)' : '#0284c7' }}>
             <span className="chip-boundary-label">Single Silicon Die Package</span>
 
             <div
@@ -349,27 +349,30 @@ export default function MultiArchitectureComparator() {
                   <div style={{ fontWeight: 800, fontSize: coreCount === 8 ? '0.88rem' : '1.05rem' }}>Core {idx + 1}</div>
                   <div className="cache-hierarchy-pill" style={{ fontSize: '0.72rem' }}>L1: 32K | L2: 512K</div>
                   <div style={{ fontSize: '0.78rem', color: dieFault ? 'var(--accent-red)' : 'var(--accent-green)', fontWeight: 700, marginTop: '0.35rem' }}>
-                    {dieFault ? 'CRASHED' : `Executing Thread ${idx + 1}`}
+                    {dieFault ? '🔥 CRASHED (MELTED)' : `Executing Thread ${idx + 1}`}
                   </div>
                   {!dieFault && (
                     <div className="core-thread-bars">
-                      <div className="core-bar" style={{ animationDuration: `${0.65 + (idx * 0.1)}s` }}></div>
-                      <div className="core-bar" style={{ animationDuration: `${0.75 + (idx * 0.12)}s` }}></div>
-                      <div className="core-bar" style={{ animationDuration: `${0.55 + (idx * 0.08)}s` }}></div>
+                      <div className="core-bar" style={{ animationDuration: `${0.65 + (idx * 0.08)}s` }}></div>
+                      <div className="core-bar" style={{ animationDuration: `${0.85 + (idx * 0.09)}s` }}></div>
+                      <div className="core-bar" style={{ animationDuration: `${0.55 + (idx * 0.07)}s` }}></div>
+                      <div className="core-bar" style={{ animationDuration: `${0.75 + (idx * 0.11)}s` }}></div>
+                      <div className="core-bar" style={{ animationDuration: `${0.60 + (idx * 0.06)}s` }}></div>
                     </div>
                   )}
                 </div>
               ))}
             </div>
 
-            {/* SHARED L3 */}
+            {/* SHARED L3 WITH COUNTER-ROTATING DUAL CROSSBAR TRACK */}
             <div className={`on-chip-l3-cache ${traceStep === 'l3' ? 'trace-highlight-green' : ''}`}>
-              ⚡ On-Chip Shared L3 Cache (8 MB - Ultra Low Latency)
+              ⚡ On-Chip Shared L3 Cache (8 MB - Ultra Low Latency Interconnect)
               <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--accent-blue)', marginTop: '0.25rem' }}>
                 Filters memory requests on-die → Low external bus traffic
               </div>
               <div className="crossbar-ring-track">
                 <div className="crossbar-ring-pulse"></div>
+                <div className="crossbar-ring-pulse pulse-reverse"></div>
               </div>
             </div>
           </div>
@@ -454,11 +457,18 @@ export default function MultiArchitectureComparator() {
               </div>
             </div>
 
-            {/* SHARED SYSTEM BUS ARBITER */}
+            {/* SHARED SYSTEM BUS ARBITER WITH ROTATING IRIS */}
             <div className={`system-bus-arbiter ${traceStep === 'arbiter' ? 'trace-highlight-amber' : ''}`}>
-              ⚖️ System Bus Arbiter & Shared Memory Pathway (Slide 18)
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.45rem' }}>
+                <span className="iris-ring-rotor" style={{ fontSize: '1rem' }}>⚙️</span>
+                <span>System Bus Arbiter & Shared Memory Pathway (Slide 18)</span>
+              </div>
               <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--accent-amber)', marginTop: '0.25rem' }}>
-                Arbitrates access to memory & I/O → High bus contention
+                Arbitrates access to memory & I/O → Serializes off-chip requests
+              </div>
+              <div className="bus-physical-line packet-stream-track active-data" style={{ height: '5px', marginTop: '0.4rem' }}>
+                <div className="floating-data-packet packet-amber packet-p1"></div>
+                <div className="floating-data-packet packet-amber packet-p2"></div>
               </div>
             </div>
 
