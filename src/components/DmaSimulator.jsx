@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, SkipForward, RotateCcw, Cpu, Layers, Activity } from 'lucide-react';
+import { Play, Pause, SkipForward, RotateCcw, Cpu, Layers, Activity, Clock, Database } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 import HardwareGaugesCluster from './HardwareGaugesCluster';
 import CpuXrayModal from './CpuXrayModal';
@@ -536,7 +536,7 @@ export default function DmaSimulator() {
             </div>
           </div>
 
-          {/* ROCK-SOLID STABLE RAM BUFFER */}
+          {/* ROCK-SOLID STABLE RAM BUFFER (ENHANCED HIGH-DENSITY DRAM MATRIX) */}
           <div className="ram-container card-hud-corner cyber-target-container" style={{ position: 'relative' }}>
             {/* HUD TARGET CORNER BRACKETS */}
             <div className="target-corner target-tl"></div>
@@ -544,28 +544,50 @@ export default function DmaSimulator() {
             <div className="target-corner target-bl"></div>
             <div className="target-corner target-br"></div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 5, marginBottom: '0.4rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 5, marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.95rem', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Database size={16} color="#00d2ff" />
                 Main Memory DRAM Target Buffer (0x8000)
                 <span className="badge-status badge-blue" style={{ fontSize: '0.72rem', padding: '0.15rem 0.5rem' }}>DRAM • 0x8000</span>
               </span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-green)' }}>
-                {transferredBytes} / {blockSize} Bytes Written
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <span className="badge-status badge-green" style={{ fontSize: '0.7rem' }}>
+                  {Math.round((transferredBytes / blockSize) * 100)}% BUFFERED
+                </span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-green)' }}>
+                  {transferredBytes} / {blockSize} Bytes Written
+                </span>
+              </div>
             </div>
+
+            {/* REAL-TIME BUFFER PROGRESS BAR */}
+            <div className="ram-progress-track">
+              <div
+                className="ram-progress-fill"
+                style={{ width: `${(transferredBytes / blockSize) * 100}%` }}
+              ></div>
+            </div>
+
             <div className="ram-cells-grid" style={{ position: 'relative', zIndex: 5 }}>
               {Array.from({ length: blockSize }).map((_, idx) => {
                 const isWritingNow = idx === transferredBytes - 1 && isRunning;
+                const isWritten = idx < transferredBytes;
+                const byteVal = isWritten
+                  ? `0x${((idx * 17 + 0xAA) % 256).toString(16).toUpperCase().padStart(2, '0')}`
+                  : '0x00';
                 return (
                   <div
                     key={idx}
-                    className={`memory-cell ${idx < transferredBytes ? 'written' : ''} ${isWritingNow ? 'pulse-write matrix-hex-scramble shockwave-blast' : ''}`}
-                    title={`DRAM Address 0x${(0x8000 + idx).toString(16).toUpperCase()}`}
+                    className={`memory-cell ${isWritten ? 'written' : ''} ${isWritingNow ? 'pulse-write matrix-hex-scramble shockwave-blast' : ''}`}
+                    title={`Physical DRAM Address 0x${(0x8000 + idx).toString(16).toUpperCase()} | Value: ${byteVal} | ${isWritten ? 'Committed (DMA)' : 'Pending'}`}
                   >
-                    {isWritingNow 
-                      ? `0x${((idx * 47 + currentClock * 19) % 256).toString(16).toUpperCase().padStart(2, '0')}`
-                      : `0x${(0x8000 + idx).toString(16).toUpperCase().slice(-3)}`
-                    }
+                    <span className="cell-addr-tag">+0x0{idx.toString(16).toUpperCase()}</span>
+                    <span className={`cell-val-tag ${isWritten ? 'val-written' : 'val-pending'}`}>
+                      {isWritingNow 
+                        ? `0x${((idx * 47 + currentClock * 19) % 256).toString(16).toUpperCase().padStart(2, '0')}`
+                        : byteVal
+                      }
+                    </span>
                   </div>
                 );
               })}
@@ -705,62 +727,154 @@ export default function DmaSimulator() {
         </div>
       </div>
 
-      {/* GANTT TIMELINE */}
+      {/* GANTT TIMELINE (ENHANCED OSCILLOSCOPE LOGIC ANALYZER) */}
       <div className="timeline-card">
         <div className="oscilloscope-beam"></div>
-        <div className="card-heading">
-          <span>Cycle-by-Cycle Waveform & Bus Arbitration Timing</span>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Displaying Last 20 System Clocks</span>
+        <div className="card-heading" style={{ flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <span style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff' }}>Cycle-by-Cycle Waveform & Bus Arbitration Timing</span>
+            <span className="badge-status badge-blue" style={{ fontSize: '0.7rem' }}>20-CYCLE OSCILLOSCOPE LOGIC</span>
+          </div>
+          <div className="timing-legend-row">
+            <span className="legend-chip legend-blue">⚡ CPU EXEC</span>
+            <span className="legend-chip legend-red">⛔ CPU STALL</span>
+            <span className="legend-chip legend-green">📡 DMA MASTER</span>
+            <span className="legend-chip legend-amber">⏳ ARBITRATION</span>
+          </div>
         </div>
 
+        {/* ROW 0: CLOCK CYCLE TIME TICKS (T-STATES) */}
+        <div className="gantt-row gantt-clock-header">
+          <div className="gantt-title" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#00d2ff' }}>
+            <Clock size={13} /> CLK Cycle (T):
+          </div>
+          <div className="gantt-blocks-grid">
+            {Array.from({ length: 20 }).map((_, idx) => {
+              const item = ganttHistory[idx];
+              const isCurrent = idx === ganttHistory.length - 1 && isRunning;
+              return (
+                <div
+                  key={idx}
+                  className={`gantt-clock-slot ${isCurrent ? 'active-clock-head' : ''} ${item ? 'slot-recorded' : ''}`}
+                >
+                  <span className="clock-t-label">T{idx + 1}</span>
+                  {isCurrent && <div className="clock-active-caret">▼</div>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ROW 1: SYNCHRONIZED DIGITAL CLOCK SQUARE WAVE */}
+        <div className="gantt-row gantt-wave-row">
+          <div className="gantt-title" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            Digital Clock (CLK):
+          </div>
+          <div className="gantt-blocks-grid gantt-wave-grid">
+            {Array.from({ length: 20 }).map((_, idx) => (
+              <div key={idx} className="gantt-wave-cell">
+                <svg viewBox="0 0 32 14" className="gantt-clock-pulse-svg">
+                  <path
+                    d="M0 12 L8 12 L8 2 L24 2 L24 12 L32 12"
+                    fill="none"
+                    stroke={idx < ganttHistory.length ? '#00d2ff' : 'rgba(255, 255, 255, 0.15)'}
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ROW 2: CPU STATUS */}
         <div className="gantt-row">
           <div className="gantt-title">CPU Status:</div>
           <div className="gantt-blocks-grid">
             {Array.from({ length: 20 }).map((_, idx) => {
               const item = ganttHistory[idx];
+              const isCurrent = idx === ganttHistory.length - 1 && isRunning;
               return (
                 <div
                   key={idx}
-                  className={`gantt-slot ${item ? (item.cpu === 'work' ? 'slot-cpu-running' : 'slot-cpu-stalled') : 'slot-idle-gray'}`}
+                  className={`gantt-slot ${item ? (item.cpu === 'work' ? 'slot-cpu-running' : 'slot-cpu-stalled') : 'slot-idle-gray'} ${isCurrent ? 'active-col-indicator' : ''}`}
+                  title={item ? (item.cpu === 'work' ? 'CPU Active: Executing ALU/Fetch' : 'CPU Stalled: Bus locked by DMA') : `Cycle T${idx + 1} Pending`}
                 >
-                  {item ? (item.cpu === 'work' ? 'EXEC' : 'STALL') : '-'}
+                  {item ? (item.cpu === 'work' ? '⚡ EXEC' : '⛔ STALL') : '·'}
                 </div>
               );
             })}
           </div>
         </div>
 
+        {/* ROW 3: BUS MASTERSHIP */}
         <div className="gantt-row">
           <div className="gantt-title">Bus Mastership:</div>
           <div className="gantt-blocks-grid">
             {Array.from({ length: 20 }).map((_, idx) => {
               const item = ganttHistory[idx];
+              const isCurrent = idx === ganttHistory.length - 1 && isRunning;
               return (
                 <div
                   key={idx}
-                  className={`gantt-slot ${item ? (item.bus.includes('DMA') ? 'slot-dma-transfer' : 'slot-cpu-running') : 'slot-idle-gray'}`}
+                  className={`gantt-slot ${item ? (item.bus.includes('DMA') ? 'slot-dma-transfer' : 'slot-cpu-running') : 'slot-idle-gray'} ${isCurrent ? 'active-col-indicator' : ''}`}
+                  title={item ? `Bus Master: ${item.bus}` : `Cycle T${idx + 1} Pending`}
                 >
-                  {item ? (item.bus.includes('DMA') ? 'DMA' : 'CPU') : '-'}
+                  {item ? (item.bus.includes('DMA') ? 'DMA' : 'CPU') : '·'}
                 </div>
               );
             })}
           </div>
         </div>
 
+        {/* ROW 4: DMA CONTROLLER */}
         <div className="gantt-row">
           <div className="gantt-title">DMA Controller:</div>
           <div className="gantt-blocks-grid">
             {Array.from({ length: 20 }).map((_, idx) => {
               const item = ganttHistory[idx];
+              const isCurrent = idx === ganttHistory.length - 1 && isRunning;
               return (
                 <div
                   key={idx}
-                  className={`gantt-slot ${item ? (item.dma === 'transfer' ? 'slot-dma-transfer' : 'slot-idle-gray') : 'slot-idle-gray'}`}
+                  className={`gantt-slot ${item ? (item.dma === 'transfer' ? 'slot-dma-transfer' : 'slot-idle-gray') : 'slot-idle-gray'} ${isCurrent ? 'active-col-indicator' : ''}`}
+                  title={item ? (item.dma === 'transfer' ? 'DMA Transferring Byte to DRAM' : 'DMA Idle / Relinquished') : `Cycle T${idx + 1} Pending`}
                 >
-                  {item ? (item.dma === 'transfer' ? 'TX' : '-') : '-'}
+                  {item ? (item.dma === 'transfer' ? '📡 TX' : 'IDLE') : '·'}
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        {/* TIMING SUMMARY METRICS STRIP */}
+        <div className="timing-summary-bar">
+          <div className="timing-metric-pill">
+            <span className="timing-metric-label">TOTAL CLOCKS:</span>
+            <span className="timing-metric-val">{currentClock} T-Cycles</span>
+          </div>
+          <div className="timing-metric-pill">
+            <span className="timing-metric-label">CPU EXEC:</span>
+            <span className="timing-metric-val" style={{ color: '#60a5fa' }}>
+              {Math.max(0, currentClock - cpuStallCycles)} ({currentClock > 0 ? Math.round(((currentClock - cpuStallCycles) / currentClock) * 100) : 100}%)
+            </span>
+          </div>
+          <div className="timing-metric-pill">
+            <span className="timing-metric-label">BUS STALLS:</span>
+            <span className="timing-metric-val" style={{ color: '#f43f5e' }}>
+              {cpuStallCycles} ({currentClock > 0 ? Math.round((cpuStallCycles / currentClock) * 100) : 0}%)
+            </span>
+          </div>
+          <div className="timing-metric-pill">
+            <span className="timing-metric-label">BURST EFFICIENCY:</span>
+            <span className="timing-metric-val" style={{ color: '#10b981' }}>
+              {transferredBytes > 0 ? Math.round((transferredBytes / (currentClock || 1)) * 100) : 0}% / Cycle
+            </span>
+          </div>
+          <div className="timing-metric-pill">
+            <span className="timing-metric-label">ARBITRATION MODE:</span>
+            <span className="timing-metric-val" style={{ color: '#fbbf24' }}>
+              {mode.toUpperCase()}
+            </span>
           </div>
         </div>
       </div>

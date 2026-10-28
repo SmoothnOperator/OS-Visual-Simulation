@@ -3688,7 +3688,277 @@ body.cinema-mode-active main {
   box-shadow: 0 0 25px rgba(244, 63, 94, 0.4) !important;
 }
 
-  </style>
+  
+/* ==========================================================================
+   51. ENHANCED GANTT TIMELINE & CLOCK OSCILLOSCOPE LOGIC
+   ========================================================================== */
+.timing-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.legend-chip {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+.legend-blue {
+  background: rgba(0, 82, 255, 0.15);
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  color: #60a5fa;
+}
+
+.legend-red {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  color: #f43f5e;
+}
+
+.legend-green {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #10b981;
+}
+
+.legend-amber {
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
+/* CLOCK RULER ROW */
+.gantt-clock-header {
+  margin-bottom: 0.35rem;
+}
+
+.gantt-clock-slot {
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.gantt-clock-slot.slot-recorded {
+  color: #00d2ff;
+}
+
+.gantt-clock-slot.active-clock-head {
+  color: #ffffff;
+  font-weight: 900;
+  text-shadow: 0 0 8px #00d2ff;
+}
+
+.clock-active-caret {
+  position: absolute;
+  top: -8px;
+  font-size: 0.52rem;
+  color: #00d2ff;
+  animation: pulseCaret 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes pulseCaret {
+  from { transform: translateY(0); opacity: 0.7; }
+  to { transform: translateY(2px); opacity: 1; }
+}
+
+/* SQUARE WAVE ROW */
+.gantt-wave-row {
+  margin-bottom: 0.65rem;
+  opacity: 0.9;
+}
+
+.gantt-wave-cell {
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gantt-clock-pulse-svg {
+  width: 100%;
+  height: 14px;
+  display: block;
+}
+
+/* ENHANCED GANTT SLOTS */
+.gantt-slot {
+  height: 40px;
+  background: rgba(10, 16, 32, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.slot-cpu-running {
+  background: rgba(0, 82, 255, 0.22) !important;
+  color: #60a5fa !important;
+  border-color: rgba(0, 132, 255, 0.6) !important;
+  box-shadow: inset 0 0 10px rgba(0, 82, 255, 0.25);
+}
+
+.slot-cpu-stalled {
+  background: rgba(244, 63, 94, 0.2) !important;
+  color: #f43f5e !important;
+  border-color: rgba(244, 63, 94, 0.6) !important;
+  box-shadow: inset 0 0 10px rgba(244, 63, 94, 0.3), 0 0 8px rgba(244, 63, 94, 0.2);
+}
+
+.slot-dma-transfer {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  box-shadow: inset 0 0 10px rgba(16, 185, 129, 0.25), 0 0 8px rgba(16, 185, 129, 0.2);
+}
+
+.slot-idle-gray {
+  color: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(6, 11, 24, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.gantt-slot.active-col-indicator {
+  border-color: #00d2ff !important;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.4) !important;
+}
+
+/* TIMING SUMMARY TELEMETRY BAR */
+.timing-summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: rgba(2, 6, 20, 0.85);
+  border: 1px solid rgba(0, 82, 255, 0.25);
+  border-radius: 6px;
+  padding: 0.65rem 1rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.timing-metric-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.timing-metric-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.timing-metric-val {
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* ENHANCED DRAM BUFFER MATRIX */
+.ram-progress-track {
+  height: 6px;
+  background: rgba(2, 6, 23, 0.8);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0.6rem 0 0.85rem 0;
+  border: 1px solid rgba(0, 82, 255, 0.3);
+  position: relative;
+}
+
+.ram-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0052ff, #00d2ff, #10b981);
+  border-radius: 3px;
+  transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 10px #00d2ff;
+}
+
+.ram-cells-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+}
+
+.memory-cell {
+  height: 48px;
+  background: rgba(4, 9, 24, 0.85);
+  border: 1px solid rgba(0, 82, 255, 0.3);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.memory-cell:hover {
+  transform: translateY(-2px);
+  border-color: #00d2ff;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.35);
+}
+
+.cell-addr-tag {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 1px;
+}
+
+.cell-val-tag {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.cell-val-tag.val-pending {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.cell-val-tag.val-written {
+  color: #00d2ff;
+  text-shadow: 0 0 8px rgba(0, 210, 255, 0.6);
+}
+
+.memory-cell.written {
+  background: rgba(0, 82, 255, 0.16) !important;
+  border-color: rgba(0, 210, 255, 0.5) !important;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.2) !important;
+}
+
+.memory-cell.pulse-write {
+  background: rgba(251, 191, 36, 0.25) !important;
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.6) !important;
+  transform: scale(1.08) translateY(-2px) !important;
+}
+</style>
 </head>
 <body>
 
@@ -4044,18 +4314,30 @@ body.cinema-mode-active main {
 
           <!-- ROCK-SOLID STABLE RAM BUFFER -->
           <div class="ram-container card-hud-corner cyber-target-container" style="position: relative;">
+            <!-- HUD TARGET CORNER BRACKETS -->
             <div class="target-corner target-tl"></div>
             <div class="target-corner target-tr"></div>
             <div class="target-corner target-bl"></div>
             <div class="target-corner target-br"></div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; position: relative; z-index: 5;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 5; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.5rem;">
               <span style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary); display: inline-flex; align-items: center; gap: 0.5rem;">
-                Main Memory DRAM Target Buffer (0x8000)
+                <span>💾</span> Main Memory DRAM Target Buffer (0x8000)
                 <span class="badge-status badge-blue" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">DRAM • 0x8000</span>
               </span>
-              <span id="labelRamProgress" style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: var(--accent-green);">0 / 16 Bytes Written</span>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <span id="ramBufferPctLabel" class="badge-status badge-green" style="font-size: 0.7rem;">0% BUFFERED</span>
+                <span id="labelRamProgress" style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: var(--accent-green);">0 / 16 Bytes Written</span>
+              </div>
             </div>
+
+            <!-- REAL-TIME BUFFER PROGRESS BAR -->
+            <div class="ram-progress-track">
+              <div id="ramBufferProgressFill" class="ram-progress-fill" style="width: 0%;"></div>
+            </div>
+
             <div class="ram-cells-grid" id="ramCellsWrapper" style="position: relative; z-index: 5;"></div>
+          </div>
           </div>
         </div>
 
@@ -4089,26 +4371,77 @@ body.cinema-mode-active main {
         </div>
       </div>
 
-      <!-- GANTT TIMELINE WAVEFORM -->
+      <!-- GANTT TIMELINE WAVEFORM (ENHANCED OSCILLOSCOPE LOGIC ANALYZER) -->
       <div class="timeline-card">
-        <div class="card-heading">
-          <span>Cycle-by-Cycle Waveform & Bus Arbitration Timing</span>
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Displaying Last 20 System Clocks</span>
+        <div class="card-heading" style="flex-wrap: wrap; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <span style="font-size: 1rem; font-weight: 800; color: #ffffff;">Cycle-by-Cycle Waveform & Bus Arbitration Timing</span>
+            <span class="badge-status badge-blue" style="font-size: 0.7rem;">20-CYCLE OSCILLOSCOPE LOGIC</span>
+          </div>
+          <div class="timing-legend-row">
+            <span class="legend-chip legend-blue">⚡ CPU EXEC</span>
+            <span class="legend-chip legend-red">⛔ CPU STALL</span>
+            <span class="legend-chip legend-green">📡 DMA MASTER</span>
+            <span class="legend-chip legend-amber">⏳ ARBITRATION</span>
+          </div>
         </div>
 
+        <!-- ROW 0: CLOCK CYCLE TIME TICKS (T-STATES) -->
+        <div class="gantt-row gantt-clock-header">
+          <div class="gantt-title" style="display: flex; align-items: center; gap: 0.4rem; color: #00d2ff;">
+            <span>⏱️</span> CLK Cycle (T):
+          </div>
+          <div class="gantt-blocks-grid" id="rowClockGantt"></div>
+        </div>
+
+        <!-- ROW 1: SYNCHRONIZED DIGITAL CLOCK SQUARE WAVE -->
+        <div class="gantt-row gantt-wave-row">
+          <div class="gantt-title" style="font-size: 0.75rem; color: var(--text-muted);">
+            Digital Clock (CLK):
+          </div>
+          <div class="gantt-blocks-grid gantt-wave-grid" id="rowWaveGantt"></div>
+        </div>
+
+        <!-- ROW 2: CPU STATUS -->
         <div class="gantt-row">
           <div class="gantt-title">CPU Status:</div>
           <div class="gantt-blocks-grid" id="rowCpuGantt"></div>
         </div>
 
+        <!-- ROW 3: BUS MASTERSHIP -->
         <div class="gantt-row">
           <div class="gantt-title">Bus Mastership:</div>
           <div class="gantt-blocks-grid" id="rowBusGantt"></div>
         </div>
 
+        <!-- ROW 4: DMA CONTROLLER -->
         <div class="gantt-row">
           <div class="gantt-title">DMA Controller:</div>
           <div class="gantt-blocks-grid" id="rowDmaGantt"></div>
+        </div>
+
+        <!-- TIMING SUMMARY METRICS STRIP -->
+        <div class="timing-summary-bar">
+          <div class="timing-metric-pill">
+            <span class="timing-metric-label">TOTAL CLOCKS:</span>
+            <span class="timing-metric-val" id="metricTotalClocks">0 T-Cycles</span>
+          </div>
+          <div class="timing-metric-pill">
+            <span class="timing-metric-label">CPU EXEC:</span>
+            <span class="timing-metric-val" id="metricCpuExec" style="color: #60a5fa;">0 (100%)</span>
+          </div>
+          <div class="timing-metric-pill">
+            <span class="timing-metric-label">BUS STALLS:</span>
+            <span class="timing-metric-val" id="metricCpuStalls" style="color: #f43f5e;">0 (0%)</span>
+          </div>
+          <div class="timing-metric-pill">
+            <span class="timing-metric-label">BURST EFFICIENCY:</span>
+            <span class="timing-metric-val" id="metricDmaEfficiency" style="color: #10b981;">0% / Cycle</span>
+          </div>
+          <div class="timing-metric-pill">
+            <span class="timing-metric-label">ARBITRATION MODE:</span>
+            <span class="timing-metric-val" id="metricBusArb" style="color: #fbbf24;">BURST</span>
+          </div>
         </div>
       </div>
     </section>
@@ -4619,19 +4952,34 @@ body.cinema-mode-active main {
     // --- RAM GRID INITIALIZER ---
     function setupRamGrid() {
       const wrapper = document.getElementById('ramCellsWrapper');
+      if (!wrapper) return;
       wrapper.innerHTML = '';
       for (let i = 0; i < blockSize; i++) {
         const cell = document.createElement('div');
         cell.className = 'memory-cell';
         cell.id = `ram_byte_${i}`;
-        cell.innerText = `0x${(0x8000 + i).toString(16).toUpperCase().slice(-3)}`;
+        const isWritten = i < transferredBytes;
+        const byteVal = isWritten
+          ? `0x${((i * 17 + 0xAA) % 256).toString(16).toUpperCase().padStart(2, '0')}`
+          : '0x00';
+        cell.innerHTML = `
+          <span class="cell-addr-tag">+0x0${i.toString(16).toUpperCase()}</span>
+          <span class="cell-val-tag ${isWritten ? 'val-written' : 'val-pending'}">${byteVal}</span>
+        `;
+        if (isWritten) cell.classList.add('written');
+        cell.title = `Physical DRAM Address 0x${(0x8000 + i).toString(16).toUpperCase()} | Value: ${byteVal} | ${isWritten ? 'Committed (DMA)' : 'Pending'}`;
         wrapper.appendChild(cell);
       }
       refreshRamLabel();
     }
 
     function refreshRamLabel() {
-      document.getElementById('labelRamProgress').innerText = `${transferredBytes} / ${blockSize} Bytes Written`;
+      const lbl = document.getElementById('labelRamProgress');
+      if (lbl) lbl.innerText = `${transferredBytes} / ${blockSize} Bytes Written`;
+      const fill = document.getElementById('ramBufferProgressFill');
+      if (fill) fill.style.width = `${(transferredBytes / blockSize) * 100}%`;
+      const pct = document.getElementById('ramBufferPctLabel');
+      if (pct) pct.innerText = `${Math.round((transferredBytes / blockSize) * 100)}% BUFFERED`;
     }
 
     // --- DMA MODE HANDLER ---
@@ -4853,7 +5201,13 @@ body.cinema-mode-active main {
       if (dmaState === 'transfer' && transferredBytes > 0) {
         const cell = document.getElementById(`ram_byte_${transferredBytes - 1}`);
         if (cell) {
+          const bIdx = transferredBytes - 1;
+          const byteVal = `0x${((bIdx * 17 + 0xAA) % 256).toString(16).toUpperCase().padStart(2, '0')}`;
           cell.className = 'memory-cell written pulse-write';
+          cell.innerHTML = `
+            <span class="cell-addr-tag">+0x0${bIdx.toString(16).toUpperCase()}</span>
+            <span class="cell-val-tag val-written">${byteVal}</span>
+          `;
           setTimeout(() => { if (cell) cell.className = 'memory-cell written'; }, 300);
         }
       }
@@ -4911,41 +5265,109 @@ body.cinema-mode-active main {
     }
 
     function drawGantt() {
+      const clockG = document.getElementById('rowClockGantt');
+      const waveG = document.getElementById('rowWaveGantt');
       const cpuG = document.getElementById('rowCpuGantt');
       const busG = document.getElementById('rowBusGantt');
       const dmaG = document.getElementById('rowDmaGantt');
 
-      cpuG.innerHTML = '';
-      busG.innerHTML = '';
-      dmaG.innerHTML = '';
+      if (clockG) clockG.innerHTML = '';
+      if (waveG) waveG.innerHTML = '';
+      if (cpuG) cpuG.innerHTML = '';
+      if (busG) busG.innerHTML = '';
+      if (dmaG) dmaG.innerHTML = '';
 
       for (let i = 0; i < 20; i++) {
         const item = ganttRecords[i];
-        const cSlot = document.createElement('div');
-        const bSlot = document.createElement('div');
-        const dSlot = document.createElement('div');
+        const isCurrent = i === ganttRecords.length - 1 && isRunning;
 
-        if (item) {
-          cSlot.className = `gantt-slot ${item.cpu === 'work' ? 'slot-cpu-running' : 'slot-cpu-stalled'}`;
-          cSlot.innerText = item.cpu === 'work' ? 'EXEC' : 'STALL';
-
-          bSlot.className = `gantt-slot ${item.bus.includes('DMA') ? 'slot-dma-transfer' : 'slot-cpu-running'}`;
-          bSlot.innerText = item.bus.includes('DMA') ? 'DMA' : 'CPU';
-
-          dSlot.className = `gantt-slot ${item.dma === 'transfer' ? 'slot-dma-transfer' : 'slot-idle-gray'}`;
-          dSlot.innerText = item.dma === 'transfer' ? 'TX' : '-';
-        } else {
-          cSlot.className = 'gantt-slot slot-idle-gray';
-          cSlot.innerText = '-';
-          bSlot.className = 'gantt-slot slot-idle-gray';
-          bSlot.innerText = '-';
-          dSlot.className = 'gantt-slot slot-idle-gray';
-          dSlot.innerText = '-';
+        // 1. Clock T-state row
+        if (clockG) {
+          const clkSlot = document.createElement('div');
+          clkSlot.className = `gantt-clock-slot ${isCurrent ? 'active-clock-head' : ''} ${item ? 'slot-recorded' : ''}`;
+          clkSlot.innerHTML = `<span class="clock-t-label">T${i + 1}</span>${isCurrent ? '<div class="clock-active-caret">▼</div>' : ''}`;
+          clockG.appendChild(clkSlot);
         }
 
-        cpuG.appendChild(cSlot);
-        busG.appendChild(bSlot);
-        dmaG.appendChild(dSlot);
+        // 2. Square wave row
+        if (waveG) {
+          const waveCell = document.createElement('div');
+          waveCell.className = 'gantt-wave-cell';
+          const strokeCol = i < ganttRecords.length ? '#00d2ff' : 'rgba(255, 255, 255, 0.15)';
+          waveCell.innerHTML = `
+            <svg viewBox="0 0 32 14" class="gantt-clock-pulse-svg">
+              <path d="M0 12 L8 12 L8 2 L24 2 L24 12 L32 12" fill="none" stroke="${strokeCol}" stroke-width="1.5" />
+            </svg>
+          `;
+          waveG.appendChild(waveCell);
+        }
+
+        // 3. CPU Status
+        if (cpuG) {
+          const cSlot = document.createElement('div');
+          if (item) {
+            cSlot.className = `gantt-slot ${item.cpu === 'work' ? 'slot-cpu-running' : 'slot-cpu-stalled'} ${isCurrent ? 'active-col-indicator' : ''}`;
+            cSlot.innerText = item.cpu === 'work' ? '⚡ EXEC' : '⛔ STALL';
+            cSlot.title = item.cpu === 'work' ? 'CPU Active: Executing ALU/Fetch' : 'CPU Stalled: Bus locked by DMA';
+          } else {
+            cSlot.className = 'gantt-slot slot-idle-gray';
+            cSlot.innerText = '·';
+          }
+          cpuG.appendChild(cSlot);
+        }
+
+        // 4. Bus Mastership
+        if (busG) {
+          const bSlot = document.createElement('div');
+          if (item) {
+            bSlot.className = `gantt-slot ${item.bus.includes('DMA') ? 'slot-dma-transfer' : 'slot-cpu-running'} ${isCurrent ? 'active-col-indicator' : ''}`;
+            bSlot.innerText = item.bus.includes('DMA') ? 'DMA' : 'CPU';
+            bSlot.title = `Bus Master: ${item.bus}`;
+          } else {
+            bSlot.className = 'gantt-slot slot-idle-gray';
+            bSlot.innerText = '·';
+          }
+          busG.appendChild(bSlot);
+        }
+
+        // 5. DMA Controller
+        if (dmaG) {
+          const dSlot = document.createElement('div');
+          if (item) {
+            dSlot.className = `gantt-slot ${item.dma === 'transfer' ? 'slot-dma-transfer' : 'slot-idle-gray'} ${isCurrent ? 'active-col-indicator' : ''}`;
+            dSlot.innerText = item.dma === 'transfer' ? '📡 TX' : 'IDLE';
+            dSlot.title = item.dma === 'transfer' ? 'DMA Transferring Byte to DRAM' : 'DMA Idle / Relinquished';
+          } else {
+            dSlot.className = 'gantt-slot slot-idle-gray';
+            dSlot.innerText = '·';
+          }
+          dmaG.appendChild(dSlot);
+        }
+      }
+
+      // Update Summary Bar
+      const mTotal = document.getElementById('metricTotalClocks');
+      const mCpu = document.getElementById('metricCpuExec');
+      const mStall = document.getElementById('metricCpuStalls');
+      const mEff = document.getElementById('metricDmaEfficiency');
+      const mArb = document.getElementById('metricBusArb');
+
+      if (mTotal) mTotal.innerText = `${currentClock} T-Cycles`;
+      if (mCpu) {
+        const execs = Math.max(0, currentClock - cpuStallCycles);
+        const pct = currentClock > 0 ? Math.round((execs / currentClock) * 100) : 100;
+        mCpu.innerText = `${execs} (${pct}%)`;
+      }
+      if (mStall) {
+        const pct = currentClock > 0 ? Math.round((cpuStallCycles / currentClock) * 100) : 0;
+        mStall.innerText = `${cpuStallCycles} (${pct}%)`;
+      }
+      if (mEff) {
+        const eff = transferredBytes > 0 ? Math.round((transferredBytes / (currentClock || 1)) * 100) : 0;
+        mEff.innerText = `${eff}% / Cycle`;
+      }
+      if (mArb) {
+        mArb.innerText = dmaMode.toUpperCase();
       }
     }
 

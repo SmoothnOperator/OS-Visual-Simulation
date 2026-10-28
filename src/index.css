@@ -3674,3 +3674,273 @@ body.cinema-mode-active main {
   border-color: #f43f5e !important;
   box-shadow: 0 0 25px rgba(244, 63, 94, 0.4) !important;
 }
+
+/* ==========================================================================
+   51. ENHANCED GANTT TIMELINE & CLOCK OSCILLOSCOPE LOGIC
+   ========================================================================== */
+.timing-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.legend-chip {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+.legend-blue {
+  background: rgba(0, 82, 255, 0.15);
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  color: #60a5fa;
+}
+
+.legend-red {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  color: #f43f5e;
+}
+
+.legend-green {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #10b981;
+}
+
+.legend-amber {
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
+/* CLOCK RULER ROW */
+.gantt-clock-header {
+  margin-bottom: 0.35rem;
+}
+
+.gantt-clock-slot {
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.gantt-clock-slot.slot-recorded {
+  color: #00d2ff;
+}
+
+.gantt-clock-slot.active-clock-head {
+  color: #ffffff;
+  font-weight: 900;
+  text-shadow: 0 0 8px #00d2ff;
+}
+
+.clock-active-caret {
+  position: absolute;
+  top: -8px;
+  font-size: 0.52rem;
+  color: #00d2ff;
+  animation: pulseCaret 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes pulseCaret {
+  from { transform: translateY(0); opacity: 0.7; }
+  to { transform: translateY(2px); opacity: 1; }
+}
+
+/* SQUARE WAVE ROW */
+.gantt-wave-row {
+  margin-bottom: 0.65rem;
+  opacity: 0.9;
+}
+
+.gantt-wave-cell {
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gantt-clock-pulse-svg {
+  width: 100%;
+  height: 14px;
+  display: block;
+}
+
+/* ENHANCED GANTT SLOTS */
+.gantt-slot {
+  height: 40px;
+  background: rgba(10, 16, 32, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.slot-cpu-running {
+  background: rgba(0, 82, 255, 0.22) !important;
+  color: #60a5fa !important;
+  border-color: rgba(0, 132, 255, 0.6) !important;
+  box-shadow: inset 0 0 10px rgba(0, 82, 255, 0.25);
+}
+
+.slot-cpu-stalled {
+  background: rgba(244, 63, 94, 0.2) !important;
+  color: #f43f5e !important;
+  border-color: rgba(244, 63, 94, 0.6) !important;
+  box-shadow: inset 0 0 10px rgba(244, 63, 94, 0.3), 0 0 8px rgba(244, 63, 94, 0.2);
+}
+
+.slot-dma-transfer {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  box-shadow: inset 0 0 10px rgba(16, 185, 129, 0.25), 0 0 8px rgba(16, 185, 129, 0.2);
+}
+
+.slot-idle-gray {
+  color: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(6, 11, 24, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.gantt-slot.active-col-indicator {
+  border-color: #00d2ff !important;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.4) !important;
+}
+
+/* TIMING SUMMARY TELEMETRY BAR */
+.timing-summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: rgba(2, 6, 20, 0.85);
+  border: 1px solid rgba(0, 82, 255, 0.25);
+  border-radius: 6px;
+  padding: 0.65rem 1rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.timing-metric-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.timing-metric-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.timing-metric-val {
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* ENHANCED DRAM BUFFER MATRIX */
+.ram-progress-track {
+  height: 6px;
+  background: rgba(2, 6, 23, 0.8);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0.6rem 0 0.85rem 0;
+  border: 1px solid rgba(0, 82, 255, 0.3);
+  position: relative;
+}
+
+.ram-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0052ff, #00d2ff, #10b981);
+  border-radius: 3px;
+  transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 10px #00d2ff;
+}
+
+.ram-cells-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+}
+
+.memory-cell {
+  height: 48px;
+  background: rgba(4, 9, 24, 0.85);
+  border: 1px solid rgba(0, 82, 255, 0.3);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.memory-cell:hover {
+  transform: translateY(-2px);
+  border-color: #00d2ff;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.35);
+}
+
+.cell-addr-tag {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 1px;
+}
+
+.cell-val-tag {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.cell-val-tag.val-pending {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.cell-val-tag.val-written {
+  color: #00d2ff;
+  text-shadow: 0 0 8px rgba(0, 210, 255, 0.6);
+}
+
+.memory-cell.written {
+  background: rgba(0, 82, 255, 0.16) !important;
+  border-color: rgba(0, 210, 255, 0.5) !important;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.2) !important;
+}
+
+.memory-cell.pulse-write {
+  background: rgba(251, 191, 36, 0.25) !important;
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.6) !important;
+  transform: scale(1.08) translateY(-2px) !important;
+}
