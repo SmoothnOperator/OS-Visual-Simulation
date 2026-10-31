@@ -2,7 +2,7 @@
 
 <div align="center">
 
-## OPERATING SYSTEM VISUALIZATION & SIMULATION PLATFORM
+## OPERATING SYSTEM ARCHITECTURE LAB (OS-ArchLab)
 ### An Interactive Architectural Simulation Workbench for Direct Memory Access (DMA) and Multicore vs. Multiprocessor Organizations
 
 ---
@@ -17,11 +17,11 @@
 Department of Computer Science & Engineering  
 
 **Submitted By (Project Team):**  
-* **Nikhil** (DMA Architecture, Bus Handshake & Arbiter Engine)  
-* **Sakshi** (Multicore/MP Architecture, Thermal Modeling & Fault Engine)  
+* **Nikhil** (DMA Architecture, Bus Handshake & Timing Engine)  
+* **Sakshi** (Multicore vs. Multiprocessor, Thermal Modeling & Fault Isolation Engine)  
 Department of Computer Science & Engineering  
 
-**Date of Submission:** October 24, 2026  
+**Date of Submission:** October 31, 2026  
 
 </div>
 
@@ -29,10 +29,10 @@ Department of Computer Science & Engineering
 
 ### Project Team & Individual Contributions
 
-| Team Member | Module & Primary Responsibilities | Key Code Deliverables |
+| Team Member | Module & Primary Responsibilities | Key Technical Deliverables |
 | :--- | :--- | :--- |
-| **Nikhil** | **Topic 5: Direct Memory Access (DMA) & Bus Arbitration**<br>• 8237 DMA Finite State Machine & `HOLD`/`HLDA` Handshake<br>• 20-Cycle Logic Analyzer Oscilloscope Waveform<br>• Crossbar Highway Arbiter & Contention Turnstile Queue | [`DmaSimulator.jsx`](file:///D:/code/os%20visual/src/components/DmaSimulator.jsx)<br>[`UnifiedSystemLab.jsx`](file:///D:/code/os%20visual/src/components/UnifiedSystemLab.jsx)<br>Test Case 1 Verification |
-| **Sakshi** | **Topic 6: Multicore vs. Multiprocessor Organizations**<br>• 2/4/8 Core Die Scaler & Thermal Hotspot Engine ($48^\circ\text{C}$ to $89^\circ\text{C}$)<br>• SMP vs. Distributed RAM & L3 Cache Ring Bus Interconnect<br>• Fault Injection Engine (Die Overheat vs. Socket Pull) | [`MultiArchitectureComparator.jsx`](file:///D:/code/os%20visual/src/components/MultiArchitectureComparator.jsx)<br>[`OsEvolutionTimeMachine.jsx`](file:///D:/code/os%20visual/src/components/OsEvolutionTimeMachine.jsx)<br>Test Cases 2 & 3 Verification |
+| **Nikhil** | **Topic 5: Direct Memory Access (DMA) & Bus Arbitration Subsystem**<br>• Intel 8237 DMA Finite State Machine & `HOLD`/`HLDA` Handshaking<br>• 24-Cycle Logic Analyzer Oscilloscope Waveform & Timing Engine<br>• Interactive Circular HUD Gauges (Contention Injector, PCIe Speed Multiplier, CPU Clock Overclocking)<br>• CPU Microarchitecture Silicon ALU & Register Bank X-Ray Popover Modal<br>• Fullscreen Presentation Cinema Mode & Cyber Startup POST Boot Sequence | [`DmaSimulator.jsx`](file:///d:/code/os%20visual/src/components/DmaSimulator.jsx)<br>[`standalone.html`](file:///d:/code/os%20visual/standalone.html) (Tab 1)<br>Hardware Test Case 1 Verification |
+| **Sakshi** | **Topic 6: Multicore vs. Multiprocessor Organization Subsystem**<br>• Dynamic Silicon Core Scaler (2, 4, 8 Cores) with Thermal Hotspot Modeling ($48^\circ\text{C}$ to $89^\circ\text{C}$ Throttling Alert)<br>• Memory Topologies: Symmetric Multiprocessing (SMP) vs. Distributed Memory (NUMA)<br>• On-Chip L3 Cache vs. Off-Chip Motherboard Bus Memory Access Tracing ($0.8\text{ ns}$ vs. $65\text{ ns}$)<br>• Hardware Fault Injection Engine: Silicon Die Overheat ($105^\circ\text{C}$) vs. Hot-Swappable Socket Pull<br>• Workload Performance Benchmarking (Single Multi-Threaded Program vs. Independent Server Jobs) | [`MultiArchitectureComparator.jsx`](file:///d:/code/os%20visual/src/components/MultiArchitectureComparator.jsx)<br>[`standalone.html`](file:///d:/code/os%20visual/standalone.html) (Tab 2)<br>Hardware Test Cases 2 & 3 Verification |
 
 ---
 
@@ -41,7 +41,6 @@ Department of Computer Science & Engineering
 > This academic project implements a cycle-accurate, real-time interactive simulation platform developed to substantiate and visually verify the architectural concepts taught in **Module 1**:
 > 1. **Topic 5: Direct Memory Access (DMA)** — Bus arbitration, control lines (`HOLD`, `HLDA`), data transfer protocol, and comparative analysis of Burst Mode, Cycle Stealing Mode, and Transparent Mode (Slides 13–15).
 > 2. **Topic 6: Multiprocessor vs. Multicore Organizations** — Single-die shared L3 cache architectures vs. multi-socket motherboard bus arbitrated architectures, SMP shared memory vs. distributed memory organizations, thermal dissipation limits, and fault isolation (Slides 16–20).
-> 3. **Unified Hardware Crossroads & OS Evolution** — Crossbar bus contention turnstile queues and the historical progression from 1st Generation Vacuum Tubes to 5th Generation Multicore NVMe DMA (Slides 23, 35–39).
 
 ---
 
@@ -49,7 +48,7 @@ Department of Computer Science & Engineering
 
 Traditional classroom instruction in Operating Systems frequently encounters pedagogical bottlenecks when communicating low-level hardware concurrency. Micro-architectural mechanisms—such as the hardware bus release handshake between the CPU and the DMA controller, cycle-level processor stalls, bus contention turnstiles, and inter-core cache snooping latencies—occur at nanosecond scales within closed integrated circuits. Consequently, students frequently memorize comparison tables (e.g., Slide 20) without internalizing the underlying physical trade-offs.
 
-To resolve this educational gap, the **OS-ArchLab Platform** was designed, engineered, and verified. Built upon modern reactive frontend systems (Node.js, React 19, Vite) and rendered with hardware-accelerated Cyberpunk telemetry animations, the platform models discrete system clock pulses, animated electrical bus lines, live hardware registers, DRAM memory cell allocations, 20-cycle logic analyzer waveforms, and runtime fault injection (Thermal Die Overheating and Physical CPU Socket Disconnection).
+To resolve this educational gap, the **OS-ArchLab Platform** was designed, engineered, and verified. Built upon modern reactive frontend systems (React 19, Vite) and a self-contained zero-dependency distribution (`standalone.html`), the platform models discrete system clock pulses, animated electrical bus lines, live hardware registers, DRAM memory cell allocations, 24-cycle logic analyzer waveforms, and runtime fault injection (Thermal Die Overheating and Physical CPU Socket Disconnection).
 
 This document serves as the formal technical submission report detailing the theoretical derivations, state-machine architectures, software design specifications, and simulation verification metrics.
 
@@ -61,13 +60,11 @@ The simulation modules directly map to the official syllabus lecture slides of *
 
 | Syllabus Topic | Lecture Slide Ref. | Conceptual Core | Implemented Visual Module |
 | :--- | :--- | :--- | :--- |
-| **Topic 5: Direct Memory Access** | Slide 13 | DMA Definition, "Station Master" Analogy, Controller Architecture | [DmaSimulator.jsx](file:///D:/code/os%20visual/src/components/DmaSimulator.jsx) |
-| **Topic 5: DMA Working Protocol** | Slide 14 | 6-Step Transfer Protocol, `HOLD`/`HLDA` Handshake, IRQ Interrupt | [DmaSimulator.jsx](file:///D:/code/os%20visual/src/components/DmaSimulator.jsx) |
-| **Topic 5: DMA Modes of Operation** | Slide 15 | Burst Mode, Cycle Stealing Mode, Transparent Mode | [DmaSimulator.jsx](file:///D:/code/os%20visual/src/components/DmaSimulator.jsx) |
-| **Topic 6: Multicore Organization** | Slides 16–17 | Single Silicon Die, Shared L3 Cache, Thermal Concentrated Heat, Inter-core Latency | [MultiArchitectureComparator.jsx](file:///D:/code/os%20visual/src/components/MultiArchitectureComparator.jsx) |
-| **Topic 6: Multiprocessor Organization** | Slides 18–19 | Multi-Socket Motherboard, System Bus Arbiter, SMP vs. Distributed RAM, Fault Isolation | [MultiArchitectureComparator.jsx](file:///D:/code/os%20visual/src/components/MultiArchitectureComparator.jsx) |
-| **Hardware Bus Crossroads** | Slide 18 & 19 | Memory Bus Contention, Hardware Arbiter Turnstile, Starvation Prevention | [UnifiedSystemLab.jsx](file:///D:/code/os%20visual/src/components/UnifiedSystemLab.jsx) |
-| **OS Historical Generations** | Slides 23, 35–39 | 1st to 5th Generation OS, Programmed I/O vs. Batch vs. DMA vs. Multicore | [OsEvolutionTimeMachine.jsx](file:///D:/code/os%20visual/src/components/OsEvolutionTimeMachine.jsx) |
+| **Topic 5: Direct Memory Access** | Slide 13 | DMA Definition, "Station Master" Analogy, Controller Architecture | [DmaSimulator.jsx](file:///d:/code/os%20visual/src/components/DmaSimulator.jsx) & [standalone.html](file:///d:/code/os%20visual/standalone.html) |
+| **Topic 5: DMA Working Protocol** | Slide 14 | 6-Step Transfer Protocol, `HOLD`/`HLDA` Handshake, IRQ Interrupt | [DmaSimulator.jsx](file:///d:/code/os%20visual/src/components/DmaSimulator.jsx) & [standalone.html](file:///d:/code/os%20visual/standalone.html) |
+| **Topic 5: DMA Modes of Operation** | Slide 15 | Burst Mode, Cycle Stealing Mode, Transparent Mode Analysis | [DmaSimulator.jsx](file:///d:/code/os%20visual/src/components/DmaSimulator.jsx) & [standalone.html](file:///d:/code/os%20visual/standalone.html) |
+| **Topic 6: Multicore Organization** | Slides 16–17 | Single Silicon Die, Shared L3 Cache, Thermal Concentrated Heat, Inter-core Latency | [MultiArchitectureComparator.jsx](file:///d:/code/os%20visual/src/components/MultiArchitectureComparator.jsx) |
+| **Topic 6: Multiprocessor Organization** | Slides 18–20 | Multi-Socket Motherboard, System Bus Arbiter, SMP vs. Distributed RAM, Fault Isolation | [MultiArchitectureComparator.jsx](file:///d:/code/os%20visual/src/components/MultiArchitectureComparator.jsx) |
 
 ---
 
@@ -111,7 +108,7 @@ Let $N$ be the total block size in bytes, $T_{\text{bus}}$ be the clock period o
 | 1. BURST MODE (Slide 15)                                                              |
 | DMA acquires bus once and holds it until all N bytes are transferred.                 |
 | CPU Stall Time: T_stall = N * T_bus (CPU Stalled: 100% of transfer window)            |
-| Best For: High-speed disk blocks, streaming buffers, fast bursts                      |
+| Best For: High-speed disk blocks, streaming buffers, fast bulk throughput             |
 +---------------------------------------------------------------------------------------+
 | 2. CYCLE STEALING MODE (Slide 15)                                                     |
 | DMA steals exactly 1 bus cycle for 1 byte, yields to CPU for 1 cycle, repeats.       |
@@ -121,7 +118,7 @@ Let $N$ be the total block size in bytes, $T_{\text{bus}}$ be the clock period o
 | 3. TRANSPARENT MODE (Slide 15)                                                        |
 | DMA monitors CPU opcode decode; claims bus ONLY when CPU executes internal ALU work.  |
 | CPU Stall Time: T_stall = 0 (Zero processor penalty)                                  |
-| Best For: High-priority compute workloads, but requires complex hardware logic        |
+| Best For: High-priority compute workloads; zero CPU wait states                       |
 +---------------------------------------------------------------------------------------+
 ```
 
@@ -136,7 +133,7 @@ In a Symmetric Multiprocessor (SMP) system communicating over an external mother
 
 $$T_{\text{access(Multiprocessor)}} = T_{\text{L1/L2}} + P_{\text{miss}} \times (T_{\text{socket\_egress}} + T_{\text{bus\_arbitration}} + T_{\text{motherboard\_trace}} + T_{\text{DRAM\_controller}}) \approx 15\text{ ns to }65\text{ ns}$$
 
-This mathematical inequality ($0.8\text{ ns} \ll 25\text{ ns}$) proves **Slide 20: "Multicore is faster in executing a single multi-threaded program"** because shared data structures in L3 do not undergo motherboard bus arbitration.
+This mathematical inequality ($0.8\text{ ns} \ll 65\text{ ns}$) proves **Slide 20: "Multicore is faster in executing a single multi-threaded program"** because shared data structures in L3 do not undergo motherboard bus arbitration.
 
 #### B. Reliability & Fault-Isolation Formulation
 Let the probability of a physical die failure due to thermal stress or silicon defect be $p$.
@@ -151,69 +148,54 @@ Let the probability of a physical die failure due to thermal stress or silicon d
 
 ## 4. Software Architecture & Implementation Details
 
-The implementation follows a modular, state-driven architecture built upon React 19, Vite, and custom hardware-accelerated CSS animations:
+The implementation follows a modular, reactive architecture built upon React 19, Vite, and custom hardware-accelerated CSS animations, mirrored synchronously in `standalone.html`:
 
 ```mermaid
 flowchart TD
-  subgraph Client_Browser ["Client Runtime (Vite Dev Server: localhost:3000)"]
+  subgraph Client_Browser ["Client Runtime (Vite Dev Server: localhost:3000 / standalone.html)"]
     App["App.jsx (Root State & Tab Router)"]
-    Nav["Navbar.jsx (Brand & Tab Navigation)"]
+    Nav["Navbar.jsx (Brand, Tabs, Reboot, Cinema Mode)"]
 
-    subgraph Simulation_Modules ["Simulation Modules (src/components/)"]
-      M1["DmaSimulator.jsx<br/>(DMA Protocol, Registers, Gantt Analyzer)"]
-      M2["MultiArchitectureComparator.jsx<br/>(Multicore vs Multiprocessor, Fault Injection)"]
-      M3["UnifiedSystemLab.jsx<br/>(Crossbar Highway, Turnstile Queue)"]
-      M4["OsEvolutionTimeMachine.jsx<br/>(1st to 5th Gen Historical Benchmarks)"]
+    subgraph Simulation_Modules ["Core Simulation Engines"]
+      M1["DmaSimulator.jsx<br/>(DMA Protocol, Registers, 24-Cycle Analyzer, X-Ray)"]
+      M2["MultiArchitectureComparator.jsx<br/>(Multicore vs Multiprocessor, Fault Injection, SMP/NUMA)"]
     end
 
-    subgraph Styling_Engine ["Animation & Visual Engine"]
-      CSS["index.css (Cyberpunk Neon Tokens, Keyframes)"]
+    subgraph Hardware_HUD ["Hardware Telemetry & Gauges"]
+      G1["Bus Saturation Injector (Contention Stress Toggle)"]
+      G2["DMA Bandwidth (PCIe Gen5 Turbo / Gen4 / Legacy)"]
+      G3["Harmonic Clock (3.2GHz / 4.8GHz Overclocking)"]
     end
 
     App --> Nav
     App --> M1
     App --> M2
-    App --> M3
-    App --> M4
-    M1 -.-> CSS
-    M2 -.-> CSS
-    M3 -.-> CSS
-    M4 -.-> CSS
+    M1 --> Hardware_HUD
   end
 ```
 
 ### 4.1 Component Breakdown
 
-1. **[Navbar.jsx](file:///D:/code/os%20visual/src/components/Navbar.jsx):**
-   * Top navigation bar with Lucide icons (`Cpu`, `Layers`, `Zap`, `History`).
-   * Clean tabs: `DMA Modes`, `Multicore vs Multiprocessor`, `Unified System Lab`, `OS Evolution Time Machine`.
+1. **[Navbar.jsx](file:///d:/code/os%20visual/src/components/Navbar.jsx):**
+   * Top navigation bar with Lucide icons (`Cpu`, `Layers`, `Monitor`).
+   * Clean, intuitive tabs: `DMA Modes` and `Multicore vs Multiprocessor`.
+   * Fast toggle for Presentation Cinema Mode (`⛶ CINEMA MODE`).
 
-2. **[DmaSimulator.jsx](file:///D:/code/os%20visual/src/components/DmaSimulator.jsx):**
+2. **[DmaSimulator.jsx](file:///d:/code/os%20visual/src/components/DmaSimulator.jsx):**
    * **State Engine:** Controls clock ticker, block transfer countdown, and registers (`Source 0x1000`, `Dest 0x8000`, `Byte Count`, `HOLD`, `HLDA`).
    * **Animated Conduits:** Flowing SVG dashed laser lines between CPU, DMA, and NVMe buffer.
-   * **Live Memory Grid:** 16/24 DRAM memory cells that pulse and emit shockwave rings upon being written.
-   * **Oscilloscope Waveform:** 20-cycle Gantt diagram with an animated sweeping laser scanline tracking CPU execution vs. DMA bus mastership.
+   * **DRAM Target Buffer Grid:** 16/24 DRAM memory cells that pulse and emit shockwave rings upon being written, with real-time percentage fill bar.
+   * **24-Cycle Oscilloscope Waveform:** Comprehensive logic analyzer tracking discrete clock pulses (T1–T24), digital square waves, CPU active vs. stalled states, and bus mastership.
+   * **CPU Microarchitecture X-Ray:** Internal silicon core inspection displaying real-time ALU micro-ops, 16/32-bit register bank (AX, BX, CX, DX, PC, SP, BP, FLAGS), and on-chip cache hierarchy.
 
-3. **[MultiArchitectureComparator.jsx](file:///D:/code/os%20visual/src/components/MultiArchitectureComparator.jsx):**
+3. **[MultiArchitectureComparator.jsx](file:///d:/code/os%20visual/src/components/MultiArchitectureComparator.jsx):**
    * **Core Scaler:** Dynamic 2-Core, 4-Core, and 8-Core scaling with thermal rise ($48^\circ\text{C} \rightarrow 68^\circ\text{C} \rightarrow 89^\circ\text{C}$ throttle alert).
    * **Memory Mode Switch:** Symmetric Multiprocessor (SMP shared DRAM) vs. Distributed Memory (Private RAM pools per socket).
    * **Fault Injection Buttons:** `Overheat Die` (silicon thermal shutdown) and `Pull Socket 2` (simulates physical socket disconnect).
-   * **Thread VU Bars:** Dynamic dancing equalizer bars inside each active core.
-   * **On-Die Ring Bus:** Rotating laser crossbar animation in L3 cache.
+   * **Memory Latency Trace:** Visual demonstration comparing 0.8ns on-die L3 cache hits to 65ns external motherboard bus traversal.
+   * **Workload Performance Race:** Real-world benchmark comparing rendering throughput across single multi-threaded programs and independent server jobs.
 
-4. **[UnifiedSystemLab.jsx](file:///D:/code/os%20visual/src/components/UnifiedSystemLab.jsx):**
-   * **Hardware Arbiter Turnstile:** 3-slot priority queue (`Active Master`, `Next in Line`, `Pending`).
-   * **Contention Stress Slider:** Adjusts memory pressure from $20\%$ to $95\%$. When $>70\%$, triggers active electric spark alerts (`⚡ CONTENTION SURGE`).
-   * **Real-World Workload Scenarios:**
-     * *Scenario A (Gaming):* Cycle Stealing mode ensures 60 FPS frame render while streaming network packets.
-     * *Scenario B (Database):* DMA Burst lock forces all cores into wait states to flush database WAL logs to NVMe.
-     * *Scenario C (4K Streaming):* Balanced round-robin arbitration.
-
-5. **[OsEvolutionTimeMachine.jsx](file:///D:/code/os%20visual/src/components/OsEvolutionTimeMachine.jsx):**
-   * **5 Generation Stepper:** Covers ENIAC (1940s) $\rightarrow$ IBM 7094 Batch (1950s) $\rightarrow$ IBM 360 & DMA Birth (1960s) $\rightarrow$ Microprocessors (1980s) $\rightarrow$ Modern Multicore + NVMe DMA (2020s).
-   * **Interactive 100 KB Benchmark:** Visualizes transfer times from 15+ minutes down to $0.014\text{ ms}$.
-
-6. **[standalone.html](file:///D:/code/os%20visual/standalone.html):**
+4. **[standalone.html](file:///d:/code/os%20visual/standalone.html):**
    * Zero-install, single-file HTML/CSS/JS distribution that runs natively in any browser without requiring Node.js.
 
 ---
@@ -222,7 +204,7 @@ flowchart TD
 
 The simulation platform was executed across structured test cases to verify the theoretical claims in Module 1:
 
-### Test Case 1: DMA Mode Performance & CPU Utilization (Slide 15 Verification)
+### Test Case 1: 24-Cycle DMA Mode Performance & CPU Utilization (Slide 15 Verification)
 * **Configuration:** 16-Byte Block Transfer, Standard Clock Speed (700ms/cycle).
 * **Experimental Observations:**
 
@@ -256,22 +238,23 @@ The complete codebase is organized cleanly within the project directory:
 
 ```
 d:\code\os visual\
-├── index.html                   # HTML5 Entry Point (data-theme="cyberpunk")
-├── package.json                 # Node dependencies (React 19, Lucide, Vite)
-├── vite.config.js               # Vite build configuration (Port 3000)
-├── standalone.html              # Zero-install single-file distribution
-├── FACULTY_SUBMISSION_REPORT.md # Root copy of this academic report
+├── index.html                           # HTML5 Entry Point (data-theme="cyberpunk")
+├── package.json                         # Node dependencies (React 19, Lucide, Vite)
+├── vite.config.js                       # Vite build configuration (Port 3000)
+├── standalone.html                      # Zero-install single-file distribution
+├── FACULTY_SUBMISSION_REPORT.md         # Markdown copy of this academic report
+├── FACULTY_SUBMISSION_REPORT.docx       # Formatted Word submission report
+├── FACULTY_VIVA_AND_DEMO_GUIDE.docx     # Two-member viva presentation guide
 ├── src/
-│   ├── main.jsx                 # React root DOM injector
-│   ├── App.jsx                  # Main tab state router & lifecycle
-│   ├── index.css                # Cyberpunk dark theme, animations, keyframes
+│   ├── main.jsx                         # React root DOM injector
+│   ├── App.jsx                          # Main tab state router & lifecycle
+│   ├── index.css                        # Cyberpunk dark theme, animations, keyframes
 │   └── components/
-│       ├── Navbar.jsx           # Clean navigation header
-│       ├── DmaSimulator.jsx     # Topic 5: DMA Controller & oscilloscope
+│       ├── Navbar.jsx                   # Clean navigation header
+│       ├── DmaSimulator.jsx             # Topic 5: DMA Controller & 24-cycle oscilloscope
 │       ├── MultiArchitectureComparator.jsx # Topic 6: Multicore vs Multiprocessor
-│       ├── UnifiedSystemLab.jsx # Bus crossbar highway & turnstile queue
-│       └── OsEvolutionTimeMachine.jsx # Topic 1: Historical OS generations
-└── dist/                        # Production build bundle (verified)
+│       └── StartupBootScreen.jsx        # Cyber boot sequence & POST animation
+└── dist/                                # Production build bundle (verified)
 ```
 
 ---
