@@ -86,7 +86,7 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
               <span className="telemetry-dot"></span> DMA 8237: ARMED
             </span>
             <span className="telemetry-item">
-              <span className="telemetry-dot amber"></span> ARBITER: READY
+              <span className="telemetry-dot amber"></span> CACHE: SYNCED
             </span>
           </div>
 
@@ -118,11 +118,9 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
               <div className="sfx-wave-bar" style={{ height: '6px' }}></div>
             </div>
           </button>
-
-
         </div>
         <div className="brand-subtitle">
-          Operating System Overview: Direct Memory Access (DMA) & Multiprocessor vs. Multicore
+          Operating System Overview: Direct Memory Access (DMA) & Memory Hierarchy / Cache Memory Lab
         </div>
       </div>
 
@@ -140,17 +138,16 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
             <Cpu size={18} /> DMA Modes
           </button>
           <button
-            id="tabBtnMulticore"
-            className={`tab-btn btn-cyber-kinetic ${activeTab === 'multicore' ? 'active' : ''}`}
+            id="tabBtnMemory"
+            className={`tab-btn btn-cyber-kinetic ${activeTab === 'memory' ? 'active' : ''}`}
             onClick={() => {
               try { soundFx.playClick(); } catch (e) {}
-              setActiveTab('multicore');
+              setActiveTab('memory');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
-            <Layers size={18} /> Multicore vs Multiprocessor
+            <Layers size={18} /> Memory Hierarchy & Cache Lab
           </button>
-
         </nav>
 
         {/* FEATURE 4: FULLSCREEN CINEMA / PRESENTATION MODE TOGGLE */}
@@ -179,14 +176,14 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
             DMA
           </button>
           <button
-            className={`tab-btn ${activeTab === 'multicore' ? 'active' : ''}`}
+            className={`tab-btn ${activeTab === 'memory' ? 'active' : ''}`}
             style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', borderRadius: '9999px' }}
             onClick={() => {
-              setActiveTab('multicore');
+              setActiveTab('memory');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
-            MULTICORE
+            MEMORY & CACHE
           </button>
 
           <button className="cinema-exit-btn" onClick={toggleCinemaMode} title="Exit Cinema Mode (ESC)">

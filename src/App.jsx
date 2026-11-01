@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import DmaSimulator from './components/DmaSimulator';
-import MultiArchitectureComparator from './components/MultiArchitectureComparator';
+import MemoryHierarchyLab from './components/MemoryHierarchyLab';
 import StartupBootScreen from './components/StartupBootScreen';
 
 const OPCODE_STREAM_LEFT = [
   '0x8000', 'DMA_BURST', 'HLDA=1', '0x4420', 'MOV AX,[BX]', '0x1000',
-  'IRQ_LINE_31', 'HOLD_REQ', '0x8024', 'L3_HIT:0.8ns', 'CYCLE_STEAL',
-  '0x6210', 'DACK_ACK', 'DREQ_LINE', '0x80FF', 'CACHE_SYNC', 'IO_READ',
+  'IRQ_LINE_31', 'HOLD_REQ', '0x8024', 'L1_HIT:1.0ns', 'CYCLE_STEAL',
+  '0x6210', 'DACK_ACK', 'DREQ_LINE', '0x80FF', 'CACHE_TAG_0x10', 'IO_READ',
   'MEMW_STROBE', '0x0400', 'BUS_GRANT', '0x8000', 'DMA_BURST', 'HLDA=1',
   '0x4420', 'MOV AX,[BX]', '0x1000', 'IRQ_LINE_31', 'HOLD_REQ', '0x8024',
-  'L3_HIT:0.8ns', 'CYCLE_STEAL', '0x6210', 'DACK_ACK', 'DREQ_LINE'
+  'L1_HIT:1.0ns', 'CYCLE_STEAL', '0x6210', 'DACK_ACK', 'DREQ_LINE'
 ];
 
 const OPCODE_STREAM_RIGHT = [
-  'SMP_BUS', '0x8A10', 'CORE1_RUN', 'SOCKET2_OK', '0x2100', 'ARBITER_WAIT',
-  'DRAM_CYCLE', '0x7FF0', 'DMA_BURST', '0x8840', 'CROSSBAR_RD', 'LAT_15ns',
-  '0x3020', 'OCTA_CORE', 'DIE_TEMP', '0x9000', 'DIST_MEM', 'SNOOP_BUS',
-  '0x1240', 'LOCK_PF', 'SMP_BUS', '0x8A10', 'CORE1_RUN', 'SOCKET2_OK',
-  '0x2100', 'ARBITER_WAIT', 'DRAM_CYCLE', '0x7FF0', 'CYCLE_ACC', '0x8840'
+  'SRAM_6T', '0x8A10', 'L2_ACCESS', 'TAG_MATCH', '0x2100', 'AMAT_1.6ns',
+  'DRAM_CYCLE', '0x7FF0', 'DMA_BURST', '0x8840', 'LINE_FILL_64B', 'LAT_12ns',
+  '0x3020', 'SPATIAL_HIT', 'TEMPORAL', '0x9000', 'PAGE_FRAME', 'SNOOP_BUS',
+  '0x1240', 'CACHE_MISS', 'SRAM_6T', '0x8A10', 'L2_ACCESS', 'TAG_MATCH',
+  '0x2100', 'AMAT_1.6ns', 'DRAM_CYCLE', '0x7FF0', 'CYCLE_ACC', '0x8840'
 ];
 
 export default function App() {
@@ -62,7 +62,7 @@ export default function App() {
       />
       <main>
         {activeTab === 'dma' && <DmaSimulator />}
-        {activeTab === 'multicore' && <MultiArchitectureComparator />}
+        {activeTab === 'memory' && <MemoryHierarchyLab />}
       </main>
       <footer style={{
         textAlign: 'center',
@@ -72,7 +72,7 @@ export default function App() {
         color: 'var(--text-muted)',
         fontSize: '0.85rem'
       }}>
-        OS-ArchLab • Operating System Overview Module 1 • Academic Research Lab Edition (DMA Modes & Multicore/Multiprocessor)
+        OS-ArchLab • Operating System Overview Module 1 • Academic Research Lab Edition (DMA Modes & Memory Hierarchy / Cache Lab)
       </footer>
     </>
   );
