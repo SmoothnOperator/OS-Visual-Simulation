@@ -5155,25 +5155,7 @@ body.cinema-mode-active main {
         </div>
       </div>
 
-      <!-- SECTION 4: NARRATION HUD (FACULTY & VIVA EXPLANATION) -->
-      <div class="narration-card" style="border-color: var(--accent-blue); background: linear-gradient(180deg, rgba(0, 82, 255, 0.08) 0%, rgba(0, 0, 0, 0.8) 100%);">
-        <div style="display: flex; align-items: flex-start; gap: 0.85rem;">
-          <div style="background: rgba(0, 82, 255, 0.2); padding: 0.65rem; border-radius: 6px; border: 1px solid rgba(0, 82, 255, 0.4); color: var(--accent-cyan); flex-shrink: 0;">
-            <span style="font-size: 1.4rem;">🔬</span>
-          </div>
-          <div>
-            <div style="font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-cyan); font-weight: 800;">
-              Operating System Architectural Narration
-            </div>
-            <div id="memoryNarrationTitle" style="font-size: 1.05rem; font-weight: 800; color: #ffffff; margin: 0.15rem 0 0.35rem 0;">
-              Memory Hierarchy & Cache Memory Lab Armed
-            </div>
-            <p id="memoryNarrationMsg" style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">
-              Operating System Memory Hierarchy balances Access Time, Storage Capacity, and Cost Per Bit. The Cache acts as a high-speed bridge between the CPU and Main Memory. Select a pyramid tier or run an address query!
-            </p>
-          </div>
-        </div>
-      </div>
+      <div style="display: none;"><span id="memoryNarrationTitle"></span><span id="memoryNarrationMsg"></span></div>
 
       <!-- SECTION 5: SYLLABUS THEORY ACCORDION (VIVA PREPARATION) -->
       <div style="margin-top: 1.25rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">

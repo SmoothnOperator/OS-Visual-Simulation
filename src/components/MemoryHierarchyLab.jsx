@@ -897,33 +897,6 @@ export default function MemoryHierarchyLab() {
         </div>
       </div>
 
-      {/* SECTION 4: NARRATION HUD (FACULTY & VIVA EXPLANATION) */}
-      <div className="narration-card" style={{ borderColor: 'var(--accent-blue)', background: 'linear-gradient(180deg, rgba(0, 82, 255, 0.08) 0%, rgba(0, 0, 0, 0.8) 100%)' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
-          <div style={{
-            background: 'rgba(0, 82, 255, 0.2)',
-            padding: '0.65rem',
-            borderRadius: '6px',
-            border: '1px solid rgba(0, 82, 255, 0.4)',
-            color: 'var(--accent-cyan)',
-            flexShrink: 0
-          }}>
-            <Activity size={22} />
-          </div>
-          <div>
-            <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent-cyan)', fontWeight: 800 }}>
-              Operating System Architectural Narration
-            </div>
-            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: '0.15rem 0 0.35rem 0' }}>
-              {narration.title}
-            </div>
-            <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-              {narration.text}
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* SECTION 5: SYLLABUS THEORY ACCORDION (VIVA PREPARATION) */}
       <div style={{ marginTop: '1.25rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1rem' }}>
         <div className="theory-card">
