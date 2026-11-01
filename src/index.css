@@ -4402,3 +4402,46 @@ body.cinema-mode-active main {
   line-height: 1.5;
   margin: 0;
 }
+
+/* =========================================================================
+   TIER POPUP MODAL (CLICK-TO-INSPECT DEEP-DIVE)
+   ========================================================================= */
+.tier-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.tier-modal-dialog {
+  background: #040918;
+  border-radius: var(--radius-lg);
+  max-width: 720px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 1.5rem 1.75rem;
+  border: 2px solid;
+  animation: popIn 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tier-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid;
+  margin-bottom: 1.15rem;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.92) translateY(10px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}

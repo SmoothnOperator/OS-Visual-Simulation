@@ -16,7 +16,9 @@ import {
   Play,
   TrendingUp,
   HardDrive,
-  Server
+  Server,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 
@@ -39,7 +41,8 @@ const HIERARCHY_TIERS = [
     bgTint: 'rgba(0, 210, 255, 0.12)',
     borderTint: 'rgba(0, 210, 255, 0.4)',
     widthPct: 46,
-    summary: 'Internal CPU registers provide zero-wait-state operand storage directly to the Arithmetic Logic Unit (ALU). Highest cost per bit and fastest access in the entire computing system.'
+    summary: 'Internal CPU registers provide zero-wait-state operand storage directly to the Arithmetic Logic Unit (ALU). Highest cost per bit and fastest access in the entire computing system.',
+    whyItMatters: 'Internal CPU registers represent the physical boundary where memory ends and computation begins. Because registers operate synchronously with the processor clock (0.5 ns), any instruction executed using registers suffers zero memory wait states. Compilers prioritize register allocation to keep active loop variables here as long as possible.'
   },
   {
     id: 'cache',
@@ -58,7 +61,8 @@ const HIERARCHY_TIERS = [
     bgTint: 'rgba(0, 82, 255, 0.14)',
     borderTint: 'rgba(0, 82, 255, 0.5)',
     widthPct: 60,
-    summary: 'The critical "Speed Bridge". SRAM requires no capacitor refresh cycles, enabling ultra-fast cache line lookups. Exploits temporal and spatial locality to prevent CPU bus starvation.'
+    summary: 'The critical "Speed Bridge". SRAM requires no capacitor refresh cycles, enabling ultra-fast cache line lookups. Exploits temporal and spatial locality to prevent CPU bus starvation.',
+    whyItMatters: 'Cache Memory bridges the 200x speed disparity between fast CPUs and slow DRAM (the "Memory Wall"). Built from 6-transistor SRAM cells with no capacitive leakage, L1 cache resolves requests in 1 ns. By storing recently used instructions (Temporal Locality) and adjacent array blocks (Spatial Locality), Cache delivers over 90% of memory requests without touching the external bus.'
   },
   {
     id: 'main_memory',
@@ -77,7 +81,8 @@ const HIERARCHY_TIERS = [
     bgTint: 'rgba(251, 191, 36, 0.12)',
     borderTint: 'rgba(251, 191, 36, 0.45)',
     widthPct: 74,
-    summary: 'Primary program and working data storage. Holds active OS processes, page tables, and stack/heap memory. Must be periodically refreshed before tiny capacitor charges bleed away.'
+    summary: 'Primary program and working data storage. Holds active OS processes, page tables, and stack/heap memory. Must be periodically refreshed before tiny capacitor charges bleed away.',
+    whyItMatters: 'Main Memory is the primary workspace where operating system kernels, active process heaps, stacks, and virtual memory page frames reside. Because DRAM uses a single microscopic capacitor to store each bit, charge bleeds away and requires a refresh command every 64ms. This physical design keeps DRAM economical ($4/GB) while providing gigabytes of capacity to hold multitasking operating systems.'
   },
   {
     id: 'secondary',
@@ -96,7 +101,8 @@ const HIERARCHY_TIERS = [
     bgTint: 'rgba(167, 139, 250, 0.12)',
     borderTint: 'rgba(167, 139, 250, 0.45)',
     widthPct: 88,
-    summary: 'Persistent mass storage for operating system binaries, applications, and user files. Orders of magnitude slower than DRAM, bridged by OS page cache and buffer pools.'
+    summary: 'Persistent mass storage for operating system binaries, applications, and user files. Orders of magnitude slower than DRAM, bridged by OS page cache and buffer pools.',
+    whyItMatters: 'Secondary storage provides non-volatile permanence: when power is removed, all user files, OS binaries, and databases remain intact. Modern NVMe SSDs use 3D NAND flash floating-gate/charge-trap transistors, achieving 10 µs access. Operating systems use secondary storage for Virtual Memory swap files and paging when physical RAM is fully saturated.'
   },
   {
     id: 'tertiary',
@@ -115,7 +121,8 @@ const HIERARCHY_TIERS = [
     bgTint: 'rgba(100, 116, 139, 0.12)',
     borderTint: 'rgba(100, 116, 139, 0.45)',
     widthPct: 100,
-    summary: 'The base of the pyramid. Provides ultra-dense, lowest-cost-per-bit archival retention. Requires robotic jukebox mechanisms or physical mounting before data blocks can be accessed.'
+    summary: 'The base of the pyramid. Provides ultra-dense, lowest-cost-per-bit archival retention. Requires robotic jukebox mechanisms or physical mounting before data blocks can be accessed.',
+    whyItMatters: 'Tertiary storage forms the bedrock foundation of enterprise data resilience. Using high-density magnetic tape cartridges (LTO-9) and robotic tape libraries, it can store hundreds of petabytes for decades without drawing electrical power. Access times are measured in seconds to minutes, making it ideal for disaster recovery, compliance archives, and cold cloud vaults.'
   }
 ];
 
@@ -128,8 +135,48 @@ const INITIAL_CACHE_LINES = [
 ];
 
 export default function MemoryHierarchyLab() {
-  // Selected Pyramid Tier
+  // Selected Pyramid Tier & Popup Modal State
   const [selectedTier, setSelectedTier] = useState(HIERARCHY_TIERS[1]); // Default Cache Memory
+  const [showTierModal, setShowTierModal] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showTierModal) {
+        closeModal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showTierModal]);
+
+  const closeModal = () => {
+    setShowTierModal(false);
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsSpeaking(false);
+  };
+
+  const toggleSpeech = () => {
+    if (!('speechSynthesis' in window)) return;
+
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    } else {
+      window.speechSynthesis.cancel();
+      const text = `${selectedTier.name}. ${selectedTier.summary} Access latency is ${selectedTier.accessTime}. Physical technology is ${selectedTier.tech}. Managed by ${selectedTier.managedBy}.`;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+    }
+  };
 
   // Cache Lookup Simulator States
   const [queryAddress, setQueryAddress] = useState('0x1004');
@@ -635,6 +682,7 @@ export default function MemoryHierarchyLab() {
                     }}
                     onClick={() => {
                       setSelectedTier(tier);
+                      setShowTierModal(true);
                       try { soundFx.playClick(); } catch (e) {}
                     }}
                   >
@@ -957,6 +1005,132 @@ export default function MemoryHierarchyLab() {
           </p>
         </div>
       </div>
+
+      {/* FEATURE: INTERACTIVE TIER DEEP-DIVE POPUP MODAL */}
+      {showTierModal && selectedTier && (
+        <div className="tier-modal-backdrop" onClick={closeModal}>
+          <div 
+            className="tier-modal-dialog" 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              borderColor: selectedTier.color,
+              boxShadow: `0 0 50px ${selectedTier.color}45, inset 0 0 25px ${selectedTier.color}15`
+            }}
+          >
+            {/* MODAL HEADER */}
+            <div className="tier-modal-header" style={{ borderBottomColor: `${selectedTier.color}40` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <span 
+                  className="tier-level-badge" 
+                  style={{ 
+                    background: selectedTier.color, 
+                    color: selectedTier.level === 1 ? '#000000' : '#ffffff',
+                    fontSize: '0.85rem',
+                    padding: '0.2rem 0.6rem'
+                  }}
+                >
+                  TIER {selectedTier.level}
+                </span>
+                <div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.01em' }}>
+                    {selectedTier.name}
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: selectedTier.color, fontFamily: 'var(--font-mono)' }}>
+                    {selectedTier.sub}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {/* READ ALOUD BUTTON */}
+                <button 
+                  className={`btn-cyber-kinetic ${isSpeaking ? 'active' : ''}`}
+                  style={{ fontSize: '0.74rem', padding: '0.35rem 0.65rem' }}
+                  onClick={toggleSpeech}
+                  title="Read description aloud via Speech Synthesis"
+                >
+                  {isSpeaking ? <VolumeX size={14} color="#f43f5e" /> : <Volume2 size={14} color="var(--accent-cyan)" />}
+                  <span>{isSpeaking ? 'STOP VOICE' : 'READ ALOUD'}</span>
+                </button>
+
+                {/* CLOSE BUTTON */}
+                <button className="xray-close-btn" onClick={closeModal} title="Close Pop-up (ESC)">
+                  ✕ CLOSE
+                </button>
+              </div>
+            </div>
+
+            {/* SUMMARY & VOLATILITY BANNER */}
+            <div style={{
+              background: `${selectedTier.color}12`,
+              border: `1px solid ${selectedTier.color}40`,
+              borderRadius: '6px',
+              padding: '0.85rem 1rem',
+              marginBottom: '1rem'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: selectedTier.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  ARCHITECTURAL ROLE & DESCRIPTION
+                </span>
+                <span className={`badge-status ${selectedTier.volatility.startsWith('Volatile') ? 'badge-amber' : 'badge-green'}`} style={{ fontSize: '0.7rem' }}>
+                  {selectedTier.volatility}
+                </span>
+              </div>
+              <p style={{ fontSize: '0.88rem', color: '#e2e8f0', lineHeight: 1.55, margin: 0 }}>
+                {selectedTier.summary}
+              </p>
+            </div>
+
+            {/* 6-SPECIFICATION MATRIX GRID */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '0.75rem',
+              marginBottom: '1rem'
+            }}>
+              <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <span className="tier-spec-label">ACCESS LATENCY</span>
+                <span className="tier-spec-val" style={{ color: selectedTier.color, fontSize: '0.98rem' }}>{selectedTier.accessTime}</span>
+              </div>
+              <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <span className="tier-spec-label">CLOCK CYCLES</span>
+                <span className="tier-spec-val" style={{ color: '#ffffff', fontSize: '0.98rem' }}>{selectedTier.cycles}</span>
+              </div>
+              <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <span className="tier-spec-label">TYPICAL STORAGE CAPACITY</span>
+                <span className="tier-spec-val" style={{ color: 'var(--accent-cyan)', fontSize: '0.98rem' }}>{selectedTier.capacity}</span>
+              </div>
+              <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <span className="tier-spec-label">COST PER BIT / GIGABYTE</span>
+                <span className="tier-spec-val" style={{ color: 'var(--accent-amber)', fontSize: '0.98rem' }}>{selectedTier.costPerGb}</span>
+              </div>
+              <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <span className="tier-spec-label">PHYSICAL SILICON TECHNOLOGY</span>
+                <span className="tier-spec-val" style={{ color: '#ffffff', fontSize: '0.84rem' }}>{selectedTier.tech}</span>
+              </div>
+              <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <span className="tier-spec-label">OPERATING SYSTEM MANAGEMENT</span>
+                <span className="tier-spec-val" style={{ color: 'var(--accent-green)', fontSize: '0.84rem' }}>{selectedTier.managedBy}</span>
+              </div>
+            </div>
+
+            {/* WHY THIS TIER MATTERS (DEEP ARCHITECTURAL EXPLANATION) */}
+            <div style={{
+              background: 'rgba(0, 0, 0, 0.5)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '6px',
+              padding: '0.85rem 1rem'
+            }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.35rem' }}>
+                💡 WHY THIS TIER MATTERS IN COMPUTER ARCHITECTURE
+              </div>
+              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
+                {selectedTier.whyItMatters}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
