@@ -5221,18 +5221,6 @@ body.cinema-mode-active main {
             </div>
 
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <!-- READ ALOUD BUTTON -->
-              <button 
-                id="modalSpeechBtn" 
-                class="btn-cyber-kinetic" 
-                onclick="toggleStandaloneTierSpeech()"
-                style="font-size: 0.74rem; padding: 0.35rem 0.65rem;"
-                title="Read description aloud via Speech Synthesis"
-              >
-                <span id="modalSpeechIcon">🔊</span>
-                <span id="modalSpeechText">READ ALOUD</span>
-              </button>
-
               <!-- CLOSE BUTTON -->
               <button class="xray-close-btn" onclick="closeStandaloneTierModal()" title="Close Pop-up (ESC)">
                 ✕ CLOSE
@@ -5848,8 +5836,7 @@ body.cinema-mode-active main {
     };
 
     let currentModalTierId = 'cache';
-    let isModalSpeaking = false;
-
+    
     function openStandaloneTierModal(tierId) {
       const tier = STANDALONE_TIERS[tierId];
       if (!tier) return;
@@ -5905,18 +5892,7 @@ body.cinema-mode-active main {
       dialog.style.borderColor = tier.color;
       dialog.style.boxShadow = `0 0 50px ${tier.color}45, inset 0 0 25px ${tier.color}15`;
 
-      // Reset speech button state
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-      isModalSpeaking = false;
-      const speechBtn = document.getElementById('modalSpeechBtn');
-      const speechIcon = document.getElementById('modalSpeechIcon');
-      const speechText = document.getElementById('modalSpeechText');
-      if (speechBtn) speechBtn.classList.remove('active');
-      if (speechIcon) speechIcon.innerText = '🔊';
-      if (speechText) speechText.innerText = 'READ ALOUD';
-
+      
       modal.style.display = 'flex';
     }
 
@@ -5926,58 +5902,6 @@ body.cinema-mode-active main {
       }
       const modal = document.getElementById('standaloneTierModal');
       if (modal) modal.style.display = 'none';
-
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-      isModalSpeaking = false;
-      const speechBtn = document.getElementById('modalSpeechBtn');
-      const speechIcon = document.getElementById('modalSpeechIcon');
-      const speechText = document.getElementById('modalSpeechText');
-      if (speechBtn) speechBtn.classList.remove('active');
-      if (speechIcon) speechIcon.innerText = '🔊';
-      if (speechText) speechText.innerText = 'READ ALOUD';
-    }
-
-    function toggleStandaloneTierSpeech() {
-      if (!('speechSynthesis' in window)) return;
-      const tier = STANDALONE_TIERS[currentModalTierId];
-      if (!tier) return;
-
-      const speechBtn = document.getElementById('modalSpeechBtn');
-      const speechIcon = document.getElementById('modalSpeechIcon');
-      const speechText = document.getElementById('modalSpeechText');
-
-      if (isModalSpeaking) {
-        window.speechSynthesis.cancel();
-        isModalSpeaking = false;
-        if (speechBtn) speechBtn.classList.remove('active');
-        if (speechIcon) speechIcon.innerText = '🔊';
-        if (speechText) speechText.innerText = 'READ ALOUD';
-      } else {
-        window.speechSynthesis.cancel();
-        const textToSpeak = `${tier.name}. ${tier.summary} Access latency is ${tier.accessTime}. Physical technology is ${tier.tech}. Managed by ${tier.managed}.`;
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.rate = 1.0;
-        utterance.pitch = 1.0;
-        utterance.onend = () => {
-          isModalSpeaking = false;
-          if (speechBtn) speechBtn.classList.remove('active');
-          if (speechIcon) speechIcon.innerText = '🔊';
-          if (speechText) speechText.innerText = 'READ ALOUD';
-        };
-        utterance.onerror = () => {
-          isModalSpeaking = false;
-          if (speechBtn) speechBtn.classList.remove('active');
-          if (speechIcon) speechIcon.innerText = '🔊';
-          if (speechText) speechText.innerText = 'READ ALOUD';
-        };
-        window.speechSynthesis.speak(utterance);
-        isModalSpeaking = true;
-        if (speechBtn) speechBtn.classList.add('active');
-        if (speechIcon) speechIcon.innerText = '⏹️';
-        if (speechText) speechText.innerText = 'STOP VOICE';
-      }
     }
 
     // Keyboard ESC listener

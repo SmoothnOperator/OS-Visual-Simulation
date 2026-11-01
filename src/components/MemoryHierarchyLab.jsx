@@ -16,9 +16,7 @@ import {
   Play,
   TrendingUp,
   HardDrive,
-  Server,
-  Volume2,
-  VolumeX
+  Server
 } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 
@@ -138,7 +136,6 @@ export default function MemoryHierarchyLab() {
   // Selected Pyramid Tier & Popup Modal State
   const [selectedTier, setSelectedTier] = useState(HIERARCHY_TIERS[1]); // Default Cache Memory
   const [showTierModal, setShowTierModal] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
 
   // Close modal on Escape key
   useEffect(() => {
@@ -153,29 +150,6 @@ export default function MemoryHierarchyLab() {
 
   const closeModal = () => {
     setShowTierModal(false);
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
-    setIsSpeaking(false);
-  };
-
-  const toggleSpeech = () => {
-    if (!('speechSynthesis' in window)) return;
-
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-    } else {
-      window.speechSynthesis.cancel();
-      const text = `${selectedTier.name}. ${selectedTier.summary} Access latency is ${selectedTier.accessTime}. Physical technology is ${selectedTier.tech}. Managed by ${selectedTier.managedBy}.`;
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1.0;
-      utterance.pitch = 1.0;
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
-      setIsSpeaking(true);
-    }
   };
 
   // Cache Lookup Simulator States
@@ -1042,17 +1016,6 @@ export default function MemoryHierarchyLab() {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                {/* READ ALOUD BUTTON */}
-                <button 
-                  className={`btn-cyber-kinetic ${isSpeaking ? 'active' : ''}`}
-                  style={{ fontSize: '0.74rem', padding: '0.35rem 0.65rem' }}
-                  onClick={toggleSpeech}
-                  title="Read description aloud via Speech Synthesis"
-                >
-                  {isSpeaking ? <VolumeX size={14} color="#f43f5e" /> : <Volume2 size={14} color="var(--accent-cyan)" />}
-                  <span>{isSpeaking ? 'STOP VOICE' : 'READ ALOUD'}</span>
-                </button>
-
                 {/* CLOSE BUTTON */}
                 <button className="xray-close-btn" onClick={closeModal} title="Close Pop-up (ESC)">
                   ✕ CLOSE
