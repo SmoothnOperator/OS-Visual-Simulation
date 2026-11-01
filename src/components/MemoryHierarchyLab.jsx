@@ -480,7 +480,7 @@ export default function MemoryHierarchyLab() {
           {/* QUICK EXPERIMENT ACTION BUTTONS */}
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem' }}>
             <button
-              className={`btn-cyber-kinetic ${experimentMode === 'spatial' ? 'active' : ''}`}
+              className={`btn-cyber-kinetic btn-action-spatial ${experimentMode === 'spatial' ? 'active' : ''}`}
               style={{ fontSize: '0.78rem', padding: '0.45rem 0.85rem' }}
               onClick={() => startExperiment('spatial')}
               disabled={isSimulating && experimentMode !== 'spatial'}
@@ -490,7 +490,7 @@ export default function MemoryHierarchyLab() {
             </button>
 
             <button
-              className={`btn-cyber-kinetic ${experimentMode === 'temporal' ? 'active' : ''}`}
+              className={`btn-cyber-kinetic btn-action-temporal ${experimentMode === 'temporal' ? 'active' : ''}`}
               style={{ fontSize: '0.78rem', padding: '0.45rem 0.85rem' }}
               onClick={() => startExperiment('temporal')}
               disabled={isSimulating && experimentMode !== 'temporal'}
@@ -500,8 +500,8 @@ export default function MemoryHierarchyLab() {
             </button>
 
             <button
-              className={`btn-cyber-kinetic ${experimentMode === 'thrashing' ? 'active' : ''}`}
-              style={{ fontSize: '0.78rem', padding: '0.45rem 0.85rem', borderColor: 'rgba(244, 63, 94, 0.4)' }}
+              className={`btn-cyber-kinetic btn-action-thrash ${experimentMode === 'thrashing' ? 'active' : ''}`}
+              style={{ fontSize: '0.78rem', padding: '0.45rem 0.85rem' }}
               onClick={() => startExperiment('thrashing')}
               disabled={isSimulating && experimentMode !== 'thrashing'}
               title="Demonstrates Cache Thrashing: Conflict misses force continuous 65ns DRAM delays"
@@ -510,8 +510,8 @@ export default function MemoryHierarchyLab() {
             </button>
 
             <button
-              className="btn-cyber-kinetic"
-              style={{ fontSize: '0.78rem', padding: '0.45rem 0.75rem', background: 'rgba(255, 255, 255, 0.05)' }}
+              className="btn-cyber-kinetic btn-action-reset"
+              style={{ fontSize: '0.78rem', padding: '0.45rem 0.75rem' }}
               onClick={handleReset}
               title="Clear all cache lines and reset statistics counters"
             >
@@ -747,7 +747,7 @@ export default function MemoryHierarchyLab() {
               </div>
 
               <button
-                className="btn-cyber-kinetic"
+                className="btn-cyber-kinetic btn-action-primary"
                 style={{ padding: '0.5rem 1rem', fontSize: '0.82rem', whiteSpace: 'nowrap' }}
                 onClick={() => executeMemoryLookup(queryAddress)}
                 disabled={isSimulating}

@@ -2055,15 +2055,97 @@ main {
   position: relative;
   overflow: hidden;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(0, 0, 0, 0.65) !important;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-main);
+  font-weight: 700;
 }
 
 .btn-cyber-kinetic:hover {
+  background: rgba(0, 82, 255, 0.2) !important;
+  border-color: var(--accent-cyan) !important;
+  color: #ffffff !important;
   transform: translateY(-2px);
   box-shadow: 0 0 20px var(--accent-blue), 0 4px 15px rgba(37, 99, 235, 0.4);
 }
 
 .btn-cyber-kinetic:active {
   transform: translateY(0) scale(0.98);
+}
+
+.btn-cyber-kinetic.active {
+  background: linear-gradient(135deg, rgba(0, 82, 255, 0.4), rgba(0, 210, 255, 0.25)) !important;
+  border-color: var(--accent-cyan) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.6) !important;
+}
+
+/* Dedicated High-Tech Action Buttons */
+.btn-action-spatial {
+  background: rgba(0, 210, 255, 0.08) !important;
+  border: 1px solid rgba(0, 210, 255, 0.35) !important;
+  color: var(--accent-cyan) !important;
+}
+
+.btn-action-spatial:hover {
+  background: rgba(0, 210, 255, 0.22) !important;
+  border-color: var(--accent-cyan) !important;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.5) !important;
+}
+
+.btn-action-temporal {
+  background: rgba(251, 191, 36, 0.08) !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  color: var(--accent-amber) !important;
+}
+
+.btn-action-temporal:hover {
+  background: rgba(251, 191, 36, 0.22) !important;
+  border-color: var(--accent-amber) !important;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.5) !important;
+}
+
+.btn-action-thrash {
+  background: rgba(244, 63, 94, 0.08) !important;
+  border: 1px solid rgba(244, 63, 94, 0.4) !important;
+  color: #fca5a5 !important;
+}
+
+.btn-action-thrash:hover {
+  background: rgba(244, 63, 94, 0.22) !important;
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.55) !important;
+}
+
+.btn-action-reset {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: var(--text-muted) !important;
+}
+
+.btn-action-reset:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+}
+
+.btn-action-primary {
+  background: linear-gradient(135deg, rgba(0, 82, 255, 0.85), rgba(0, 210, 255, 0.75)) !important;
+  border: 1px solid rgba(0, 210, 255, 0.6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(0, 82, 255, 0.4) !important;
+}
+
+.btn-action-primary:hover {
+  background: linear-gradient(135deg, rgba(0, 82, 255, 1), rgba(0, 210, 255, 0.95)) !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.65) !important;
 }
 
 /* 26. OSCILLOSCOPE PHOSPHOR AFTERGLOW SCANLINE */
