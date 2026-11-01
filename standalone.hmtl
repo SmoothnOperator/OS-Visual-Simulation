@@ -5159,7 +5159,34 @@ body.cinema-mode-active main {
                     </tr>
                   </thead>
                   <tbody id="standaloneCacheTableBody">
-                    <!-- Populated dynamically via JS -->
+                    <tr class="cache-row-target">
+                      <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">Set #0</td>
+                      <td><span class="badge-status badge-green" style="padding: 0.1rem 0.35rem; font-size: 0.68rem;">V=1</span></td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-cyan); font-weight: 700;">0x40</td>
+                      <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);">0x4A, 0x1F, 0x88, 0x02</td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 800;">8</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">Set #1</td>
+                      <td><span class="badge-status badge-green" style="padding: 0.1rem 0.35rem; font-size: 0.68rem;">V=1</span></td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-cyan); font-weight: 700;">0x04</td>
+                      <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);">0xC2, 0x7E, 0x11, 0x90</td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 800;">12</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">Set #2</td>
+                      <td><span class="badge-status badge-red" style="padding: 0.1rem 0.35rem; font-size: 0.68rem;">V=0</span></td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-cyan); font-weight: 700;">0x00</td>
+                      <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">0x00, 0x00, 0x00, 0x00</td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 800;">0</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">Set #3</td>
+                      <td><span class="badge-status badge-green" style="padding: 0.1rem 0.35rem; font-size: 0.68rem;">V=1</span></td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-cyan); font-weight: 700;">0x80</td>
+                      <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);">0xFF, 0x33, 0xAA, 0x5D</td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 800;">2</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -5273,6 +5300,11 @@ body.cinema-mode-active main {
         if (pane) {
           pane.classList.add('active');
           pane.style.display = 'block';
+        }
+        if (tabName === 'memory') {
+          renderStandaloneCacheTable(0);
+          updateStandaloneAddressDecoders();
+          updateStandaloneTelemetry();
         }
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5770,6 +5802,24 @@ body.cinema-mode-active main {
     };
 
     let currentModalTierId = 'cache';
+
+    let standaloneCacheLines = [
+      { index: 0, valid: 1, tag: '0x40', data: '0x4A, 0x1F, 0x88, 0x02', hits: 8 },
+      { index: 1, valid: 1, tag: '0x04', data: '0xC2, 0x7E, 0x11, 0x90', hits: 12 },
+      { index: 2, valid: 0, tag: '0x00', data: '0x00, 0x00, 0x00, 0x00', hits: 0 },
+      { index: 3, valid: 1, tag: '0x80', data: '0xFF, 0x33, 0xAA, 0x5D', hits: 2 }
+    ];
+
+    let standaloneStats = {
+      totalAccesses: 24,
+      l1Hits: 18,
+      l2Hits: 3,
+      l3Hits: 1,
+      dramMisses: 2
+    };
+
+    let standaloneExpTimer = null;
+    let isStandaloneSimulating = false;
 
     function openStandaloneTierModal(tierId) {
       const tier = STANDALONE_TIERS[tierId];
