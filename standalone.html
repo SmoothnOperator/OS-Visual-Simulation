@@ -4834,7 +4834,7 @@ body.cinema-mode-active main {
       </div>
 
       <!-- SECTION 3: TWO-COLUMN MAIN WORKBENCH -->
-      <div style="display: grid; grid-template-columns: minmax(340px, 1.15fr) minmax(360px, 1.25fr); gap: 1.25rem; margin-bottom: 1.25rem;">
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 1.25rem; margin-bottom: 1.25rem;">
         
         <!-- COLUMN A: THE 5-TIER MEMORY HIERARCHY PYRAMID -->
         <div class="cyber-panel" style="display: flex; flex-direction: column;">
@@ -4998,6 +4998,7 @@ body.cinema-mode-active main {
                 </div>
               </div>
             </div>
+          </div>
         </div>
 
         <!-- COLUMN B: THE CACHE "SPEED BRIDGE" PIPELINE SIMULATOR -->
@@ -5014,6 +5015,19 @@ body.cinema-mode-active main {
 
           <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column;">
             
+            <!-- MODULE 1 (PAGE 12): CACHE MEMORY - THE SPEED BRIDGE -->
+            <div style="background: rgba(0, 82, 255, 0.08); border: 1px solid rgba(0, 82, 255, 0.35); border-radius: 6px; padding: 0.65rem 0.85rem; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem;">
+                <span style="font-size: 0.74rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.06em;">
+                  MODULE 1 (PAGE 12): CACHE MEMORY — THE SPEED BRIDGE
+                </span>
+                <span class="badge-status badge-blue" style="font-size: 0.65rem;">Locality of Reference</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                Compensates for the major speed difference between the ultra-fast processor and slower main memory (RAM). When CPU requests data: <strong>Cache Hit</strong> reads immediately; <strong>Cache Miss</strong> fetches a block from RAM into cache.
+              </p>
+            </div>
+
             <!-- ADDRESS INPUT BAR -->
             <div style="display: flex; gap: 0.65rem; margin-bottom: 1rem; align-items: center;">
               <div style="flex: 1; position: relative;">
@@ -5073,7 +5087,7 @@ body.cinema-mode-active main {
               <div id="pipeNodeL1" class="pipeline-node">
                 <span style="font-size: 1.1rem;">⚡</span>
                 <div class="pipeline-node-title">L1 Cache</div>
-                <div class="pipeline-node-lat">1.0 ns</div>
+                <div class="pipeline-node-lat">32KB–128KB</div>
               </div>
 
               <div class="pipeline-wire"></div>
@@ -5082,7 +5096,7 @@ body.cinema-mode-active main {
               <div id="pipeNodeL2" class="pipeline-node">
                 <span style="font-size: 1.1rem;">🗄️</span>
                 <div class="pipeline-node-title">L2 Cache</div>
-                <div class="pipeline-node-lat">3.5 ns</div>
+                <div class="pipeline-node-lat">256KB–1MB</div>
               </div>
 
               <div class="pipeline-wire"></div>
@@ -5091,7 +5105,7 @@ body.cinema-mode-active main {
               <div id="pipeNodeL3" class="pipeline-node">
                 <span style="font-size: 1.1rem;">🏢</span>
                 <div class="pipeline-node-title">L3 Cache</div>
-                <div class="pipeline-node-lat">12.0 ns</div>
+                <div class="pipeline-node-lat">2MB–100MB+</div>
               </div>
 
               <div class="pipeline-wire"></div>
@@ -5100,7 +5114,7 @@ body.cinema-mode-active main {
               <div id="pipeNodeDram" class="pipeline-node">
                 <span style="font-size: 1.1rem;">💾</span>
                 <div class="pipeline-node-title">DRAM</div>
-                <div class="pipeline-node-lat">65.0 ns</div>
+                <div class="pipeline-node-lat">Gigabytes</div>
               </div>
             </div>
 
@@ -5157,38 +5171,7 @@ body.cinema-mode-active main {
 
       <div style="display: none;"><span id="memoryNarrationTitle"></span><span id="memoryNarrationMsg"></span></div>
 
-      <!-- SECTION 5: SYLLABUS THEORY ACCORDION (VIVA PREPARATION) -->
-      <div style="margin-top: 1.25rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
-        <div class="theory-card">
-          <div class="theory-card-title">
-            <span style="color: var(--accent-cyan);">1.</span> The Speed, Capacity & Cost Trade-Off
-          </div>
-          <p class="theory-card-body">
-            Designers face three conflicting constraints: fast memory is physically expensive, large capacity memory is slow, and cost per bit increases drastically with speed. The <strong>Memory Hierarchy</strong> solves this dilemma by placing a small, ultra-fast memory at the apex and cascading down to larger, inexpensive secondary storage.
-          </p>
-        </div>
-
-        <div class="theory-card">
-          <div class="theory-card-title">
-            <span style="color: var(--accent-green);">2.</span> Temporal Locality vs. Spatial Locality
-          </div>
-          <p className="theory-card-body">
-            <strong>Temporal Locality:</strong> A memory address referenced once is likely to be referenced again soon (e.g. loop counters, stack variables).<br />
-            <strong>Spatial Locality:</strong> When a memory address is accessed, nearby addresses will likely be referenced soon (e.g. linear arrays, sequential instructions).
-          </p>
-        </div>
-
-        <div class="theory-card">
-          <div class="theory-card-title">
-            <span style="color: var(--accent-amber);">3.</span> Cache as the "Speed Bridge"
-          </div>
-          <p class="theory-card-body">
-            CPU clock frequencies have outpaced physical DRAM speeds by over 200x. Cache memory acts as a hardware buffer: on a <strong>Cache Hit</strong>, data is returned in 1–3 clock cycles without touching the system bus. On a <strong>Cache Miss</strong>, an entire 64-byte block is transferred from DRAM into the cache.
-          </p>
-        </div>
-      </div>
-    
-            <!-- FEATURE: INTERACTIVE TIER DEEP-DIVE POPUP MODAL (MODULE 1 CONTENT) -->
+      <!-- FEATURE: INTERACTIVE TIER DEEP-DIVE POPUP MODAL (MODULE 1 CONTENT) -->
       <div id="standaloneTierModal" class="tier-modal-backdrop" style="display: none;" onclick="closeStandaloneTierModal(event)">
         <div id="standaloneTierModalDialog" class="tier-modal-dialog" onclick="event.stopPropagation()">
           <!-- MODAL HEADER -->

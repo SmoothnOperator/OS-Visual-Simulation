@@ -588,8 +588,8 @@ export default function MemoryHierarchyLab() {
         </div>
       </div>
 
-      {/* SECTION 3: TWO-COLUMN MAIN WORKBENCH */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(340px, 1.15fr) minmax(360px, 1.25fr)', gap: '1.25rem', marginBottom: '1.25rem' }}>
+      {/* SECTION 3: TWO-COLUMN MAIN WORKBENCH (LEFT: PYRAMID | RIGHT: CACHE SPEED BRIDGE) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.15fr)', gap: '1.25rem', marginBottom: '1.25rem' }}>
         
         {/* COLUMN A: THE 5-TIER MEMORY HIERARCHY PYRAMID */}
         <div className="cyber-panel" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -714,6 +714,25 @@ export default function MemoryHierarchyLab() {
 
           <div style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
             
+            {/* MODULE 1 (PAGE 12): CACHE MEMORY - THE SPEED BRIDGE */}
+            <div style={{
+              background: 'rgba(0, 82, 255, 0.08)',
+              border: '1px solid rgba(0, 82, 255, 0.35)',
+              borderRadius: '6px',
+              padding: '0.65rem 0.85rem',
+              marginBottom: '1rem'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  MODULE 1 (PAGE 12): CACHE MEMORY — THE SPEED BRIDGE
+                </span>
+                <span className="badge-status badge-blue" style={{ fontSize: '0.65rem' }}>Locality of Reference</span>
+              </div>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.45, margin: 0 }}>
+                Compensates for the major speed difference between the ultra-fast processor and slower main memory (RAM). When CPU requests data: <strong>Cache Hit</strong> reads immediately; <strong>Cache Miss</strong> fetches a block from RAM into cache.
+              </p>
+            </div>
+            
             {/* ADDRESS INPUT BAR */}
             <div style={{ display: 'flex', gap: '0.65rem', marginBottom: '1rem', alignItems: 'center' }}>
               <div style={{ flex: 1, position: 'relative' }}>
@@ -790,7 +809,7 @@ export default function MemoryHierarchyLab() {
               <div className={`pipeline-node ${activeStep?.startsWith('l1') ? (activeStep === 'l1-hit' ? 'node-hit' : (activeStep === 'l1-miss' ? 'node-miss' : 'node-active')) : ''}`}>
                 <Zap size={16} color="#00d2ff" />
                 <div className="pipeline-node-title">L1 Cache</div>
-                <div className="pipeline-node-lat">1.0 ns</div>
+                <div className="pipeline-node-lat">32KB–128KB</div>
               </div>
 
               <div className="pipeline-wire"></div>
@@ -799,7 +818,7 @@ export default function MemoryHierarchyLab() {
               <div className={`pipeline-node ${activeStep?.startsWith('l2') ? (activeStep === 'l2-hit' ? 'node-hit' : (activeStep === 'l2-miss' ? 'node-miss' : 'node-active')) : ''}`}>
                 <Database size={16} color="#0052ff" />
                 <div className="pipeline-node-title">L2 Cache</div>
-                <div className="pipeline-node-lat">3.5 ns</div>
+                <div className="pipeline-node-lat">256KB–1MB</div>
               </div>
 
               <div className="pipeline-wire"></div>
@@ -808,7 +827,7 @@ export default function MemoryHierarchyLab() {
               <div className={`pipeline-node ${activeStep?.startsWith('l3') ? (activeStep === 'l3-hit' ? 'node-hit' : (activeStep === 'l3-miss' ? 'node-miss' : 'node-active')) : ''}`}>
                 <Server size={16} color="#a78bfa" />
                 <div className="pipeline-node-title">L3 Cache</div>
-                <div className="pipeline-node-lat">12.0 ns</div>
+                <div className="pipeline-node-lat">2MB–100MB+</div>
               </div>
 
               <div className="pipeline-wire"></div>
@@ -817,7 +836,7 @@ export default function MemoryHierarchyLab() {
               <div className={`pipeline-node ${activeStep === 'dram' || activeStep === 'fill' ? 'node-dram' : ''}`}>
                 <HardDrive size={16} color="var(--accent-amber)" />
                 <div className="pipeline-node-title">DRAM</div>
-                <div className="pipeline-node-lat">65.0 ns</div>
+                <div className="pipeline-node-lat">Gigabytes</div>
               </div>
             </div>
 
@@ -894,37 +913,6 @@ export default function MemoryHierarchyLab() {
             </div>
 
           </div>
-        </div>
-      </div>
-
-      {/* SECTION 5: SYLLABUS THEORY ACCORDION (VIVA PREPARATION) */}
-      <div style={{ marginTop: '1.25rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1rem' }}>
-        <div className="theory-card">
-          <div className="theory-card-title">
-            <span style={{ color: 'var(--accent-cyan)' }}>1.</span> The Speed, Capacity & Cost Trade-Off
-          </div>
-          <p className="theory-card-body">
-            Designers face three conflicting constraints: fast memory is physically expensive, large capacity memory is slow, and cost per bit increases drastically with speed. The <strong>Memory Hierarchy</strong> solves this dilemma by placing a small, ultra-fast memory at the apex and cascading down to larger, inexpensive secondary storage.
-          </p>
-        </div>
-
-        <div className="theory-card">
-          <div className="theory-card-title">
-            <span style={{ color: 'var(--accent-green)' }}>2.</span> Temporal Locality vs. Spatial Locality
-          </div>
-          <p className="theory-card-body">
-            <strong>Temporal Locality:</strong> A memory address referenced once is likely to be referenced again soon (e.g. loop counters, stack variables).<br />
-            <strong>Spatial Locality:</strong> When a memory address is accessed, nearby addresses will likely be referenced soon (e.g. linear arrays, sequential instructions).
-          </p>
-        </div>
-
-        <div className="theory-card">
-          <div className="theory-card-title">
-            <span style={{ color: 'var(--accent-amber)' }}>3.</span> Cache as the "Speed Bridge"
-          </div>
-          <p className="theory-card-body">
-            CPU clock frequencies have outpaced physical DRAM speeds by over 200x. Cache memory acts as a hardware buffer: on a <strong>Cache Hit</strong>, data is returned in 1–3 clock cycles without touching the system bus. On a <strong>Cache Miss</strong>, an entire 64-byte block is transferred from DRAM into the cache.
-          </p>
         </div>
       </div>
 
