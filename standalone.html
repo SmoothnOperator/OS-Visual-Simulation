@@ -4857,7 +4857,7 @@ body.cinema-mode-active main {
             </div>
 
             <!-- VISUAL PYRAMID TIERS -->
-            <div class="pyramid-stack" style="display: flex; flex-direction: column; align-items: center; gap: 0.45rem; margin: auto 0;">
+                        <div class="pyramid-stack" style="display: flex; flex-direction: column; align-items: center; gap: 0.45rem; margin: auto 0;">
               <!-- Tier 1 -->
               <div
                 id="tierBlock_registers"
@@ -4867,14 +4867,14 @@ body.cinema-mode-active main {
               >
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div style="display: flex; align-items: center; gap: 0.45rem;">
-                    <span class="tier-level-badge" style="background: #00d2ff;">L1</span>
+                    <span class="tier-level-badge" style="background: #00d2ff; color: #000000;">L1</span>
                     <span style="font-weight: 800; font-size: 0.86rem; color: #00d2ff;">CPU Registers</span>
                   </div>
-                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">0.5 ns</span>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">Internal Storage</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
-                  <span>Cap: 1 KB – 2 KB</span>
-                  <span>Cost: Highest</span>
+                  <span>Size: bytes to kilobytes</span>
+                  <span>Fastest, Most expensive</span>
                 </div>
               </div>
 
@@ -4888,13 +4888,13 @@ body.cinema-mode-active main {
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div style="display: flex; align-items: center; gap: 0.45rem;">
                     <span class="tier-level-badge" style="background: #0052ff; color: #ffffff;">L2</span>
-                    <span style="font-weight: 800; font-size: 0.86rem; color: #ffffff;">Cache Memory (L1-L3)</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #ffffff;">Cache Memory</span>
                   </div>
-                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: #ffffff;">1.0 – 12.0 ns</span>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: #ffffff;">Internal Storage</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
-                  <span>Cap: 32 KB – 64 MB</span>
-                  <span>Cost: Very High</span>
+                  <span>Size: kilobytes to megabytes</span>
+                  <span>High-speed buffer (SRAM)</span>
                 </div>
               </div>
 
@@ -4907,14 +4907,14 @@ body.cinema-mode-active main {
               >
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div style="display: flex; align-items: center; gap: 0.45rem;">
-                    <span class="tier-level-badge" style="background: #fbbf24;">L3</span>
-                    <span style="font-weight: 800; font-size: 0.86rem; color: #fbbf24;">Main Memory (DRAM)</span>
+                    <span class="tier-level-badge" style="background: #fbbf24; color: #000000;">L3</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #fbbf24;">Main Memory (RAM)</span>
                   </div>
-                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">60.0 – 80.0 ns</span>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">Primary Storage</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
-                  <span>Cap: 16 GB – 128 GB</span>
-                  <span>Cost: Moderate ($4/GB)</span>
+                  <span>Size: gigabytes</span>
+                  <span>Moderate speed, DRAM</span>
                 </div>
               </div>
 
@@ -4927,14 +4927,14 @@ body.cinema-mode-active main {
               >
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div style="display: flex; align-items: center; gap: 0.45rem;">
-                    <span class="tier-level-badge" style="background: #a78bfa;">L4</span>
-                    <span style="font-weight: 800; font-size: 0.86rem; color: #a78bfa;">Secondary Storage (SSD/NVMe)</span>
+                    <span class="tier-level-badge" style="background: #a78bfa; color: #000000;">L4</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #a78bfa;">Secondary Storage</span>
                   </div>
-                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">10 µs – 10 ms</span>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">Secondary Storage</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
-                  <span>Cap: 512 GB – 8 TB</span>
-                  <span>Cost: Low ($0.08/GB)</span>
+                  <span>Size: terabytes</span>
+                  <span>Long-term persistence</span>
                 </div>
               </div>
 
@@ -4948,57 +4948,56 @@ body.cinema-mode-active main {
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div style="display: flex; align-items: center; gap: 0.45rem;">
                     <span class="tier-level-badge" style="background: #64748b; color: #ffffff;">L5</span>
-                    <span style="font-weight: 800; font-size: 0.86rem; color: #94a3b8;">Tertiary / Offline Storage</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #64748b;">Tertiary / Offline Storage</span>
                   </div>
-                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">100 ms – Minutes</span>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">Tertiary Storage</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
-                  <span>Cap: 100 TB – Exabytes</span>
-                  <span>Cost: Ultra-Low ($0.005/GB)</span>
+                  <span>Size: petabytes</span>
+                  <span>Massive backup storage</span>
                 </div>
               </div>
             </div>
 
-            <!-- SELECTED TIER HARDWARE SPECIFICATION CARD -->
+                        <!-- SELECTED TIER HARDWARE SPECIFICATION CARD -->
             <div id="standaloneTierSpecCard" class="tier-spec-card" style="margin-top: 1rem; border-left-color: #0052ff;">
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.45rem;">
                 <div>
                   <div id="specCardTitle" style="font-size: 0.95rem; font-weight: 900; color: #ffffff;">
-                    Tier 2: Cache Memory (L1 / L2 / L3)
+                    Tier 2: Cache Memory
                   </div>
                   <div id="specCardSub" style="font-size: 0.75rem; color: #0052ff;">
-                    High-Speed Static RAM (SRAM) On-Die Buffers
+                    Internal Storage
                   </div>
                 </div>
-                <span id="specCardVolatility" class="badge-status badge-blue" style="font-size: 0.68rem;">
-                  Volatile
+                <span id="specCardSizeBadge" class="badge-status badge-blue" style="font-size: 0.68rem;">
+                  kilobytes to megabytes
                 </span>
               </div>
 
-              <p id="specCardSummary" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.45; margin: 0.4rem 0 0.65rem 0;">
-                The critical "Speed Bridge". SRAM requires no capacitor refresh cycles, enabling ultra-fast cache line lookups. Exploits temporal and spatial locality to prevent CPU bus starvation.
+              <p id="specCardSummary" style="font-size: 0.85rem; color: #e2e8f0; line-height: 1.5; margin: 0.4rem 0 0.65rem 0;">
+                "High-speed Static RAM (SRAM) positioned between the CPU and RAM. Stores frequently used instructions and data to speed up processing (size: kilobytes to megabytes)."
               </p>
 
               <div class="tier-spec-grid">
                 <div class="tier-spec-item">
-                  <span class="tier-spec-label">PHYSICAL TECHNOLOGY</span>
-                  <span class="tier-spec-val" id="specCardTech" style="color: #ffffff;">6-Transistor SRAM (Static RAM Cells)</span>
+                  <span class="tier-spec-label">STORAGE CAPACITY (MODULE 1)</span>
+                  <span class="tier-spec-val" id="specCardCapacity" style="color: var(--accent-cyan);">kilobytes to megabytes</span>
                 </div>
                 <div class="tier-spec-item">
-                  <span class="tier-spec-label">ACCESS LATENCY</span>
-                  <span class="tier-spec-val" id="specCardLatency" style="color: #0052ff;">1.0 ns – 12.0 ns (3 – 40 cycles)</span>
+                  <span class="tier-spec-label">STORAGE LEVEL</span>
+                  <span class="tier-spec-val" id="specCardLevel" style="color: #ffffff;">Internal Storage</span>
                 </div>
                 <div class="tier-spec-item">
-                  <span class="tier-spec-label">CLOCK CYCLES</span>
-                  <span class="tier-spec-val" id="specCardCycles">3 – 40 cycles</span>
+                  <span class="tier-spec-label">SPEED & COST POSITION</span>
+                  <span class="tier-spec-val" id="specCardSpeedCost" style="color: var(--accent-amber);">High-speed buffer (SRAM)</span>
                 </div>
                 <div class="tier-spec-item">
-                  <span class="tier-spec-label">MANAGED BY</span>
-                  <span class="tier-spec-val" id="specCardManaged" style="color: var(--accent-cyan);">Hardware Cache Controller</span>
+                  <span class="tier-spec-label">STORAGE MEDIA / EXAMPLES</span>
+                  <span class="tier-spec-val" id="specCardDevices" style="color: var(--accent-green);">Static RAM (SRAM) — L1, L2, L3 levels</span>
                 </div>
               </div>
             </div>
-          </div>
         </div>
 
         <!-- COLUMN B: THE CACHE "SPEED BRIDGE" PIPELINE SIMULATOR -->
@@ -5207,7 +5206,7 @@ body.cinema-mode-active main {
         </div>
       </div>
     
-      <!-- FEATURE: INTERACTIVE TIER DEEP-DIVE POPUP MODAL -->
+            <!-- FEATURE: INTERACTIVE TIER DEEP-DIVE POPUP MODAL (MODULE 1 CONTENT) -->
       <div id="standaloneTierModal" class="tier-modal-backdrop" style="display: none;" onclick="closeStandaloneTierModal(event)">
         <div id="standaloneTierModalDialog" class="tier-modal-dialog" onclick="event.stopPropagation()">
           <!-- MODAL HEADER -->
@@ -5216,67 +5215,56 @@ body.cinema-mode-active main {
               <span id="modalTierBadge" class="tier-level-badge" style="font-size: 0.85rem; padding: 0.2rem 0.6rem;">TIER 1</span>
               <div>
                 <div id="modalTierTitle" style="font-size: 1.25rem; font-weight: 900; color: #ffffff; letter-spacing: -0.01em;">CPU Registers</div>
-                <div id="modalTierSub" style="font-size: 0.78rem; font-family: var(--font-mono);">Immediate Silicon Core Registers</div>
+                <div id="modalTierSub" style="font-size: 0.78rem; font-family: var(--font-mono);">Internal Storage</div>
               </div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <!-- CLOSE BUTTON -->
               <button class="xray-close-btn" onclick="closeStandaloneTierModal()" title="Close Pop-up (ESC)">
                 ✕ CLOSE
               </button>
             </div>
           </div>
 
-          <!-- SUMMARY & VOLATILITY BANNER -->
-          <div id="modalTierSummaryBanner" style="border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-              <span id="modalTierBannerTag" style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;">
-                ARCHITECTURAL ROLE & DESCRIPTION
-              </span>
-              <span id="modalTierVolatility" class="badge-status" style="font-size: 0.7rem;">Volatile</span>
+          <!-- MODULE CONTENT BANNER -->
+          <div id="modalTierSummaryBanner" style="border-radius: 6px; padding: 0.9rem 1.1rem; margin-bottom: 1rem;">
+            <div id="modalTierBannerTag" style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem;">
+              CONTENT FROM MODULE 1 (PAGE 11)
             </div>
-            <p id="modalTierSummaryText" style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.55; margin: 0;"></p>
+            <p id="modalTierSummaryText" style="font-size: 0.95rem; color: #f1f5f9; line-height: 1.6; margin: 0; font-weight: 500;"></p>
           </div>
 
-          <!-- 6-SPECIFICATION MATRIX GRID -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1rem;">
+          <!-- MODULE SPECIFICATIONS GRID (ONLY FIELDS FROM MODULE 1) -->
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
             <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
-              <span class="tier-spec-label">ACCESS LATENCY</span>
-              <span id="modalSpecLatency" class="tier-spec-val" style="font-size: 0.98rem;"></span>
+              <span class="tier-spec-label">STORAGE CAPACITY (MODULE 1)</span>
+              <span id="modalSpecCapacity" class="tier-spec-val" style="color: var(--accent-cyan); font-size: 1.02rem;"></span>
             </div>
             <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
-              <span class="tier-spec-label">CLOCK CYCLES</span>
-              <span id="modalSpecCycles" class="tier-spec-val" style="color: #ffffff; font-size: 0.98rem;"></span>
+              <span class="tier-spec-label">STORAGE HIERARCHY LEVEL</span>
+              <span id="modalSpecClassification" class="tier-spec-val" style="color: #ffffff; font-size: 1.02rem;"></span>
             </div>
             <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
-              <span class="tier-spec-label">TYPICAL STORAGE CAPACITY</span>
-              <span id="modalSpecCapacity" class="tier-spec-val" style="color: var(--accent-cyan); font-size: 0.98rem;"></span>
+              <span class="tier-spec-label">SPEED & COST POSITION</span>
+              <span id="modalSpecSpeedCost" class="tier-spec-val" style="color: var(--accent-amber); font-size: 0.92rem;"></span>
             </div>
             <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
-              <span class="tier-spec-label">COST PER BIT / GIGABYTE</span>
-              <span id="modalSpecCost" class="tier-spec-val" style="color: var(--accent-amber); font-size: 0.98rem;"></span>
-            </div>
-            <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
-              <span class="tier-spec-label">PHYSICAL SILICON TECHNOLOGY</span>
-              <span id="modalSpecTech" class="tier-spec-val" style="color: #ffffff; font-size: 0.84rem;"></span>
-            </div>
-            <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
-              <span class="tier-spec-label">OPERATING SYSTEM MANAGEMENT</span>
-              <span id="modalSpecManaged" class="tier-spec-val" style="color: var(--accent-green); font-size: 0.84rem;"></span>
+              <span class="tier-spec-label">STORAGE MEDIA / EXAMPLES</span>
+              <span id="modalSpecDevices" class="tier-spec-val" style="color: var(--accent-green); font-size: 0.92rem;"></span>
             </div>
           </div>
 
-          <!-- WHY THIS TIER MATTERS (DEEP ARCHITECTURAL EXPLANATION) -->
-          <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.85rem 1rem;">
-            <div style="font-size: 0.72rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem;">
-              💡 WHY THIS TIER MATTERS IN COMPUTER ARCHITECTURE
+          <!-- KEY PRINCIPLE FROM MODULE 1 -->
+          <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.75rem 1rem;">
+            <div style="font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem;">
+              MODULE PRINCIPLE (PAGE 11)
             </div>
-            <p id="modalTierWhyMatters" style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.55; margin: 0;"></p>
+            <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+              As you move down the pyramid, storage capacity and cost per bit increase, while access speed and cost efficiency decrease.
+            </p>
           </div>
         </div>
       </div>
-
     </section>
 
     
@@ -5757,86 +5745,67 @@ body.cinema-mode-active main {
     // TAB 2 ENGINE: MEMORY HIERARCHY PYRAMID & CACHE SIMULATOR
     // =========================================================================
         // --- STANDALONE MEMORY HIERARCHY SPECIFICATIONS ---
+        // --- STANDALONE MEMORY HIERARCHY SPECIFICATIONS (STRICTLY MODULE 1, PAGE 11) ---
     const STANDALONE_TIERS = {
       'registers': {
         level: 1,
         name: 'CPU Registers',
-        sub: 'Immediate Silicon Core Registers (AX, BX, PC, SP)',
-        capacity: '1 KB - 2 KB',
-        accessTime: '0.5 ns (1 clock cycle)',
-        cycles: '0.5 - 1 cycle',
-        tech: 'D-Type Flip-Flops (Bistable Multivibrator)',
-        cost: 'Highest ($100k+/GB)',
-        volatility: 'Volatile',
-        managed: 'Compiler & Hardware Allocator',
-        color: '#00d2ff',
-        summary: 'Internal CPU registers provide zero-wait-state operand storage directly to the Arithmetic Logic Unit (ALU). Highest cost per bit and fastest access in the entire computing system.',
-        whyItMatters: 'Internal CPU registers represent the physical boundary where memory ends and computation begins. Because registers operate synchronously with the processor clock (0.5 ns), any instruction executed using registers suffers zero memory wait states. Compilers prioritize register allocation to keep active loop variables here as long as possible.'
+        classification: 'Internal Storage',
+        size: 'bytes to kilobytes',
+        moduleText: 'The fastest and most expensive memory located directly inside the CPU. Holds data currently being processed (size: bytes to kilobytes).',
+        location: 'Located directly inside the CPU',
+        speedCost: 'Fastest speed, Most expensive',
+        devices: 'CPU Internal Registers',
+        color: '#00d2ff'
       },
       'cache': {
         level: 2,
-        name: 'Cache Memory (L1 / L2 / L3)',
-        sub: 'High-Speed Static RAM (SRAM) On-Die Buffers',
-        capacity: '32 KB (L1) - 64 MB+ (L3)',
-        accessTime: '1.0 ns - 12.0 ns (3 - 40 cycles)',
-        cycles: '3 - 40 cycles',
-        tech: '6-Transistor SRAM (Static RAM Cells)',
-        cost: 'Very High ($1,000 - $5,000/GB)',
-        volatility: 'Volatile',
-        managed: 'Hardware Cache Controller (Transparent to OS)',
-        color: '#0052ff',
-        summary: 'The critical "Speed Bridge". SRAM requires no capacitor refresh cycles, enabling ultra-fast cache line lookups. Exploits temporal and spatial locality to prevent CPU bus starvation.',
-        whyItMatters: 'Cache Memory bridges the 200x speed disparity between fast CPUs and slow DRAM (the "Memory Wall"). Built from 6-transistor SRAM cells with no capacitive leakage, L1 cache resolves requests in 1 ns. By storing recently used instructions (Temporal Locality) and adjacent array blocks (Spatial Locality), Cache delivers over 90% of memory requests without touching the external bus.'
+        name: 'Cache Memory',
+        classification: 'Internal Storage',
+        size: 'kilobytes to megabytes',
+        moduleText: 'High-speed Static RAM (SRAM) positioned between the CPU and RAM. Stores frequently used instructions and data to speed up processing (size: kilobytes to megabytes).',
+        location: 'Positioned between the CPU and RAM',
+        speedCost: 'High-speed buffer (SRAM)',
+        devices: 'Static RAM (SRAM) — L1, L2, L3 levels',
+        color: '#0052ff'
       },
       'main_memory': {
         level: 3,
-        name: 'Main Memory (DRAM)',
-        sub: 'Physical System RAM (DDR4 / DDR5 Dual-Channel)',
-        capacity: '16 GB - 128 GB',
-        accessTime: '60.0 ns - 80.0 ns (200+ cycles)',
-        cycles: '180 - 240 cycles',
-        tech: '1-Transistor 1-Capacitor DRAM (Requires 64ms Refresh)',
-        cost: 'Moderate ($4 - $6/GB)',
-        volatility: 'Volatile',
-        managed: 'Operating System Virtual Memory Manager (MMU)',
-        color: '#fbbf24',
-        summary: 'Primary program and working data storage. Holds active OS processes, page tables, and stack/heap memory. Must be periodically refreshed before tiny capacitor charges bleed away.',
-        whyItMatters: 'Main Memory is the primary workspace where operating system kernels, active process heaps, stacks, and virtual memory page frames reside. Because DRAM uses a single microscopic capacitor to store each bit, charge bleeds away and requires a refresh command every 64ms. This physical design keeps DRAM economical ($4/GB) while providing gigabytes of capacity to hold multitasking operating systems.'
+        name: 'Main Memory (RAM)',
+        classification: 'Primary Storage',
+        size: 'gigabytes',
+        moduleText: 'The primary working memory of the computer, typically Dynamic RAM (DRAM). Holds active programs and operating data (size: gigabytes).',
+        location: 'Motherboard System RAM',
+        speedCost: 'Moderate speed, Primary working memory',
+        devices: 'Dynamic RAM (DRAM)',
+        color: '#fbbf24'
       },
       'secondary': {
         level: 4,
-        name: 'Secondary Storage (NVMe / SSD / HDD)',
-        sub: 'Non-Volatile Solid State Drives & Magnetic Disks',
-        capacity: '512 GB - 8 TB',
-        accessTime: '10 µs (NVMe SSD) - 10 ms (Mechanical HDD)',
-        cycles: '30,000 - 30,000,000 cycles',
-        tech: '3D TLC/QLC NAND Flash / Magnetic Platters',
-        cost: 'Low ($0.08/GB)',
-        volatility: 'Non-Volatile',
-        managed: 'OS File System & Block Device Drivers',
-        color: '#a78bfa',
-        summary: 'Persistent mass storage for operating system binaries, applications, and user files. Orders of magnitude slower than DRAM, bridged by OS page cache and buffer pools.',
-        whyItMatters: 'Secondary storage provides non-volatile permanence: when power is removed, all user files, OS binaries, and databases remain intact. Modern NVMe SSDs use 3D NAND flash floating-gate/charge-trap transistors, achieving 10 µs access. Operating systems use secondary storage for Virtual Memory swap files and paging when physical RAM is fully saturated.'
+        name: 'Secondary Storage',
+        classification: 'Secondary Storage',
+        size: 'terabytes',
+        moduleText: 'Non-volatile storage like Hard Drives (HDDs) or Solid-State Drives (SSDs). Used for long-term data persistence (size: terabytes).',
+        location: 'Secondary Storage Bus / Drive Bays',
+        speedCost: 'Large capacity, Long-term persistence',
+        devices: 'Hard Drives (HDDs), Solid-State Drives (SSDs), USB / Flash Memory',
+        color: '#a78bfa'
       },
       'tertiary': {
         level: 5,
         name: 'Tertiary / Offline Storage',
-        sub: 'Magnetic Tape Cartridges, Optical Discs & Cold Cloud',
-        capacity: '100 TB - Exabytes',
-        accessTime: '100 ms - Several Minutes (Robotic Mount)',
-        cycles: 'Millions of seconds',
-        tech: 'Barium Ferrite (BaFe) Magnetic Tape & LTO Drives',
-        cost: 'Ultra-Low ($0.005/GB)',
-        volatility: 'Non-Volatile',
-        managed: 'Robotic Automated Tape Libraries & Archival daemons',
-        color: '#64748b',
-        summary: 'The base of the pyramid. Provides ultra-dense, lowest-cost-per-bit archival retention. Requires robotic jukebox mechanisms or physical mounting before data blocks can be accessed.',
-        whyItMatters: 'Tertiary storage forms the bedrock foundation of enterprise data resilience. Using high-density magnetic tape cartridges stored in robotic automated tape libraries (ATLs) or cold cloud vaults, it delivers unalterable compliance retention, ransomware air-gaps, and disaster recovery at fractions of a cent per gigabyte.'
+        classification: 'Tertiary Storage',
+        size: 'petabytes',
+        moduleText: 'Massive capacity storage such as magnetic tapes or optical discs used for backups (size: petabytes).',
+        location: 'Offline / Archival Tape Libraries',
+        speedCost: 'Massive capacity, Lowest cost per bit',
+        devices: 'Magnetic Tapes, Tape Drives, Optical Discs',
+        color: '#64748b'
       }
     };
 
     let currentModalTierId = 'cache';
-    
+
     function openStandaloneTierModal(tierId) {
       const tier = STANDALONE_TIERS[tierId];
       if (!tier) return;
@@ -5849,9 +5818,7 @@ body.cinema-mode-active main {
       const sub = document.getElementById('modalTierSub');
       const banner = document.getElementById('modalTierSummaryBanner');
       const bannerTag = document.getElementById('modalTierBannerTag');
-      const volBadge = document.getElementById('modalTierVolatility');
       const summaryText = document.getElementById('modalTierSummaryText');
-      const whyMatters = document.getElementById('modalTierWhyMatters');
 
       if (!modal) return;
 
@@ -5861,38 +5828,29 @@ body.cinema-mode-active main {
       badge.style.color = (tier.level === 1) ? '#000000' : '#ffffff';
 
       title.innerText = tier.name;
-      sub.innerText = tier.sub;
+      sub.innerText = tier.classification;
       sub.style.color = tier.color;
 
-      // Summary Banner
+      // Module 1 Content Banner
       banner.style.background = `${tier.color}15`;
-      banner.style.border = `1px solid ${tier.color}45`;
+      banner.style.border = `1px solid ${tier.color}40`;
       bannerTag.style.color = tier.color;
+      summaryText.innerText = `"${tier.moduleText}"`;
 
-      volBadge.innerText = tier.volatility;
-      volBadge.className = tier.volatility.startsWith('Volatile') ? 'badge-status badge-amber' : 'badge-status badge-green';
-
-      summaryText.innerText = tier.summary;
-
-      // Spec Grid
-      const specLat = document.getElementById('modalSpecLatency');
-      specLat.innerText = tier.accessTime;
-      specLat.style.color = tier.color;
-
-      document.getElementById('modalSpecCycles').innerText = tier.cycles;
-      document.getElementById('modalSpecCapacity').innerText = tier.capacity;
-      document.getElementById('modalSpecCost').innerText = tier.cost;
-      document.getElementById('modalSpecTech').innerText = tier.tech;
-      document.getElementById('modalSpecManaged').innerText = tier.managed;
-
-      // Why It Matters
-      whyMatters.innerText = tier.whyItMatters;
+      // Spec Grid (Strictly Module 1 Fields)
+      const capEl = document.getElementById('modalSpecCapacity');
+      if (capEl) capEl.innerText = tier.size;
+      const classEl = document.getElementById('modalSpecClassification');
+      if (classEl) classEl.innerText = tier.classification;
+      const scEl = document.getElementById('modalSpecSpeedCost');
+      if (scEl) scEl.innerText = tier.speedCost;
+      const devEl = document.getElementById('modalSpecDevices');
+      if (devEl) devEl.innerText = tier.devices;
 
       // Dialog glow & border
       dialog.style.borderColor = tier.color;
       dialog.style.boxShadow = `0 0 50px ${tier.color}45, inset 0 0 25px ${tier.color}15`;
 
-      
       modal.style.display = 'flex';
     }
 
@@ -5939,31 +5897,29 @@ body.cinema-mode-active main {
       if (titleEl) titleEl.innerText = `Tier ${tier.level}: ${tier.name}`;
       const subEl = document.getElementById('specCardSub');
       if (subEl) {
-        subEl.innerText = tier.sub;
+        subEl.innerText = tier.classification;
         subEl.style.color = tier.color;
       }
-      const volEl = document.getElementById('specCardVolatility');
-      if (volEl) volEl.innerText = tier.volatility;
+      const sizeBadge = document.getElementById('specCardSizeBadge');
+      if (sizeBadge) sizeBadge.innerText = tier.size;
       const sumEl = document.getElementById('specCardSummary');
-      if (sumEl) sumEl.innerText = tier.summary;
-      const techEl = document.getElementById('specCardTech');
-      if (techEl) techEl.innerText = tier.tech;
-      const latEl = document.getElementById('specCardLatency');
-      if (latEl) {
-        latEl.innerText = tier.accessTime;
-        latEl.style.color = tier.color;
-      }
-      const cycEl = document.getElementById('specCardCycles');
-      if (cycEl) cycEl.innerText = tier.cycles;
-      const mgdEl = document.getElementById('specCardManaged');
-      if (mgdEl) mgdEl.innerText = tier.managed;
+      if (sumEl) sumEl.innerText = `"${tier.moduleText}"`;
+
+      const capEl = document.getElementById('specCardCapacity');
+      if (capEl) capEl.innerText = tier.size;
+      const lvlEl = document.getElementById('specCardLevel');
+      if (lvlEl) lvlEl.innerText = tier.classification;
+      const scEl = document.getElementById('specCardSpeedCost');
+      if (scEl) scEl.innerText = tier.speedCost;
+      const devEl = document.getElementById('specCardDevices');
+      if (devEl) devEl.innerText = tier.devices;
 
       const narrTitle = document.getElementById('memoryNarrationTitle');
       if (narrTitle) narrTitle.innerText = `Pyramid Level ${tier.level}: ${tier.name}`;
       const narrMsg = document.getElementById('memoryNarrationMsg');
-      if (narrMsg) narrMsg.innerText = `${tier.summary} Access latency: ${tier.accessTime} with capacity ${tier.capacity}.`;
+      if (narrMsg) narrMsg.innerText = tier.moduleText;
 
-      // Trigger Interactive Pop-up Modal with full details & audio read aloud
+      // Trigger Interactive Pop-up Modal with strictly Module 1 details
       openStandaloneTierModal(tierId);
     }
 

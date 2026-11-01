@@ -20,107 +20,82 @@ import {
 } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 
-// 5-Tier Memory Hierarchy Definitions
+// 5-Tier Memory Hierarchy Definitions (Strictly From Module 1, Page 11)
 const HIERARCHY_TIERS = [
   {
     id: 'registers',
     level: 1,
     name: 'CPU Registers',
-    sub: 'Immediate Silicon Core Registers (AX, BX, PC, SP)',
-    capacity: '1 KB – 2 KB',
-    accessTime: '0.5 ns (1 clock cycle)',
-    cycles: '0.5 – 1 cycle',
-    tech: 'D-Type Flip-Flops (Bistable Multivibrator)',
-    costPerGb: '$100,000+ / GB',
-    volatility: 'Volatile (Power Off = Data Lost)',
-    accessFreq: 'Highest (Every single CPU micro-op)',
-    managedBy: 'Compiler & Hardware Register Allocator',
+    classification: 'Internal Storage',
+    size: 'bytes to kilobytes',
+    moduleText: 'The fastest and most expensive memory located directly inside the CPU. Holds data currently being processed (size: bytes to kilobytes).',
+    location: 'Located directly inside the CPU',
+    speedCost: 'Fastest speed, Most expensive',
+    devices: 'CPU Internal Registers',
     color: '#00d2ff',
     bgTint: 'rgba(0, 210, 255, 0.12)',
     borderTint: 'rgba(0, 210, 255, 0.4)',
-    widthPct: 46,
-    summary: 'Internal CPU registers provide zero-wait-state operand storage directly to the Arithmetic Logic Unit (ALU). Highest cost per bit and fastest access in the entire computing system.',
-    whyItMatters: 'Internal CPU registers represent the physical boundary where memory ends and computation begins. Because registers operate synchronously with the processor clock (0.5 ns), any instruction executed using registers suffers zero memory wait states. Compilers prioritize register allocation to keep active loop variables here as long as possible.'
+    widthPct: 46
   },
   {
     id: 'cache',
     level: 2,
-    name: 'Cache Memory (L1 / L2 / L3)',
-    sub: 'High-Speed Static RAM (SRAM) On-Die Buffers',
-    capacity: '32 KB (L1) – 64 MB+ (L3)',
-    accessTime: '1.0 ns – 12.0 ns (3 – 40 cycles)',
-    cycles: '3 – 40 cycles',
-    tech: '6-Transistor SRAM (Static RAM Cells)',
-    costPerGb: '$1,000 – $5,000 / GB',
-    volatility: 'Volatile',
-    accessFreq: 'Very High (Speed Bridge between CPU & DRAM)',
-    managedBy: 'Hardware Cache Controller (Transparent to OS)',
+    name: 'Cache Memory',
+    classification: 'Internal Storage',
+    size: 'kilobytes to megabytes',
+    moduleText: 'High-speed Static RAM (SRAM) positioned between the CPU and RAM. Stores frequently used instructions and data to speed up processing (size: kilobytes to megabytes).',
+    location: 'Positioned between the CPU and RAM',
+    speedCost: 'High-speed buffer (SRAM)',
+    devices: 'Static RAM (SRAM) — L1, L2, L3 levels',
     color: '#0052ff',
     bgTint: 'rgba(0, 82, 255, 0.14)',
     borderTint: 'rgba(0, 82, 255, 0.5)',
-    widthPct: 60,
-    summary: 'The critical "Speed Bridge". SRAM requires no capacitor refresh cycles, enabling ultra-fast cache line lookups. Exploits temporal and spatial locality to prevent CPU bus starvation.',
-    whyItMatters: 'Cache Memory bridges the 200x speed disparity between fast CPUs and slow DRAM (the "Memory Wall"). Built from 6-transistor SRAM cells with no capacitive leakage, L1 cache resolves requests in 1 ns. By storing recently used instructions (Temporal Locality) and adjacent array blocks (Spatial Locality), Cache delivers over 90% of memory requests without touching the external bus.'
+    widthPct: 60
   },
   {
     id: 'main_memory',
     level: 3,
-    name: 'Main Memory (DRAM)',
-    sub: 'Physical System RAM (DDR4 / DDR5 Dual-Channel)',
-    capacity: '16 GB – 128 GB',
-    accessTime: '60.0 ns – 80.0 ns (200+ cycles)',
-    cycles: '180 – 240 cycles',
-    tech: '1-Transistor 1-Capacitor DRAM (Requires 64ms Refresh)',
-    costPerGb: '$3.50 – $6.00 / GB',
-    volatility: 'Volatile',
-    accessFreq: 'Moderate (Served on Cache Misses)',
-    managedBy: 'Operating System Virtual Memory Manager (MMU)',
+    name: 'Main Memory (RAM)',
+    classification: 'Primary Storage',
+    size: 'gigabytes',
+    moduleText: 'The primary working memory of the computer, typically Dynamic RAM (DRAM). Holds active programs and operating data (size: gigabytes).',
+    location: 'Motherboard System RAM',
+    speedCost: 'Moderate speed, Primary working memory',
+    devices: 'Dynamic RAM (DRAM)',
     color: '#fbbf24',
     bgTint: 'rgba(251, 191, 36, 0.12)',
     borderTint: 'rgba(251, 191, 36, 0.45)',
-    widthPct: 74,
-    summary: 'Primary program and working data storage. Holds active OS processes, page tables, and stack/heap memory. Must be periodically refreshed before tiny capacitor charges bleed away.',
-    whyItMatters: 'Main Memory is the primary workspace where operating system kernels, active process heaps, stacks, and virtual memory page frames reside. Because DRAM uses a single microscopic capacitor to store each bit, charge bleeds away and requires a refresh command every 64ms. This physical design keeps DRAM economical ($4/GB) while providing gigabytes of capacity to hold multitasking operating systems.'
+    widthPct: 74
   },
   {
     id: 'secondary',
     level: 4,
-    name: 'Secondary Storage (NVMe / SSD / HDD)',
-    sub: 'Non-Volatile Solid State Drives & Magnetic Disks',
-    capacity: '512 GB – 8 TB',
-    accessTime: '10 µs (NVMe SSD) – 10 ms (Mechanical HDD)',
-    cycles: '30,000 – 30,000,000 cycles',
-    tech: '3D TLC/QLC NAND Flash / Magnetic Platters',
-    costPerGb: '$0.06 – $0.15 / GB',
-    volatility: 'Non-Volatile (Persistent without power)',
-    accessFreq: 'Low (File I/O, Page Fault Swapping)',
-    managedBy: 'OS File System & Storage Block Drivers',
+    name: 'Secondary Storage',
+    classification: 'Secondary Storage',
+    size: 'terabytes',
+    moduleText: 'Non-volatile storage like Hard Drives (HDDs) or Solid-State Drives (SSDs). Used for long-term data persistence (size: terabytes).',
+    location: 'Secondary Storage Bus / Drive Bays',
+    speedCost: 'Large capacity, Long-term persistence',
+    devices: 'Hard Drives (HDDs), Solid-State Drives (SSDs), USB / Flash Memory',
     color: '#a78bfa',
     bgTint: 'rgba(167, 139, 250, 0.12)',
     borderTint: 'rgba(167, 139, 250, 0.45)',
-    widthPct: 88,
-    summary: 'Persistent mass storage for operating system binaries, applications, and user files. Orders of magnitude slower than DRAM, bridged by OS page cache and buffer pools.',
-    whyItMatters: 'Secondary storage provides non-volatile permanence: when power is removed, all user files, OS binaries, and databases remain intact. Modern NVMe SSDs use 3D NAND flash floating-gate/charge-trap transistors, achieving 10 µs access. Operating systems use secondary storage for Virtual Memory swap files and paging when physical RAM is fully saturated.'
+    widthPct: 88
   },
   {
     id: 'tertiary',
     level: 5,
-    name: 'Tertiary & Offline Storage',
-    sub: 'Magnetic Tape Libraries & Optical Cold Cloud Archives',
-    capacity: '100 TB – Exabytes (Petabyte Scale)',
-    accessTime: '100 ms – Minutes / Hours',
-    cycles: 'Billions of cycles',
-    tech: 'Linear Tape-Open (LTO-9) / AWS Glacier Cold Vaults',
-    costPerGb: '$0.004 – $0.01 / GB (Lowest Cost/Bit)',
-    volatility: 'Non-Volatile (Decade Retention)',
-    accessFreq: 'Rare (Disaster Recovery & Enterprise Archival)',
-    managedBy: 'Backup Daemons, Hierarchical Storage Management (HSM)',
+    name: 'Tertiary / Offline Storage',
+    classification: 'Tertiary Storage',
+    size: 'petabytes',
+    moduleText: 'Massive capacity storage such as magnetic tapes or optical discs used for backups (size: petabytes).',
+    location: 'Offline / Archival Tape Libraries',
+    speedCost: 'Massive capacity, Lowest cost per bit',
+    devices: 'Magnetic Tapes, Tape Drives, Optical Discs',
     color: '#64748b',
     bgTint: 'rgba(100, 116, 139, 0.12)',
     borderTint: 'rgba(100, 116, 139, 0.45)',
-    widthPct: 100,
-    summary: 'The base of the pyramid. Provides ultra-dense, lowest-cost-per-bit archival retention. Requires robotic jukebox mechanisms or physical mounting before data blocks can be accessed.',
-    whyItMatters: 'Tertiary storage forms the bedrock foundation of enterprise data resilience. Using high-density magnetic tape cartridges (LTO-9) and robotic tape libraries, it can store hundreds of petabytes for decades without drawing electrical power. Access times are measured in seconds to minutes, making it ideal for disaster recovery, compliance archives, and cold cloud vaults.'
+    widthPct: 100
   }
 ];
 
@@ -668,13 +643,13 @@ export default function MemoryHierarchyLab() {
                         </span>
                       </div>
                       <span style={{ fontSize: '0.74rem', fontFamily: 'var(--font-mono)', color: isSelected ? '#ffffff' : 'var(--text-muted)' }}>
-                        {tier.accessTime}
+                        {tier.classification}
                       </span>
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.3rem', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                      <span>Cap: {tier.capacity}</span>
-                      <span>Cost: {tier.costPerGb}</span>
+                      <span>Size: {tier.size}</span>
+                      <span>{tier.speedCost}</span>
                     </div>
                   </div>
                 );
@@ -690,34 +665,34 @@ export default function MemoryHierarchyLab() {
                       Tier {selectedTier.level}: {selectedTier.name}
                     </div>
                     <div style={{ fontSize: '0.75rem', color: selectedTier.color }}>
-                      {selectedTier.sub}
+                      {selectedTier.classification}
                     </div>
                   </div>
                   <span className="badge-status badge-blue" style={{ fontSize: '0.68rem' }}>
-                    {selectedTier.volatility}
+                    {selectedTier.size}
                   </span>
                 </div>
 
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.45, margin: '0.4rem 0 0.65rem 0' }}>
-                  {selectedTier.summary}
+                <p style={{ fontSize: '0.85rem', color: '#e2e8f0', lineHeight: 1.5, margin: '0.4rem 0 0.65rem 0' }}>
+                  "{selectedTier.moduleText}"
                 </p>
 
                 <div className="tier-spec-grid">
                   <div className="tier-spec-item">
-                    <span className="tier-spec-label">PHYSICAL TECHNOLOGY</span>
-                    <span className="tier-spec-val" style={{ color: '#ffffff' }}>{selectedTier.tech}</span>
+                    <span className="tier-spec-label">STORAGE CAPACITY</span>
+                    <span className="tier-spec-val" style={{ color: 'var(--accent-cyan)' }}>{selectedTier.size}</span>
                   </div>
                   <div className="tier-spec-item">
-                    <span className="tier-spec-label">ACCESS LATENCY</span>
-                    <span className="tier-spec-val" style={{ color: selectedTier.color }}>{selectedTier.accessTime}</span>
+                    <span className="tier-spec-label">STORAGE LEVEL</span>
+                    <span className="tier-spec-val" style={{ color: '#ffffff' }}>{selectedTier.classification}</span>
                   </div>
                   <div className="tier-spec-item">
-                    <span className="tier-spec-label">CLOCK CYCLES</span>
-                    <span className="tier-spec-val">{selectedTier.cycles}</span>
+                    <span className="tier-spec-label">SPEED & COST POSITION</span>
+                    <span className="tier-spec-val" style={{ color: 'var(--accent-amber)' }}>{selectedTier.speedCost}</span>
                   </div>
                   <div className="tier-spec-item">
-                    <span className="tier-spec-label">MANAGED BY</span>
-                    <span className="tier-spec-val" style={{ color: 'var(--accent-cyan)' }}>{selectedTier.managedBy}</span>
+                    <span className="tier-spec-label">STORAGE MEDIA / EXAMPLES</span>
+                    <span className="tier-spec-val" style={{ color: 'var(--accent-green)' }}>{selectedTier.devices}</span>
                   </div>
                 </div>
               </div>
@@ -1010,90 +985,77 @@ export default function MemoryHierarchyLab() {
                     {selectedTier.name}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: selectedTier.color, fontFamily: 'var(--font-mono)' }}>
-                    {selectedTier.sub}
+                    {selectedTier.classification}
                   </div>
                 </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                {/* CLOSE BUTTON */}
                 <button className="xray-close-btn" onClick={closeModal} title="Close Pop-up (ESC)">
                   ✕ CLOSE
                 </button>
               </div>
             </div>
 
-            {/* SUMMARY & VOLATILITY BANNER */}
+            {/* MODULE CONTENT BANNER */}
             <div style={{
-              background: `${selectedTier.color}12`,
+              background: `${selectedTier.color}15`,
               border: `1px solid ${selectedTier.color}40`,
               borderRadius: '6px',
-              padding: '0.85rem 1rem',
+              padding: '0.9rem 1.1rem',
               marginBottom: '1rem'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: selectedTier.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  ARCHITECTURAL ROLE & DESCRIPTION
-                </span>
-                <span className={`badge-status ${selectedTier.volatility.startsWith('Volatile') ? 'badge-amber' : 'badge-green'}`} style={{ fontSize: '0.7rem' }}>
-                  {selectedTier.volatility}
-                </span>
+              <div style={{ fontSize: '0.72rem', fontWeight: 800, color: selectedTier.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+                CONTENT FROM MODULE 1 (PAGE 11)
               </div>
-              <p style={{ fontSize: '0.88rem', color: '#e2e8f0', lineHeight: 1.55, margin: 0 }}>
-                {selectedTier.summary}
+              <p style={{ fontSize: '0.95rem', color: '#f1f5f9', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                "{selectedTier.moduleText}"
               </p>
             </div>
 
-            {/* 6-SPECIFICATION MATRIX GRID */}
+            {/* MODULE SPECIFICATIONS GRID (STRICTLY FROM MODULE 1) */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gridTemplateColumns: 'repeat(2, 1fr)',
               gap: '0.75rem',
               marginBottom: '1rem'
             }}>
               <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <span className="tier-spec-label">ACCESS LATENCY</span>
-                <span className="tier-spec-val" style={{ color: selectedTier.color, fontSize: '0.98rem' }}>{selectedTier.accessTime}</span>
+                <span className="tier-spec-label">STORAGE CAPACITY (MODULE 1)</span>
+                <span className="tier-spec-val" style={{ color: 'var(--accent-cyan)', fontSize: '1.02rem' }}>{selectedTier.size}</span>
               </div>
               <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <span className="tier-spec-label">CLOCK CYCLES</span>
-                <span className="tier-spec-val" style={{ color: '#ffffff', fontSize: '0.98rem' }}>{selectedTier.cycles}</span>
+                <span className="tier-spec-label">STORAGE HIERARCHY LEVEL</span>
+                <span className="tier-spec-val" style={{ color: '#ffffff', fontSize: '1.02rem' }}>{selectedTier.classification}</span>
               </div>
               <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <span className="tier-spec-label">TYPICAL STORAGE CAPACITY</span>
-                <span className="tier-spec-val" style={{ color: 'var(--accent-cyan)', fontSize: '0.98rem' }}>{selectedTier.capacity}</span>
+                <span className="tier-spec-label">SPEED & COST POSITION</span>
+                <span className="tier-spec-val" style={{ color: 'var(--accent-amber)', fontSize: '0.92rem' }}>{selectedTier.speedCost}</span>
               </div>
               <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <span className="tier-spec-label">COST PER BIT / GIGABYTE</span>
-                <span className="tier-spec-val" style={{ color: 'var(--accent-amber)', fontSize: '0.98rem' }}>{selectedTier.costPerGb}</span>
-              </div>
-              <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <span className="tier-spec-label">PHYSICAL SILICON TECHNOLOGY</span>
-                <span className="tier-spec-val" style={{ color: '#ffffff', fontSize: '0.84rem' }}>{selectedTier.tech}</span>
-              </div>
-              <div className="tier-spec-item" style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <span className="tier-spec-label">OPERATING SYSTEM MANAGEMENT</span>
-                <span className="tier-spec-val" style={{ color: 'var(--accent-green)', fontSize: '0.84rem' }}>{selectedTier.managedBy}</span>
+                <span className="tier-spec-label">STORAGE MEDIA / EXAMPLES</span>
+                <span className="tier-spec-val" style={{ color: 'var(--accent-green)', fontSize: '0.92rem' }}>{selectedTier.devices}</span>
               </div>
             </div>
 
-            {/* WHY THIS TIER MATTERS (DEEP ARCHITECTURAL EXPLANATION) */}
+            {/* KEY PRINCIPLE FROM MODULE 1 */}
             <div style={{
               background: 'rgba(0, 0, 0, 0.5)',
               border: '1px solid var(--border-subtle)',
               borderRadius: '6px',
-              padding: '0.85rem 1rem'
+              padding: '0.75rem 1rem'
             }}>
-              <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.35rem' }}>
-                💡 WHY THIS TIER MATTERS IN COMPUTER ARCHITECTURE
+              <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
+                MODULE PRINCIPLE (PAGE 11)
               </div>
-              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
-                {selectedTier.whyItMatters}
+              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
+                As you move down the pyramid, storage capacity and cost per bit increase, while access speed and cost efficiency decrease.
               </p>
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 }
