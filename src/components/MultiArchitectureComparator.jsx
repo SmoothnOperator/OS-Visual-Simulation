@@ -6,6 +6,7 @@ export default function MultiArchitectureComparator() {
   const [coreCount, setCoreCount] = useState(2);
   const [workloadType, setWorkloadType] = useState('single');
   const [mpMemMode, setMpMemMode] = useState('smp');
+  const [machineProfile, setMachineProfile] = useState('gaming');
 
   const [benchmarkRunning, setBenchmarkRunning] = useState(false);
   const [mcProgress, setMcProgress] = useState(0);
@@ -47,6 +48,29 @@ export default function MultiArchitectureComparator() {
       setNarration({
         title: 'Multicore Configuration: Octa-Core Contention',
         msg: 'Contention Analysis: "Increasing cores causes software interference due to resource sharing" & high heat generation in concentrated die area!'
+      });
+    }
+  };
+
+  const handleProfileChange = (profile) => {
+    setMachineProfile(profile);
+    setDieFault(false);
+    setSocketFault(false);
+    if (profile === 'gaming') {
+      setCoreCount(8);
+      setWorkloadType('single');
+      setMpMemMode('smp');
+      setNarration({
+        title: 'Real-World Profile: Consumer Gaming Rig (AMD Ryzen 9 / Intel i9)',
+        msg: 'Architectural Analysis: Video games require high-FPS thread synchronization between physics, rendering, and game logic. Multicore delivers 0.8ns L3 cache latency with zero motherboard bus hops. Running games on a dual-socket server causes micro-stuttering due to inter-socket bus latency!'
+      });
+    } else {
+      setCoreCount(4);
+      setWorkloadType('multi');
+      setMpMemMode('distributed');
+      setNarration({
+        title: 'Real-World Profile: Enterprise Cloud Rack Server (Dell PowerEdge / Dual AMD EPYC)',
+        msg: 'Architectural Analysis: Cloud platforms (AWS EC2 / Azure) host isolated client VMs and Docker containers. Dual-socket multiprocessors with NUMA memory pools provide hardware fault isolation: if Socket 2 fails or overheats, Socket 1 survives with 100% uptime!'
       });
     }
   };
@@ -228,6 +252,18 @@ export default function MultiArchitectureComparator() {
       {/* CONTROLS STRIP */}
       <div className="controls-card">
         <div className="control-cluster">
+          <span className="control-label">Machine Profile:</span>
+          <select
+            className="select-dropdown"
+            value={machineProfile}
+            onChange={(e) => handleProfileChange(e.target.value)}
+            style={{ minWidth: '220px' }}
+          >
+            <option value="gaming">🎮 Consumer Gaming PC (Ryzen 9 / Core i9)</option>
+            <option value="server">☁️ Enterprise Cloud Server (Dell PowerEdge / Dual EPYC)</option>
+          </select>
+        </div>
+        <div className="control-cluster">
           <span className="control-label">Cores on Die:</span>
           <select
             className="select-dropdown"
@@ -323,6 +359,82 @@ export default function MultiArchitectureComparator() {
           </div>
         </div>
       )}
+
+      {/* REAL-WORLD HARDWARE MACHINE PROFILE HUD */}
+      <div className={`hardware-profile-card card-hud-corner ${machineProfile === 'server' ? 'profile-server' : ''}`}>
+        <div className="profile-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span className="profile-icon">{machineProfile === 'gaming' ? '🎮' : '☁️'}</span>
+            <div>
+              <div className="profile-title">
+                {machineProfile === 'gaming'
+                  ? 'Real-World Hardware Profile: High-FPS Gaming Rig (AMD Ryzen 9 7950X / Intel Core i9)'
+                  : 'Real-World Hardware Profile: Enterprise Cloud Server (Dell PowerEdge R760 / Dual AMD EPYC)'}
+              </div>
+              <div className="profile-subtitle">
+                {machineProfile === 'gaming'
+                  ? 'Desktop Class Architecture • Single AM5 Socket (LGA1718) • Monolithic Silicon Die Package'
+                  : 'Datacenter Server Infrastructure • Dual SP5 Motherboard Sockets • NUMA Distributed Memory Nodes'}
+              </div>
+            </div>
+          </div>
+          <span className={`badge-status ${machineProfile === 'gaming' ? 'badge-blue' : 'badge-purple'}`}>
+            {machineProfile === 'gaming' ? 'CONSUMER DESKTOP CLASS' : 'ENTERPRISE RACK SERVER'}
+          </span>
+        </div>
+
+        <div className="profile-specs-grid">
+          <div className="profile-spec-item">
+            <span className="spec-label">Physical Packaging</span>
+            <span className="spec-val">
+              {machineProfile === 'gaming' ? '1 Silicon Die (Single Socket)' : '2 Physical Motherboard Sockets'}
+            </span>
+            <span className="spec-detail">
+              {machineProfile === 'gaming' ? 'Zero off-chip motherboard hops' : 'Dual socket with independent VRMs'}
+            </span>
+          </div>
+
+          <div className="profile-spec-item">
+            <span className="spec-label">Interconnect & Latency</span>
+            <span className="spec-val" style={{ color: machineProfile === 'gaming' ? 'var(--accent-green)' : 'var(--accent-amber)' }}>
+              {machineProfile === 'gaming' ? 'On-Die Crossbar (0.8 ns)' : 'AMD Infinity Fabric / UPI (15-65 ns)'}
+            </span>
+            <span className="spec-detail">
+              {machineProfile === 'gaming' ? 'High-bandwidth shared L3 cache' : '64 GB/s Motherboard Bus Arbiter'}
+            </span>
+          </div>
+
+          <div className="profile-spec-item">
+            <span className="spec-label">Memory Subsystem</span>
+            <span className="spec-val">
+              {machineProfile === 'gaming' ? 'Dual-Channel DDR5-6000' : '16-Channel ECC Registered DDR5'}
+            </span>
+            <span className="spec-detail">
+              {machineProfile === 'gaming' ? 'Non-ECC direct memory channel' : 'NUMA distributed memory pools'}
+            </span>
+          </div>
+
+          <div className="profile-spec-item">
+            <span className="spec-label">Target Workload</span>
+            <span className="spec-val" style={{ color: machineProfile === 'gaming' ? 'var(--accent-cyan)' : '#c084fc' }}>
+              {machineProfile === 'gaming' ? 'AAA Gaming, Physics, 4K Render' : 'AWS EC2 VMs, Docker, SQL DB'}
+            </span>
+            <span className="spec-detail">
+              {machineProfile === 'gaming' ? 'Tightly-coupled shared pointers' : 'Hardware-isolated multi-tenancy'}
+            </span>
+          </div>
+
+          <div className="profile-spec-item">
+            <span className="spec-label">Fault Resilience</span>
+            <span className="spec-val" style={{ color: machineProfile === 'gaming' ? 'var(--accent-red)' : 'var(--accent-green)' }}>
+              {machineProfile === 'gaming' ? 'Single Point of Failure' : 'Hot-Swap Socket Failover'}
+            </span>
+            <span className="spec-detail">
+              {machineProfile === 'gaming' ? 'Die thermal burnout halts all cores' : 'Socket 1 survives if Socket 2 fails'}
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* FEATURE 5: DUAL NEON TACHOMETER / SPEEDOMETER HUD GAUGES */}
       <div className="speedo-gauges-row">

@@ -3978,6 +3978,101 @@ body.cinema-mode-active main {
   box-shadow: 0 0 20px rgba(251, 191, 36, 0.6) !important;
   transform: scale(1.08) translateY(-2px) !important;
 }
+
+/* ==========================================================================
+   FEATURE 6: REAL-WORLD HARDWARE PROFILE SPECIFICATION CARD
+   ========================================================================== */
+.hardware-profile-card {
+  background: rgba(4, 9, 24, 0.9);
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.35rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 82, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hardware-profile-card.profile-server {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 0 24px rgba(168, 85, 247, 0.1);
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.profile-icon {
+  font-size: 1.75rem;
+  filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.4));
+}
+
+.profile-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.profile-subtitle {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 0.15rem;
+}
+
+.profile-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+}
+
+.profile-spec-item {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.profile-spec-item:hover {
+  border-color: rgba(0, 210, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.spec-label {
+  font-size: 0.64rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.spec-val {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.spec-detail {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  line-height: 1.25;
+}
+
 </style>
 </head>
 <body>
@@ -4467,6 +4562,13 @@ body.cinema-mode-active main {
     <section id="pane-multicore" class="tab-pane">
       <div class="controls-card">
         <div class="control-cluster">
+          <span class="control-label">Machine Profile:</span>
+          <select id="selectMachineProfile" class="select-dropdown" onchange="changeMachineProfile()" style="min-width: 220px;">
+            <option value="gaming" selected>🎮 Consumer Gaming PC (Ryzen 9 / Core i9)</option>
+            <option value="server">☁️ Enterprise Cloud Server (Dell PowerEdge / Dual EPYC)</option>
+          </select>
+        </div>
+        <div class="control-cluster">
           <span class="control-label">Cores on Die:</span>
           <select id="selectCoreCount" class="select-dropdown" onchange="changeCoreCount()">
             <option value="2" selected>2 Cores (Dual-Core)</option>
@@ -4532,6 +4634,52 @@ body.cinema-mode-active main {
               <span>Interconnect: <strong style="color: var(--accent-amber);">Motherboard Bus Arbiter (15ns)</strong></span>
               <span>Off-Chip Bus Contention: <strong style="color: var(--accent-red);" id="mpBusContention">84% (High Contention)</strong></span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REAL-WORLD HARDWARE MACHINE PROFILE HUD -->
+      <div id="hardwareProfileCard" class="hardware-profile-card card-hud-corner">
+        <div class="profile-header">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span id="profileIcon" class="profile-icon">🎮</span>
+            <div>
+              <div id="profileTitle" class="profile-title">Real-World Hardware Profile: High-FPS Gaming Rig (AMD Ryzen 9 7950X / Intel Core i9)</div>
+              <div id="profileSubtitle" class="profile-subtitle">Desktop Class Architecture • Single AM5 Socket (LGA1718) • Monolithic Silicon Die Package</div>
+            </div>
+          </div>
+          <span id="profileBadge" class="badge-status badge-blue">CONSUMER DESKTOP CLASS</span>
+        </div>
+
+        <div class="profile-specs-grid">
+          <div class="profile-spec-item">
+            <span class="spec-label">Physical Packaging</span>
+            <span id="profileSpecPkg" class="spec-val">1 Silicon Die (Single Socket)</span>
+            <span id="profileSpecPkgSub" class="spec-detail">Zero off-chip motherboard hops</span>
+          </div>
+
+          <div class="profile-spec-item">
+            <span class="spec-label">Interconnect & Latency</span>
+            <span id="profileSpecInter" class="spec-val" style="color: var(--accent-green);">On-Die Crossbar (0.8 ns)</span>
+            <span id="profileSpecInterSub" class="spec-detail">High-bandwidth shared L3 cache</span>
+          </div>
+
+          <div class="profile-spec-item">
+            <span class="spec-label">Memory Subsystem</span>
+            <span id="profileSpecMem" class="spec-val">Dual-Channel DDR5-6000</span>
+            <span id="profileSpecMemSub" class="spec-detail">Non-ECC direct memory channel</span>
+          </div>
+
+          <div class="profile-spec-item">
+            <span class="spec-label">Target Workload</span>
+            <span id="profileSpecWorkload" class="spec-val" style="color: var(--accent-cyan);">AAA Gaming, Physics, 4K Render</span>
+            <span id="profileSpecWorkloadSub" class="spec-detail">Tightly-coupled shared pointers</span>
+          </div>
+
+          <div class="profile-spec-item">
+            <span class="spec-label">Fault Resilience</span>
+            <span id="profileSpecFault" class="spec-val" style="color: var(--accent-red);">Single Point of Failure</span>
+            <span id="profileSpecFaultSub" class="spec-detail">Die thermal burnout halts all cores</span>
           </div>
         </div>
       </div>
@@ -5178,6 +5326,85 @@ body.cinema-mode-active main {
     // --- TAB 2 ACTIONS & ENGINE ---
     let multiBenchmarkTimer = null;
     let traceTimer = null;
+    let machineProfile = 'gaming';
+
+    function changeMachineProfile() {
+      machineProfile = document.getElementById('selectMachineProfile').value;
+      const card = document.getElementById('hardwareProfileCard');
+      const icon = document.getElementById('profileIcon');
+      const title = document.getElementById('profileTitle');
+      const sub = document.getElementById('profileSubtitle');
+      const badge = document.getElementById('profileBadge');
+
+      const pkg = document.getElementById('profileSpecPkg');
+      const pkgSub = document.getElementById('profileSpecPkgSub');
+      const inter = document.getElementById('profileSpecInter');
+      const interSub = document.getElementById('profileSpecInterSub');
+      const mem = document.getElementById('profileSpecMem');
+      const memSub = document.getElementById('profileSpecMemSub');
+      const wl = document.getElementById('profileSpecWorkload');
+      const wlSub = document.getElementById('profileSpecWorkloadSub');
+      const fault = document.getElementById('profileSpecFault');
+      const faultSub = document.getElementById('profileSpecFaultSub');
+
+      restoreMultiArchitectures();
+
+      if (machineProfile === 'gaming') {
+        if (card) card.classList.remove('profile-server');
+        if (icon) icon.innerText = '🎮';
+        if (title) title.innerText = 'Real-World Hardware Profile: High-FPS Gaming Rig (AMD Ryzen 9 7950X / Intel Core i9)';
+        if (sub) sub.innerText = 'Desktop Class Architecture • Single AM5 Socket (LGA1718) • Monolithic Silicon Die Package';
+        if (badge) { badge.className = 'badge-status badge-blue'; badge.innerText = 'CONSUMER DESKTOP CLASS'; }
+
+        if (pkg) pkg.innerText = '1 Silicon Die (Single Socket)';
+        if (pkgSub) pkgSub.innerText = 'Zero off-chip motherboard hops';
+        if (inter) { inter.innerText = 'On-Die Crossbar (0.8 ns)'; inter.style.color = 'var(--accent-green)'; }
+        if (interSub) interSub.innerText = 'High-bandwidth shared L3 cache';
+        if (mem) mem.innerText = 'Dual-Channel DDR5-6000';
+        if (memSub) memSub.innerText = 'Non-ECC direct memory channel';
+        if (wl) { wl.innerText = 'AAA Gaming, Physics, 4K Render'; wl.style.color = 'var(--accent-cyan)'; }
+        if (wlSub) wlSub.innerText = 'Tightly-coupled shared pointers';
+        if (fault) { fault.innerText = 'Single Point of Failure'; fault.style.color = 'var(--accent-red)'; }
+        if (faultSub) faultSub.innerText = 'Die thermal burnout halts all cores';
+
+        const coreSel = document.getElementById('selectCoreCount');
+        if (coreSel) { coreSel.value = '8'; changeCoreCount(); }
+        const workSel = document.getElementById('selectWorkloadType');
+        if (workSel) workSel.value = 'single';
+        const memSel = document.getElementById('selectMpMemMode');
+        if (memSel) { memSel.value = 'smp'; toggleMpMemoryMode(); }
+
+        document.getElementById('multiNarrationTitle').innerText = 'Real-World Profile: Consumer Gaming Rig (AMD Ryzen 9 / Intel i9)';
+        document.getElementById('multiNarrationMsg').innerText = 'Architectural Analysis: Video games require high-FPS thread synchronization between physics, rendering, and game logic. Multicore delivers 0.8ns L3 cache latency with zero motherboard bus hops. Running games on a dual-socket server causes micro-stuttering due to inter-socket bus latency!';
+      } else {
+        if (card) card.classList.add('profile-server');
+        if (icon) icon.innerText = '☁️';
+        if (title) title.innerText = 'Real-World Hardware Profile: Enterprise Cloud Server (Dell PowerEdge R760 / Dual AMD EPYC)';
+        if (sub) sub.innerText = 'Datacenter Server Infrastructure • Dual SP5 Motherboard Sockets • NUMA Distributed Memory Nodes';
+        if (badge) { badge.className = 'badge-status badge-purple'; badge.innerText = 'ENTERPRISE RACK SERVER'; }
+
+        if (pkg) pkg.innerText = '2 Physical Motherboard Sockets';
+        if (pkgSub) pkgSub.innerText = 'Dual socket with independent VRMs';
+        if (inter) { inter.innerText = 'AMD Infinity Fabric / UPI (15-65 ns)'; inter.style.color = 'var(--accent-amber)'; }
+        if (interSub) interSub.innerText = '64 GB/s Motherboard Bus Arbiter';
+        if (mem) mem.innerText = '16-Channel ECC Registered DDR5';
+        if (memSub) memSub.innerText = 'NUMA distributed memory pools';
+        if (wl) { wl.innerText = 'AWS EC2 VMs, Docker, SQL DB'; wl.style.color = '#c084fc'; }
+        if (wlSub) wlSub.innerText = 'Hardware-isolated multi-tenancy';
+        if (fault) { fault.innerText = 'Hot-Swap Socket Failover'; fault.style.color = 'var(--accent-green)'; }
+        if (faultSub) faultSub.innerText = 'Socket 1 survives if Socket 2 fails';
+
+        const coreSel = document.getElementById('selectCoreCount');
+        if (coreSel) { coreSel.value = '4'; changeCoreCount(); }
+        const workSel = document.getElementById('selectWorkloadType');
+        if (workSel) workSel.value = 'multi';
+        const memSel = document.getElementById('selectMpMemMode');
+        if (memSel) { memSel.value = 'distributed'; toggleMpMemoryMode(); }
+
+        document.getElementById('multiNarrationTitle').innerText = 'Real-World Profile: Enterprise Cloud Rack Server (Dell PowerEdge / Dual AMD EPYC)';
+        document.getElementById('multiNarrationMsg').innerText = 'Architectural Analysis: Cloud platforms (AWS EC2 / Azure) host isolated client VMs and Docker containers. Dual-socket multiprocessors with NUMA memory pools provide hardware fault isolation: if Socket 2 fails or overheats, Socket 1 survives with 100% uptime!';
+      }
+    }
 
     function changeCoreCount() {
       const count = parseInt(document.getElementById('selectCoreCount').value, 10);

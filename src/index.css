@@ -3964,3 +3964,98 @@ body.cinema-mode-active main {
   box-shadow: 0 0 20px rgba(251, 191, 36, 0.6) !important;
   transform: scale(1.08) translateY(-2px) !important;
 }
+
+
+/* ==========================================================================
+   FEATURE 6: REAL-WORLD HARDWARE PROFILE SPECIFICATION CARD
+   ========================================================================== */
+.hardware-profile-card {
+  background: rgba(4, 9, 24, 0.9);
+  border: 1px solid rgba(0, 82, 255, 0.4);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.35rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 82, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hardware-profile-card.profile-server {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 0 24px rgba(168, 85, 247, 0.1);
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.profile-icon {
+  font-size: 1.75rem;
+  filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.4));
+}
+
+.profile-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.profile-subtitle {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 0.15rem;
+}
+
+.profile-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+}
+
+.profile-spec-item {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.profile-spec-item:hover {
+  border-color: rgba(0, 210, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.spec-label {
+  font-size: 0.64rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.spec-val {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.spec-detail {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  line-height: 1.25;
+}
