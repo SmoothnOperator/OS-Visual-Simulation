@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import DmaSimulator from './components/DmaSimulator';
+import InstructionCycleLab from './components/InstructionCycleLab';
+import MemoryHierarchyLab from './components/MemoryHierarchyLab';
 import StartupBootScreen from './components/StartupBootScreen';
 
 const OPCODE_STREAM_LEFT = [
@@ -60,7 +62,9 @@ export default function App() {
         onReboot={() => setShowBootScreen(true)}
       />
       <main>
-        <DmaSimulator />
+        {activeTab === 'dma' && <DmaSimulator />}
+        {activeTab === 'instruction' && <InstructionCycleLab />}
+        {activeTab === 'memory' && <MemoryHierarchyLab />}
       </main>
       <footer style={{
         textAlign: 'center',
@@ -70,7 +74,7 @@ export default function App() {
         color: 'var(--text-muted)',
         fontSize: '0.85rem'
       }}>
-        OS-ArchLab • Operating System Overview Module 1 • Academic Research Lab Edition (DMA Transfer Modes & Bus Architecture)
+        OS-ArchLab • Operating System Overview Hardware Visualizer • DMA Modes • Instruction Cycle • Memory Hierarchy & Cache
       </footer>
     </>
   );

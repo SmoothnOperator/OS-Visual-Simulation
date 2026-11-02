@@ -4343,16 +4343,20 @@ body.cinema-mode-active main {
           OS-ArchLab
         </span>
       </div>
-      <div class="brand-subtitle">Operating System Overview: Direct Memory Access (DMA) Simulator & Bus Architecture</div>
+      <div class="brand-subtitle">Operating System Architecture: DMA Modes • CPU Instruction Cycle • Cache & Memory Hierarchy</div>
     </div>
 
     <div class="header-nav-cluster" style="display: flex; align-items: center; gap: 0.85rem; flex-shrink: 0;">
       <nav class="nav-tabs">
         <button class="tab-btn active" id="tabBtnDma" onclick="navigateTab('dma')">
-          <span>📡</span> DMA Modes
+          <span>⚡</span> DMA Modes
         </button>
-
-
+        <button class="tab-btn" id="tabBtnInstruction" onclick="navigateTab('instruction')">
+          <span>🔄</span> Instruction Cycle
+        </button>
+        <button class="tab-btn" id="tabBtnMemory" onclick="navigateTab('memory')">
+          <span>💾</span> Memory & Cache
+        </button>
       </nav>
 
       <!-- FEATURE 4: FULLSCREEN PRESENTATION / CINEMA MODE TOGGLE -->
@@ -4365,7 +4369,7 @@ body.cinema-mode-active main {
     <div id="cinemaFloatingHud" class="cinema-floating-hud" style="display: none;">
       <span class="cinema-pill-tag">⛶ CINEMA VIEW</span>
       <button class="tab-btn" style="padding: 0.25rem 0.65rem; font-size: 0.72rem; border-radius: 9999px;" onclick="navigateTab('dma')">DMA</button>
-      
+      <button class="tab-btn" style="padding: 0.25rem 0.65rem; font-size: 0.72rem; border-radius: 9999px;" onclick="navigateTab('memory')">MEMORY & CACHE</button>
 
       <button class="cinema-exit-btn" onclick="toggleCinemaMode()" title="Exit Cinema Mode (ESC)">✕ EXIT</button>
     </div>
@@ -4724,8 +4728,1080 @@ body.cinema-mode-active main {
       </div>
     </section>
 
+        
+    <!-- ==================== TAB 2: INSTRUCTION EXECUTION CYCLE LAB ==================== -->
+    <section id="pane-instruction" class="tab-pane" style="display: none;">
+      
+      <!-- SECTION 1: LAB HEADER & INTERACTIVE CLOCK STEPPER -->
+      <div class="controls-card" style="margin-bottom: 1.25rem;">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <span class="badge-status badge-blue">CPU MACHINE CYCLE</span>
+              <h2 style="font-size: 1.35rem; font-weight: 900; color: #ffffff; letter-spacing: -0.02em; margin: 0;">
+                Instruction Execution Cycle & Hardware Registers
+              </h2>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem;">
+              Interactive Step-by-Step Micro-Op Conveyor: Fetch → Decode → Execute across PC, MAR, MDR, IR & Accumulator
+            </div>
+          </div>
+
+          <!-- STEPPER & CLOCK CONTROL BUTTONS -->
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
+            <button
+              id="btnStepInst"
+              class="btn-cyber-kinetic btn-action-primary"
+              style="font-size: 0.85rem; padding: 0.5rem 1.15rem; font-weight: 800;"
+              onclick="stepInstructionMicroOp()"
+              title="Pulse next micro-operation clock signal"
+            >
+              ⚡ NEXT CLOCK PULSE (STEP)
+            </button>
+
+            <button
+              id="btnAutoInst"
+              class="btn-cyber-kinetic"
+              style="font-size: 0.82rem; padding: 0.5rem 0.95rem; background: rgba(0, 82, 255, 0.2); border: 1px solid var(--accent-blue);"
+              onclick="toggleInstructionAutoRun()"
+            >
+              ▶ AUTO RUN
+            </button>
+
+            <button
+              class="btn-cyber-kinetic"
+              style="font-size: 0.82rem; padding: 0.5rem 0.85rem; background: rgba(255, 255, 255, 0.05);"
+              onclick="resetInstructionSim()"
+              title="Reset registers and program memory"
+            >
+              🔄 RESET
+            </button>
+
+            <div style="display: flex; align-items: center; gap: 0.35rem; margin-left: 0.5rem;">
+              <span style="font-size: 0.72rem; color: var(--text-muted);">SPEED:</span>
+              <select
+                id="instClockSpeed"
+                class="speed-select"
+                style="padding: 0.35rem 0.6rem; font-size: 0.75rem;"
+                onchange="updateInstSpeed(this.value)"
+              >
+                <option value="1200">Slow (0.8 Hz)</option>
+                <option value="700" selected>Normal (1.4 Hz)</option>
+                <option value="350">Fast (2.8 Hz)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE MICRO-OP BANNER & PROGRESS -->
+        <div style="margin-top: 1rem; padding: 0.85rem 1rem; background: rgba(0, 0, 0, 0.55); border: 1px solid var(--border-subtle); border-radius: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <span id="instPhaseBadge" class="badge-status badge-cyan" style="font-weight: 800; font-size: 0.75rem;">FETCH PHASE</span>
+              <span id="instStepName" style="font-size: 0.88rem; font-weight: 800; color: #ffffff; font-family: var(--font-mono);">
+                MAR ← PC
+              </span>
+            </div>
+            <span id="instStepCounter" style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">
+              Step 1 of 31 • Addr 100
+            </span>
+          </div>
+          <div id="instStepDesc" style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45; margin-bottom: 0.6rem;">
+            Step 1: Address in Program Counter (100) is transferred to Memory Address Register (MAR).
+          </div>
+          <div class="progress-bar-track">
+            <div id="instProgressBar" class="progress-bar-fill animated-bar-cyan" style="width: 3.2%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: LIVE CPU REGISTERS & SYSTEM RAM WORKBENCH -->
+      <div style="display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.25rem; margin-bottom: 1.25rem;">
+
+        <!-- COLUMN A: CPU CORE REGISTERS & BUS INTERCONNECT -->
+        <div class="cyber-panel" style="display: flex; flex-direction: column;">
+          <div class="cyber-panel-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.1rem;">🔲</span>
+              <span style="font-weight: 800; fontSize: 0.92rem; color: #ffffff;">
+                CPU Internal Registers & Control Unit (CU)
+              </span>
+            </div>
+            <span id="instBusStateBadge" class="badge-status badge-cyan">BUS: ADDR_LOAD</span>
+          </div>
+
+          <div style="padding: 1rem; flex: 1;">
+            
+            <!-- 5 DEDICATED CPU REGISTERS GRID -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+              
+              <!-- 1. PROGRAM COUNTER (PC) -->
+              <div id="cardRegPc" class="telemetry-card" style="border-left: 3px solid var(--accent-cyan);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="telemetry-card-label">PROGRAM COUNTER (PC)</span>
+                  <span class="badge-status badge-blue" style="font-size: 0.6rem;">Address Pointer</span>
+                </div>
+                <div id="valRegPc" class="telemetry-card-val" style="color: var(--accent-cyan); font-family: var(--font-mono); font-size: 1.4rem;">
+                  100
+                </div>
+                <div class="telemetry-card-sub">Points to next instruction address</div>
+              </div>
+
+              <!-- 2. MEMORY ADDRESS REGISTER (MAR) -->
+              <div id="cardRegMar" class="telemetry-card" style="border-left: 3px solid var(--accent-amber);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="telemetry-card-label">MEMORY ADDR REG (MAR)</span>
+                  <span class="badge-status badge-amber" style="font-size: 0.6rem;">Address Bus</span>
+                </div>
+                <div id="valRegMar" class="telemetry-card-val" style="color: var(--accent-amber); font-family: var(--font-mono); font-size: 1.4rem;">
+                  100
+                </div>
+                <div class="telemetry-card-sub">Holds memory location being accessed</div>
+              </div>
+
+              <!-- 3. MEMORY DATA REGISTER (MDR) -->
+              <div id="cardRegMdr" class="telemetry-card" style="border-left: 3px solid #c084fc;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="telemetry-card-label">MEMORY DATA REG (MDR)</span>
+                  <span class="badge-status badge-purple" style="font-size: 0.6rem;">Data Buffer</span>
+                </div>
+                <div id="valRegMdr" class="telemetry-card-val" style="color: #c084fc; font-family: var(--font-mono); font-size: 1.25rem;">
+                  ---
+                </div>
+                <div class="telemetry-card-sub">Holds data/opcode read from or written to RAM</div>
+              </div>
+
+              <!-- 4. INSTRUCTION REGISTER (IR) -->
+              <div id="cardRegIr" class="telemetry-card" style="border-left: 3px solid var(--accent-green);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="telemetry-card-label">INSTRUCTION REG (IR)</span>
+                  <span class="badge-status badge-green" style="font-size: 0.6rem;">Active Opcode</span>
+                </div>
+                <div id="valRegIr" class="telemetry-card-val" style="color: var(--accent-green); font-family: var(--font-mono); font-size: 1.25rem;">
+                  ---
+                </div>
+                <div class="telemetry-card-sub">Holds current opcode being decoded</div>
+              </div>
+
+            </div>
+
+            <!-- 5. ACCUMULATOR (AC) & ALU HERO CARD -->
+            <div id="cardRegAc" class="telemetry-card" style="border-left: 4px solid var(--accent-cyan); background: rgba(0, 210, 255, 0.05); margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="telemetry-card-label" style="font-size: 0.8rem; font-weight: 800;">
+                  ACCUMULATOR REGISTER (AC) & ALU RESULT
+                </span>
+                <span class="badge-status badge-blue">Math Result</span>
+              </div>
+              <div style="display: flex; align-items: baseline; gap: 0.75rem; margin: 0.35rem 0;">
+                <span id="valRegAc" style="font-size: 2rem; font-weight: 900; color: #ffffff; font-family: var(--font-mono);">
+                  0
+                </span>
+                <span id="valRegAcDesc" style="font-size: 0.8rem; color: var(--accent-cyan);">
+                  (Initialized to 0)
+                </span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                Holds intermediate arithmetic & logic calculation results. Updates to 3456 after LOAD 500, and 4656 after ADD 600.
+              </div>
+            </div>
+
+            <!-- CONTROL SIGNALS BUS MONITOR -->
+            <div style="background: rgba(0, 0, 0, 0.45); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.75rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">
+                  Control Unit Bus Signals
+                </span>
+                <span id="instSignalBusStatus" style="font-size: 0.72rem; font-family: var(--font-mono); color: var(--accent-cyan);">
+                  STROBE: ACTIVE
+                </span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center;">
+                <div id="sigMemRead" style="background: rgba(0, 210, 255, 0.1); border: 1px solid var(--accent-cyan); border-radius: 4px; padding: 0.3rem;">
+                  <div style="font-size: 0.65rem; color: var(--text-muted);">MEM_READ</div>
+                  <div id="sigMemReadVal" style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan);">1 (HIGH)</div>
+                </div>
+                <div id="sigMemWrite" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem;">
+                  <div style="font-size: 0.65rem; color: var(--text-muted);">MEM_WRITE</div>
+                  <div id="sigMemWriteVal" style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted);">0 (LOW)</div>
+                </div>
+                <div id="sigAluOp" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem;">
+                  <div style="font-size: 0.65rem; color: var(--text-muted);">ALU_OP</div>
+                  <div id="sigAluOpVal" style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted);">NONE</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- COLUMN B: MAIN MEMORY (RAM) TABLES -->
+        <div class="cyber-panel" style="display: flex; flex-direction: column;">
+          <div class="cyber-panel-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.1rem;">💾</span>
+              <span style="font-weight: 800; fontSize: 0.92rem; color: #ffffff;">
+                Main Memory (RAM) Organization
+              </span>
+            </div>
+            <span class="badge-status badge-amber">Instructions & Data</span>
+          </div>
+
+          <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: 1rem;">
+            
+            <!-- INSTRUCTION SEGMENT TABLE -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                <span style="font-size: 0.78rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase;">
+                  Instruction Segment (Addrs 100–103)
+                </span>
+                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">
+                  Opcode + Operand Format
+                </span>
+              </div>
+              <table class="cache-table">
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Instruction Mnemonic</th>
+                    <th>Action Summary</th>
+                  </tr>
+                </thead>
+                <tbody id="instMemoryTableBody">
+                  <tr id="rowInst100" class="cache-row-target">
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan);">100</td>
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff;">LOAD 500</td>
+                    <td style="font-size: 0.75rem; color: var(--text-secondary);">AC ← Memory[500] (Load 3456)</td>
+                  </tr>
+                  <tr id="rowInst101">
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan);">101</td>
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff;">ADD 600</td>
+                    <td style="font-size: 0.75rem; color: var(--text-secondary);">AC ← AC + Memory[600] (+ 1200)</td>
+                  </tr>
+                  <tr id="rowInst102">
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan);">102</td>
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff;">STORE 700</td>
+                    <td style="font-size: 0.75rem; color: var(--text-secondary);">Memory[700] ← AC (Write 4656)</td>
+                  </tr>
+                  <tr id="rowInst103">
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan);">103</td>
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff;">HALT</td>
+                    <td style="font-size: 0.75rem; color: var(--text-secondary);">Terminates Execution Cycle</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- DATA SEGMENT TABLE -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                <span style="font-size: 0.78rem; font-weight: 800; color: var(--accent-amber); text-transform: uppercase;">
+                  Data Segment (Addrs 500–700)
+                </span>
+                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">
+                  Dynamic RAM Variables
+                </span>
+              </div>
+              <table class="cache-table">
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Value (Decimal)</th>
+                    <th>Role / Variable Name</th>
+                  </tr>
+                </thead>
+                <tbody id="dataMemoryTableBody">
+                  <tr id="rowData500">
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">500</td>
+                    <td id="valData500" style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-green);">3456</td>
+                    <td style="font-size: 0.75rem; color: var(--text-secondary);">Input Variable A</td>
+                  </tr>
+                  <tr id="rowData600">
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">600</td>
+                    <td id="valData600" style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-green);">1200</td>
+                    <td style="font-size: 0.75rem; color: var(--text-secondary);">Input Variable B</td>
+                  </tr>
+                  <tr id="rowData700">
+                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">700</td>
+                    <td id="valData700" style="font-family: var(--font-mono); font-weight: 800; color: var(--text-muted);">0</td>
+                    <td id="descData700" style="font-size: 0.75rem; color: var(--text-muted);">Target Output Result (Memory[700])</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECTION 3: 3-PHASE INTERACTIVE WORKFLOW CARDS -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+        
+        <div id="cardPhaseFetch" class="cyber-panel" style="padding: 0.95rem; border-left: 3px solid var(--accent-cyan); background: rgba(0, 210, 255, 0.08);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <span class="badge-status badge-cyan">1. FETCH CYCLE</span>
+            <span style="font-size: 0.68rem; color: var(--text-muted);">Phase 1 Specification</span>
+          </div>
+          <div style="font-size: 0.88rem; font-weight: 800; color: #ffffff; margin-bottom: 0.4rem;">
+            MAR ← PC, MDR ← Mem[MAR], IR ← MDR, PC ← PC + 1
+          </div>
+          <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+            <li>1. PC copied to MAR</li>
+            <li>2. Memory Read strobe pulses</li>
+            <li>3. Opcode fetched into MDR</li>
+            <li>4. MDR transferred to IR</li>
+            <li>5. PC auto-increments to next instruction</li>
+          </ul>
+        </div>
+
+        <div id="cardPhaseDecode" class="cyber-panel" style="padding: 0.95rem; border-left: 3px solid var(--accent-amber);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <span class="badge-status badge-amber">2. DECODE CYCLE</span>
+            <span style="font-size: 0.68rem; color: var(--text-muted);">Phase 2 Specification</span>
+          </div>
+          <div style="font-size: 0.88rem; font-weight: 800; color: #ffffff; margin-bottom: 0.4rem;">
+            Control Unit interprets fetched opcode
+          </div>
+          <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+            <li>1. CU inspects opcode part of IR</li>
+            <li>2. Determines operation to perform</li>
+            <li>3. Decodes operand memory address (500, 600, 700)</li>
+          </ul>
+        </div>
+
+        <div id="cardPhaseExecute" class="cyber-panel" style="padding: 0.95rem; border-left: 3px solid var(--accent-green);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <span class="badge-status badge-green">3. EXECUTE CYCLE</span>
+            <span style="font-size: 0.68rem; color: var(--text-muted);">Phase 3 Specification</span>
+          </div>
+          <div style="font-size: 0.88rem; font-weight: 800; color: #ffffff; margin-bottom: 0.4rem;">
+            ALU arithmetic & RAM read/write execution
+          </div>
+          <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+            <li>1. MAR loaded with operand address</li>
+            <li>2. Data transferred via MDR (3456, 1200)</li>
+            <li>3. Accumulator updated or target written (4656)</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </section>
+
         <!-- ==================== TAB 2: MEMORY HIERARCHY & CACHE SIMULATOR ==================== -->
-    
+    <section id="pane-memory" class="tab-pane" style="display: none;">
+      <!-- SECTION 1: LAB CONTROL HEADER -->
+      <div class="controls-card" style="margin-bottom: 1.25rem;">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <div class="badge-status badge-blue">SYLLABUS MODULE 1</div>
+              <h2 style="font-size: 1.35rem; font-weight: 900; color: #ffffff; letter-spacing: -0.02em; margin: 0;">
+                Memory Hierarchy & Cache Memory Lab
+              </h2>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem;">
+              Balance of Access Speed, Storage Capacity & Cost Per Bit • Locality of Reference (Temporal & Spatial)
+            </div>
+          </div>
+
+          <!-- QUICK EXPERIMENT ACTION BUTTONS -->
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
+            <button
+              id="btnExpSpatial"
+              class="btn-cyber-kinetic btn-action-spatial"
+              style="font-size: 0.78rem; padding: 0.45rem 0.85rem;"
+              onclick="startStandaloneExperiment('spatial')"
+              title="Demonstrates Spatial Locality: Array element traversal achieves ~93% cache hits"
+            >
+              📈 Spatial Locality (Array)
+            </button>
+
+            <button
+              id="btnExpTemporal"
+              class="btn-cyber-kinetic btn-action-temporal"
+              style="font-size: 0.78rem; padding: 0.45rem 0.85rem;"
+              onclick="startStandaloneExperiment('temporal')"
+              title="Demonstrates Temporal Locality: Loop counter variable hits L1 repeatedly at 1.0ns"
+            >
+              ⚡ Temporal Locality (Loop)
+            </button>
+
+            <button
+              id="btnExpThrash"
+              class="btn-cyber-kinetic btn-action-thrash"
+              style="font-size: 0.78rem; padding: 0.45rem 0.85rem; border-color: rgba(244, 63, 94, 0.4);"
+              onclick="startStandaloneExperiment('thrashing')"
+              title="Demonstrates Cache Thrashing: Conflict misses force continuous 65ns DRAM delays"
+            >
+              🔥 Cache Thrashing Test
+            </button>
+
+            <button
+              class="btn-cyber-kinetic"
+              style="font-size: 0.78rem; padding: 0.45rem 0.75rem; background: rgba(255, 255, 255, 0.05);"
+              class="btn-cyber-kinetic btn-action-reset" onclick="handleResetStandaloneLab()"
+              title="Clear all cache lines and reset statistics counters"
+            >
+              🔄 Reset Lab
+            </button>
+          </div>
+        </div>
+
+        <!-- EXPERIMENT PROGRESS BAR IF RUNNING -->
+        <div id="standaloneExpProgressRow" style="display: none; margin-top: 0.85rem; padding-top: 0.65rem; border-top: 1px solid var(--border-subtle);">
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono); margin-bottom: 0.3rem;">
+            <span id="standaloneExpLabel" style="color: var(--accent-cyan);">EXPERIMENT RUNNING...</span>
+            <span id="standaloneExpPct" style="color: var(--accent-green); font-weight: 800;">0% COMPLETE</span>
+          </div>
+          <div class="progress-bar-track">
+            <div id="standaloneExpBar" class="progress-bar-fill animated-bar-cyan" style="width: 0%; background: var(--accent-cyan);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: LIVE TELEMETRY & AMAT HUD -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.85rem; margin-bottom: 1.25rem;">
+        <div class="telemetry-card">
+          <div class="telemetry-card-label">TOTAL MEMORY REQUESTS</div>
+          <div class="telemetry-card-val" id="statTotalReqs" style="color: #ffffff;">24</div>
+          <div class="telemetry-card-sub" style="color: var(--text-muted);">CPU Address Queries</div>
+        </div>
+
+        <div class="telemetry-card">
+          <div class="telemetry-card-label">CACHE HIT RATIO</div>
+          <div class="telemetry-card-val" id="statHitRatio" style="color: var(--accent-green);">91.7%</div>
+          <div class="telemetry-card-sub" id="statHitSub" style="color: var(--accent-green);">22 Hits (18 L1 / 3 L2 / 1 L3)</div>
+        </div>
+
+        <div class="telemetry-card">
+          <div class="telemetry-card-label">CACHE MISS RATIO</div>
+          <div class="telemetry-card-val" id="statMissRatio" style="color: var(--accent-red);">8.3%</div>
+          <div class="telemetry-card-sub" id="statMissSub" style="color: var(--accent-red);">2 DRAM Miss Penalties</div>
+        </div>
+
+        <div class="telemetry-card">
+          <div class="telemetry-card-label">AVG MEMORY ACCESS TIME (AMAT)</div>
+          <div class="telemetry-card-val" id="statAmatVal" style="color: var(--accent-cyan);">
+            6.75 <span style="font-size: 0.85rem; color: var(--text-muted);">ns</span>
+          </div>
+          <div class="telemetry-card-sub" style="color: var(--accent-cyan);">Baseline DRAM = 65.0 ns</div>
+        </div>
+
+        <div class="telemetry-card">
+          <div class="telemetry-card-label">SYSTEM MEMORY SPEEDUP</div>
+          <div class="telemetry-card-val" id="statSpeedupVal" style="color: var(--accent-amber);">9.6x</div>
+          <div class="telemetry-card-sub" style="color: var(--accent-amber);">Faster than pure DRAM</div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: TWO-COLUMN MAIN WORKBENCH -->
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 1.25rem; margin-bottom: 1.25rem;">
+        
+        <!-- COLUMN A: THE 5-TIER MEMORY HIERARCHY PYRAMID -->
+        <div class="cyber-panel" style="display: flex; flex-direction: column;">
+          <div class="cyber-panel-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.1rem;">🏢</span>
+              <span style="font-weight: 800; font-size: 0.92rem; color: #ffffff;">Memory Hierarchy Pyramid</span>
+            </div>
+            <span class="badge-status badge-blue">CLICK A TIER TO INSPECT</span>
+          </div>
+
+          <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">
+              <div style="display: flex; align-items: center; gap: 0.35rem; color: var(--accent-cyan);">
+                <span>▲ Faster Speed • Higher Cost/Bit • Higher Frequency</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.35rem; color: var(--accent-amber);">
+                <span>Greater Capacity • Slower Access ▼</span>
+              </div>
+            </div>
+
+            <!-- VISUAL PYRAMID TIERS -->
+                        <div class="pyramid-stack" style="display: flex; flex-direction: column; align-items: center; gap: 0.45rem; margin: auto 0;">
+              <!-- Tier 1 -->
+              <div
+                id="tierBlock_registers"
+                class="pyramid-tier-block"
+                style="width: 46%; border-color: rgba(0, 210, 255, 0.4); background: rgba(0, 0, 0, 0.45);"
+                onclick="selectStandalonePyramidTier('registers')"
+              >
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; align-items: center; gap: 0.45rem;">
+                    <span class="tier-level-badge" style="background: #00d2ff; color: #000000;">L1</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #00d2ff;">CPU Registers</span>
+                  </div>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">Internal Storage</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
+                  <span>Size: bytes to kilobytes</span>
+                  <span>Fastest, Most expensive</span>
+                </div>
+              </div>
+
+              <!-- Tier 2 (Default Selected) -->
+              <div
+                id="tierBlock_cache"
+                class="pyramid-tier-block tier-selected"
+                style="width: 60%; border-color: #0052ff; background: rgba(0, 82, 255, 0.14); box-shadow: 0 0 16px rgba(0, 82, 255, 0.4), inset 0 0 12px rgba(0, 82, 255, 0.25);"
+                onclick="selectStandalonePyramidTier('cache')"
+              >
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; align-items: center; gap: 0.45rem;">
+                    <span class="tier-level-badge" style="background: #0052ff; color: #ffffff;">L2</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #ffffff;">Cache Memory</span>
+                  </div>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: #ffffff;">Internal Storage</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
+                  <span>Size: kilobytes to megabytes</span>
+                  <span>High-speed buffer (SRAM)</span>
+                </div>
+              </div>
+
+              <!-- Tier 3 -->
+              <div
+                id="tierBlock_main_memory"
+                class="pyramid-tier-block"
+                style="width: 74%; border-color: rgba(251, 191, 36, 0.45); background: rgba(0, 0, 0, 0.45);"
+                onclick="selectStandalonePyramidTier('main_memory')"
+              >
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; align-items: center; gap: 0.45rem;">
+                    <span class="tier-level-badge" style="background: #fbbf24; color: #000000;">L3</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #fbbf24;">Main Memory (RAM)</span>
+                  </div>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">Primary Storage</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
+                  <span>Size: gigabytes</span>
+                  <span>Moderate speed, DRAM</span>
+                </div>
+              </div>
+
+              <!-- Tier 4 -->
+              <div
+                id="tierBlock_secondary"
+                class="pyramid-tier-block"
+                style="width: 88%; border-color: rgba(167, 139, 250, 0.45); background: rgba(0, 0, 0, 0.45);"
+                onclick="selectStandalonePyramidTier('secondary')"
+              >
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; align-items: center; gap: 0.45rem;">
+                    <span class="tier-level-badge" style="background: #a78bfa; color: #000000;">L4</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #a78bfa;">Secondary Storage</span>
+                  </div>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">Secondary Storage</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
+                  <span>Size: terabytes</span>
+                  <span>Long-term persistence</span>
+                </div>
+              </div>
+
+              <!-- Tier 5 -->
+              <div
+                id="tierBlock_tertiary"
+                class="pyramid-tier-block"
+                style="width: 100%; border-color: rgba(100, 116, 139, 0.45); background: rgba(0, 0, 0, 0.45);"
+                onclick="selectStandalonePyramidTier('tertiary')"
+              >
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; align-items: center; gap: 0.45rem;">
+                    <span class="tier-level-badge" style="background: #64748b; color: #ffffff;">L5</span>
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #64748b;">Tertiary / Offline Storage</span>
+                  </div>
+                  <span style="font-size: 0.74rem; font-family: var(--font-mono); color: var(--text-muted);">Tertiary Storage</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.72rem; color: var(--text-secondary);">
+                  <span>Size: petabytes</span>
+                  <span>Massive backup storage</span>
+                </div>
+              </div>
+            </div>
+
+                        <!-- SELECTED TIER HARDWARE SPECIFICATION CARD -->
+            <div id="standaloneTierSpecCard" class="tier-spec-card" style="margin-top: 1rem; border-left-color: #0052ff;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.45rem;">
+                <div>
+                  <div id="specCardTitle" style="font-size: 0.95rem; font-weight: 900; color: #ffffff;">
+                    Tier 2: Cache Memory
+                  </div>
+                  <div id="specCardSub" style="font-size: 0.75rem; color: #0052ff;">
+                    Internal Storage
+                  </div>
+                </div>
+                <span id="specCardSizeBadge" class="badge-status badge-blue" style="font-size: 0.68rem;">
+                  kilobytes to megabytes
+                </span>
+              </div>
+
+              <p id="specCardSummary" style="font-size: 0.85rem; color: #e2e8f0; line-height: 1.5; margin: 0.4rem 0 0.65rem 0;">
+                "High-speed Static RAM (SRAM) positioned between the CPU and RAM. Stores frequently used instructions and data to speed up processing (size: kilobytes to megabytes)."
+              </p>
+
+              <div class="tier-spec-grid">
+                <div class="tier-spec-item">
+                  <span class="tier-spec-label">STORAGE CAPACITY </span>
+                  <span class="tier-spec-val" id="specCardCapacity" style="color: var(--accent-cyan);">kilobytes to megabytes</span>
+                </div>
+                <div class="tier-spec-item">
+                  <span class="tier-spec-label">STORAGE LEVEL</span>
+                  <span class="tier-spec-val" id="specCardLevel" style="color: #ffffff;">Internal Storage</span>
+                </div>
+                <div class="tier-spec-item">
+                  <span class="tier-spec-label">SPEED & COST POSITION</span>
+                  <span class="tier-spec-val" id="specCardSpeedCost" style="color: var(--accent-amber);">High-speed buffer (SRAM)</span>
+                </div>
+                <div class="tier-spec-item">
+                  <span class="tier-spec-label">STORAGE MEDIA / EXAMPLES</span>
+                  <span class="tier-spec-val" id="specCardDevices" style="color: var(--accent-green);">Static RAM (SRAM) — L1, L2, L3 levels</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMN B: THE CACHE "SPEED BRIDGE" PIPELINE SIMULATOR -->
+        <div class="cyber-panel" style="display: flex; flex-direction: column;">
+          <div class="cyber-panel-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.1rem;">⚡</span>
+              <span style="font-weight: 800; font-size: 0.92rem; color: #ffffff;">
+                Cache Speed Bridge & Access Pipeline
+              </span>
+            </div>
+            <span class="badge-status badge-green">L1 → L2 → L3 → DRAM</span>
+          </div>
+
+          <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column;">
+            
+            <!-- MODULE 1 (PAGE 12): CACHE MEMORY - THE SPEED BRIDGE -->
+            <div style="background: rgba(0, 82, 255, 0.08); border: 1px solid rgba(0, 82, 255, 0.35); border-radius: 6px; padding: 0.65rem 0.85rem; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem;">
+                <span style="font-size: 0.74rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.06em;">
+                  CACHE MEMORY — THE SPEED BRIDGE
+                </span>
+                <span class="badge-status badge-blue" style="font-size: 0.65rem;">Locality of Reference</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                Compensates for the major speed difference between the ultra-fast processor and slower main memory (RAM). When CPU requests data: <strong>Cache Hit</strong> reads immediately; <strong>Cache Miss</strong> fetches a block from RAM into cache.
+              </p>
+            </div>
+
+            <!-- ADDRESS INPUT BAR -->
+            <div style="display: flex; gap: 0.65rem; margin-bottom: 1rem; align-items: center;">
+              <div style="flex: 1; position: relative;">
+                <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
+                  ADDR:
+                </span>
+                <input
+                  type="text"
+                  id="inputMemoryAddress"
+                  value="0x1004"
+                  placeholder="0x1004"
+                  maxlength="6"
+                  style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 3.6rem; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-subtle); border-radius: 4px; color: var(--accent-cyan); font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700;"
+                  oninput="updateStandaloneAddressDecoders()"
+                  onkeydown="if(event.key === 'Enter') executeStandaloneMemoryLookup(this.value);"
+                />
+              </div>
+
+              <button
+                id="btnRequestMemRead"
+                class="btn-cyber-kinetic btn-action-primary"
+                style="padding: 0.5rem 1rem; font-size: 0.82rem; white-space: nowrap;"
+                onclick="executeStandaloneMemoryLookup(document.getElementById('inputMemoryAddress').value)"
+              >
+                ▶ Request Memory Read
+              </button>
+            </div>
+
+            <!-- ADDRESS DECODING BREAKDOWN (TAG, INDEX, OFFSET) -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
+              <div class="addr-field-box">
+                <span class="addr-field-label">CACHE TAG (8-BIT)</span>
+                <span class="addr-field-val" id="valTagHex" style="color: var(--accent-cyan);">0x10</span>
+              </div>
+              <div class="addr-field-box">
+                <span class="addr-field-label">CACHE SET INDEX (2-BIT)</span>
+                <span class="addr-field-val" id="valIndexLine" style="color: var(--accent-amber);">Line 0</span>
+              </div>
+              <div class="addr-field-box">
+                <span class="addr-field-label">BLOCK OFFSET (4-BIT)</span>
+                <span class="addr-field-val" id="valOffsetHex" style="color: var(--accent-green);">0x04</span>
+              </div>
+            </div>
+
+            <!-- CACHE HIERARCHY FLOW CONTROLS & VIEW TOGGLE -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+              <span style="font-size: 0.78rem; fontWeight: 800; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.06em;">
+                Cache Hierarchy Flow
+              </span>
+              <div style="display: inline-flex; background: rgba(0,0,0,0.5); padding: 2px; border-radius: 4px; border: 1px solid var(--border-subtle);">
+                <button
+                  type="button"
+                  id="btnViewPipeline"
+                  class="btn-cyber-kinetic btn-action-primary"
+                  style="padding: 0.2rem 0.6rem; font-size: 0.7rem; cursor: pointer;"
+                  onclick="switchStandaloneCacheView('pipeline')"
+                >
+                  ⚡ Linear Pipeline
+                </button>
+                <button
+                  type="button"
+                  id="btnViewTopology"
+                  class="btn-cyber-kinetic"
+                  style="padding: 0.2rem 0.6rem; font-size: 0.7rem; cursor: pointer;"
+                  onclick="switchStandaloneCacheView('topology')"
+                >
+                  🖧 Multi-Core Topology (L1i/L1d → L2 → L3)
+                </button>
+              </div>
+            </div>
+
+            <!-- LINEAR PIPELINE FLOW -->
+            <div id="standalonePipelineStrip" class="cache-pipeline-strip" style="margin-bottom: 1rem;">
+              <!-- STAGE 1: CPU -->
+              <div id="pipeNodeCpu" class="pipeline-node">
+                <span style="font-size: 1.1rem;">💻</span>
+                <div class="pipeline-node-title">CPU ALU</div>
+                <div class="pipeline-node-lat">Core</div>
+              </div>
+
+              <div class="pipeline-wire"></div>
+
+              <!-- STAGE 2: L1 CACHE -->
+              <div id="pipeNodeL1" class="pipeline-node">
+                <span style="font-size: 1.1rem;">⚡</span>
+                <div class="pipeline-node-title">L1 Cache</div>
+                <div class="pipeline-node-lat">32KB–128KB</div>
+              </div>
+
+              <div class="pipeline-wire"></div>
+
+              <!-- STAGE 3: L2 CACHE -->
+              <div id="pipeNodeL2" class="pipeline-node">
+                <span style="font-size: 1.1rem;">🗄️</span>
+                <div class="pipeline-node-title">L2 Cache</div>
+                <div class="pipeline-node-lat">256KB–1MB</div>
+              </div>
+
+              <div class="pipeline-wire"></div>
+
+              <!-- STAGE 4: L3 CACHE -->
+              <div id="pipeNodeL3" class="pipeline-node">
+                <span style="font-size: 1.1rem;">🏢</span>
+                <div class="pipeline-node-title">L3 Cache</div>
+                <div class="pipeline-node-lat">2MB–100MB+</div>
+              </div>
+
+              <div class="pipeline-wire"></div>
+
+              <!-- STAGE 5: PHYSICAL DRAM -->
+              <div id="pipeNodeDram" class="pipeline-node">
+                <span style="font-size: 1.1rem;">💾</span>
+                <div class="pipeline-node-title">DRAM</div>
+                <div class="pipeline-node-lat">Gigabytes</div>
+              </div>
+            </div>
+
+            <!-- MULTI-CORE SPLIT CACHE TOPOLOGY SCHEMATIC (HIDDEN INITIALLY) -->
+            <div id="standaloneTopologySchematic" class="topology-schematic-card" style="display: none; background: rgba(0, 0, 0, 0.55); border: 1px solid rgba(0, 82, 255, 0.35); border-radius: 6px; padding: 0.85rem; margin-bottom: 1rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem;">
+                <!-- CORE 0 -->
+                <div style="background: rgba(0, 210, 255, 0.05); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 6px; padding: 0.6rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.74rem; font-weight: 800; color: var(--accent-cyan);">CPU CORE 0 (ACTIVE)</span>
+                    <span class="badge-status badge-blue" style="font-size: 0.6rem;">On-Core</span>
+                  </div>
+                  <!-- SPLIT L1 CACHE: L1i & L1d -->
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; margin-bottom: 0.45rem;">
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem; text-align: center;">
+                      <div style="font-size: 0.64rem; color: var(--text-muted);">L1-INSTR (L1i)</div>
+                      <div style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">32KB–64KB</div>
+                      <div style="font-size: 0.58rem; color: var(--accent-green);">Code Fetch (1.0ns)</div>
+                    </div>
+                    <div id="topoCore0L1d" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem; text-align: center; transition: all 0.2s ease;">
+                      <div style="font-size: 0.64rem; color: var(--text-muted);">L1-DATA (L1d)</div>
+                      <div style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">32KB–64KB</div>
+                      <div style="font-size: 0.58rem; color: var(--accent-cyan);">Data Operands (1.0ns)</div>
+                    </div>
+                  </div>
+                  <!-- PRIVATE L2 CACHE -->
+                  <div id="topoCore0L2" style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.35rem; text-align: center; transition: all 0.2s ease;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <span style="font-size: 0.66rem; color: var(--text-secondary);">PRIVATE L2 CACHE:</span>
+                      <span style="font-size: 0.72rem; font-weight: 800; color: var(--accent-blue);">256KB–1MB (3.5ns)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CORE 1 -->
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 0.6rem; opacity: 0.85;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.74rem; font-weight: 800; color: var(--text-secondary);">CPU CORE 1</span>
+                    <span class="badge-status badge-purple" style="font-size: 0.6rem;">On-Core</span>
+                  </div>
+                  <!-- SPLIT L1 CACHE: L1i & L1d -->
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; margin-bottom: 0.45rem;">
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem; text-align: center;">
+                      <div style="font-size: 0.64rem; color: var(--text-muted);">L1-INSTR (L1i)</div>
+                      <div style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">32KB–64KB</div>
+                      <div style="font-size: 0.58rem; color: var(--accent-green);">Code Fetch (1.0ns)</div>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem; text-align: center;">
+                      <div style="font-size: 0.64rem; color: var(--text-muted);">L1-DATA (L1d)</div>
+                      <div style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">32KB–64KB</div>
+                      <div style="font-size: 0.58rem; color: var(--text-muted);">Data Operands (1.0ns)</div>
+                    </div>
+                  </div>
+                  <!-- PRIVATE L2 CACHE -->
+                  <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.35rem; text-align: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <span style="font-size: 0.66rem; color: var(--text-muted);">PRIVATE L2 CACHE:</span>
+                      <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-secondary);">256KB–1MB (3.5ns)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CROSSBAR BUS INTERCONNECT -->
+              <div style="text-align: center; margin: -0.2rem 0 0.35rem 0; color: var(--accent-cyan); font-size: 0.72rem; font-family: var(--font-mono);">
+                ▼ Dual-Core Crossbar Interconnect Bus ▼
+              </div>
+
+              <!-- SHARED L3 CACHE -->
+              <div id="topoL3Shared" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 6px; padding: 0.55rem 0.85rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease;">
+                <div>
+                  <div style="font-size: 0.78rem; font-weight: 900; color: #ffffff;">
+                    SHARED L3 CACHE (2MB TO 100MB+)
+                  </div>
+                  <div style="font-size: 0.68rem; color: var(--text-muted);">
+                    Shared Across All Processor Cores • Bridges Gap to Main RAM (12.0 ns)
+                  </div>
+                </div>
+                <span class="badge-status badge-purple" style="font-size: 0.68rem;">
+                  Shared Multi-Core Die
+                </span>
+              </div>
+
+              <!-- SYSTEM BUS TO DRAM -->
+              <div id="topoDram" style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; padding: 0.55rem 0.85rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease;">
+                <div>
+                  <div style="font-size: 0.78rem; font-weight: 900; color: var(--accent-amber);">
+                    OFF-CHIP MAIN MEMORY (DRAM — GIGABYTES)
+                  </div>
+                  <div style="font-size: 0.68rem; color: var(--text-muted);">
+                    External System Bus Memory Access (60.0 – 80.0 ns Miss Penalty)
+                  </div>
+                </div>
+                <span class="badge-status badge-amber" style="font-size: 0.68rem;">
+                  DRAM Bus Fill
+                </span>
+              </div>
+            </div>
+
+            <!-- LAST RESULT HIGHLIGHT BANNER -->
+            <div id="standaloneResultBanner" class="result-banner result-hit" style="margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <span id="bannerIcon" style="font-size: 1.1rem;">✅</span>
+                <div>
+                  <span id="bannerStatusText" style="font-weight: 800; font-size: 0.88rem; color: var(--accent-green);">
+                    HIT: Resolved in L1 Cache
+                  </span>
+                  <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">
+                    Latency: <strong id="bannerLatencyText" style="color: #ffffff;">1.0 ns</strong>
+                  </span>
+                </div>
+              </div>
+              <span id="bannerAddrText" class="badge-status badge-blue" style="font-family: var(--font-mono);">
+                0x1004
+              </span>
+            </div>
+
+            <!-- FEATURE 1: HUMAN-SCALE TIME TRANSLATOR -->
+            <div class="human-scale-card" style="background: rgba(0, 210, 255, 0.04); border: 1px solid rgba(0, 210, 255, 0.25); border-radius: 6px; padding: 0.75rem; margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <div style="display: flex; align-items: center; gap: 0.45rem;">
+                  <span style="font-size: 0.95rem;">⏱️</span>
+                  <span style="font-size: 0.76rem; font-weight: 800; color: #ffffff; letter-spacing: 0.04em;">
+                    HUMAN-SCALE TIME EQUIVALENCE (1 CLOCK CYCLE = 1 SECOND)
+                  </span>
+                </div>
+                <span class="badge-status badge-amber" style="font-size: 0.65rem;">
+                  Relative Latency Scale
+                </span>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); padding: 0.45rem 0.7rem; border-radius: 4px; margin-bottom: 0.45rem;">
+                <div>
+                  <span style="font-size: 0.72rem; color: var(--text-muted);">OPERATION: </span>
+                  <strong id="humanCardOp" style="font-size: 0.8rem; color: var(--accent-green);">
+                    L1 Cache HIT (1.0 ns)
+                  </strong>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 0.72rem; color: var(--text-muted);">HUMAN TIME: </span>
+                  <strong id="humanCardTime" style="font-size: 0.84rem; color: var(--accent-cyan); font-family: var(--font-mono);">
+                    ⚡ 1.0 Second
+                  </strong>
+                </div>
+              </div>
+
+              <div id="humanCardDesc" style="font-size: 0.74rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.5rem;">
+                🎯 Desk Pen Analogy: Reaching for a pen right on your desk (1.0s). 200× faster than off-chip DRAM!
+              </div>
+
+              <!-- VISUAL LATENCY TICKER STRIP -->
+              <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.35rem; text-align: center;">
+                <div id="pillL1" style="background: rgba(0, 210, 255, 0.25); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: var(--accent-cyan); font-weight: 800;">L1 CACHE</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">1.0s (Desk)</div>
+                </div>
+                <div id="pillL2" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: var(--accent-blue); font-weight: 800;">L2 CACHE</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">3.5s (Shelf)</div>
+                </div>
+                <div id="pillL3" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: #c084fc; font-weight: 800;">L3 SHARED</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">12s (Hall)</div>
+                </div>
+                <div id="pillDram" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: var(--accent-amber); font-weight: 800;">MAIN RAM</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">90s (Street)</div>
+                </div>
+                <div id="pillSsd" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: var(--accent-purple); font-weight: 800;">NVMe SSD</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">3.5 Hours</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LIVE L1 CACHE TABLE (DIRECT-MAPPED SIMULATOR) -->
+            <div style="margin-top: auto;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                <span style="font-size: 0.78rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.06em;">
+                  L1 Cache Lines (Direct-Mapped SRAM State)
+                </span>
+                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">
+                  4 Blocks • 64-Byte Lines
+                </span>
+              </div>
+
+              <div class="cache-table-wrapper">
+                <table class="cache-table">
+                  <thead>
+                    <tr>
+                      <th>Line</th>
+                      <th>Valid</th>
+                      <th>Tag</th>
+                      <th>Stored Data (Hex Bytes)</th>
+                      <th>Hits</th>
+                    </tr>
+                  </thead>
+                  <tbody id="standaloneCacheTableBody">
+                    <tr class="cache-row-target">
+                      <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">Set #0</td>
+                      <td><span class="badge-status badge-green" style="padding: 0.1rem 0.35rem; font-size: 0.68rem;">V=1</span></td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-cyan); font-weight: 700;">0x40</td>
+                      <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);">0x4A, 0x1F, 0x88, 0x02</td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 800;">8</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">Set #1</td>
+                      <td><span class="badge-status badge-green" style="padding: 0.1rem 0.35rem; font-size: 0.68rem;">V=1</span></td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-cyan); font-weight: 700;">0x04</td>
+                      <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);">0xC2, 0x7E, 0x11, 0x90</td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 800;">12</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">Set #2</td>
+                      <td><span class="badge-status badge-red" style="padding: 0.1rem 0.35rem; font-size: 0.68rem;">V=0</span></td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-cyan); font-weight: 700;">0x00</td>
+                      <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">0x00, 0x00, 0x00, 0x00</td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 800;">0</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">Set #3</td>
+                      <td><span class="badge-status badge-green" style="padding: 0.1rem 0.35rem; font-size: 0.68rem;">V=1</span></td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-cyan); font-weight: 700;">0x80</td>
+                      <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);">0xFF, 0x33, 0xAA, 0x5D</td>
+                      <td style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 800;">2</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div style="display: none;"><span id="memoryNarrationTitle"></span><span id="memoryNarrationMsg"></span></div>
+
+      <!-- FEATURE: INTERACTIVE TIER DEEP-DIVE POPUP MODAL (MODULE 1 CONTENT) -->
+      <div id="standaloneTierModal" class="tier-modal-backdrop" style="display: none;" onclick="closeStandaloneTierModal(event)">
+        <div id="standaloneTierModalDialog" class="tier-modal-dialog" onclick="event.stopPropagation()">
+          <!-- MODAL HEADER -->
+          <div class="tier-modal-header" id="modalTierHeader">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span id="modalTierBadge" class="tier-level-badge" style="font-size: 0.85rem; padding: 0.2rem 0.6rem;">TIER 1</span>
+              <div>
+                <div id="modalTierTitle" style="font-size: 1.25rem; font-weight: 900; color: #ffffff; letter-spacing: -0.01em;">CPU Registers</div>
+                <div id="modalTierSub" style="font-size: 0.78rem; font-family: var(--font-mono);">Internal Storage</div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <button class="xray-close-btn" onclick="closeStandaloneTierModal()" title="Close Pop-up (ESC)">
+                ✕ CLOSE
+              </button>
+            </div>
+          </div>
+
+          <!-- MODULE CONTENT BANNER -->
+          <div id="modalTierSummaryBanner" style="border-radius: 6px; padding: 0.9rem 1.1rem; margin-bottom: 1rem;">
+            <div id="modalTierBannerTag" style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem;">
+              SYSTEM ARCHITECTURAL SPECIFICATION
+            </div>
+            <p id="modalTierSummaryText" style="font-size: 0.95rem; color: #f1f5f9; line-height: 1.6; margin: 0; font-weight: 500;"></p>
+          </div>
+
+          <!-- MODULE SPECIFICATIONS GRID (ONLY FIELDS FROM MODULE 1) -->
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+            <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
+              <span class="tier-spec-label">STORAGE CAPACITY </span>
+              <span id="modalSpecCapacity" class="tier-spec-val" style="color: var(--accent-cyan); font-size: 1.02rem;"></span>
+            </div>
+            <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
+              <span class="tier-spec-label">STORAGE HIERARCHY LEVEL</span>
+              <span id="modalSpecClassification" class="tier-spec-val" style="color: #ffffff; font-size: 1.02rem;"></span>
+            </div>
+            <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
+              <span class="tier-spec-label">SPEED & COST POSITION</span>
+              <span id="modalSpecSpeedCost" class="tier-spec-val" style="color: var(--accent-amber); font-size: 0.92rem;"></span>
+            </div>
+            <div class="tier-spec-item" style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);">
+              <span class="tier-spec-label">STORAGE MEDIA / EXAMPLES</span>
+              <span id="modalSpecDevices" class="tier-spec-val" style="color: var(--accent-green); font-size: 0.92rem;"></span>
+            </div>
+          </div>
+
+          <!-- KEY PRINCIPLE FROM MODULE 1 -->
+          <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.75rem 1rem;">
+            <div style="font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem;">
+              ARCHITECTURAL PRINCIPLE
+            </div>
+            <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+              As you move down the pyramid, storage capacity and cost per bit increase, while access speed and cost efficiency decrease.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
     
   </main>
@@ -4757,6 +5833,7 @@ body.cinema-mode-active main {
 
       const paneMap = {
         'dma': { btn: 'tabBtnDma', pane: 'pane-dma' },
+        'instruction': { btn: 'tabBtnInstruction', pane: 'pane-instruction' },
         'memory': { btn: 'tabBtnMemory', pane: 'pane-memory' }
       };
 
@@ -4773,6 +5850,9 @@ body.cinema-mode-active main {
           renderStandaloneCacheTable(0);
           updateStandaloneAddressDecoders();
           updateStandaloneTelemetry();
+        }
+        if (tabName === 'instruction') {
+          renderInstCurrentStep();
         }
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5832,7 +6912,12 @@ body.cinema-mode-active main {
         savedTheme = localStorage.getItem('os_lab_theme') || 'cyberpunk';
       } catch (e) {}
       switchTheme(savedTheme);
-      navigateTab('dma');
+      let initTab = 'dma';
+      if (window.location.hash) {
+        const h = window.location.hash.replace('#', '');
+        if (['dma', 'instruction', 'memory'].includes(h)) initTab = h;
+      }
+      navigateTab(initTab);
       setupRamGrid();
       drawGantt();
       updateHardwareGauges();
@@ -6207,6 +7292,246 @@ body.cinema-mode-active main {
       const xrayModal = document.getElementById('cpuXrayModal');
       if (xrayModal && xrayModal.style.display !== 'none') {
         updateCpuXrayState();
+      }
+    }
+
+
+    // ========================================================
+    // TAB 2: INSTRUCTION EXECUTION CYCLE SIMULATOR STATE & LOGIC
+    // ========================================================
+    const INST_MICRO_OPS = [
+      // Instruction 1: LOAD 500 (Addr 100)
+      { id: 'f1_1', instAddr: 100, phase: 'FETCH', stepNum: 1, name: 'MAR ← PC', desc: 'Step 1: Address in Program Counter (100) is transferred to Memory Address Register (MAR).', pc: 100, mar: 100, mdr: '---', ir: '---', ac: 0, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f1_2', instAddr: 100, phase: 'FETCH', stepNum: 2, name: 'Memory Read Strobe', desc: 'Step 2: Control Unit asserts MEM_READ line to fetch instruction at Address 100.', pc: 100, mar: 100, mdr: '---', ir: '---', ac: 0, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f1_3', instAddr: 100, phase: 'FETCH', stepNum: 3, name: 'MDR ← Memory[MAR]', desc: 'Step 3: Opcode "LOAD 500" from Address 100 is placed on the Data Bus into MDR.', pc: 100, mar: 100, mdr: 'LOAD 500', ir: '---', ac: 0, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f1_4', instAddr: 100, phase: 'FETCH', stepNum: 4, name: 'IR ← MDR', desc: 'Step 4: Instruction contents in MDR transfer into Instruction Register (IR).', pc: 100, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f1_5', instAddr: 100, phase: 'FETCH', stepNum: 5, name: 'PC ← PC + 1', desc: 'Step 5: Program Counter auto-increments from 100 to 101 to point to next instruction.', pc: 101, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      
+      { id: 'd1_1', instAddr: 100, phase: 'DECODE', stepNum: 1, name: 'Opcode Interpretation', desc: 'Step 1: Control Unit parses Opcode: "LOAD" identified (Memory to Accumulator copy).', pc: 101, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'd1_2', instAddr: 100, phase: 'DECODE', stepNum: 2, name: 'Operand Address Extraction', desc: 'Step 2: Operand resolved to memory address 500.', pc: 101, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      
+      { id: 'e1_1', instAddr: 100, phase: 'EXECUTE', stepNum: 1, name: 'MAR ← 500 & Read', desc: 'Step 1: Operand address 500 loaded into MAR; Read strobe issued to RAM.', pc: 101, mar: 500, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'e1_2', instAddr: 100, phase: 'EXECUTE', stepNum: 2, name: 'MDR ← Memory[500]', desc: 'Step 2: Value 3456 from Address 500 transferred into MDR.', pc: 101, mar: 500, mdr: '3456', ir: 'LOAD 500', ac: 0, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'e1_3', instAddr: 100, phase: 'EXECUTE', stepNum: 3, name: 'Accumulator ← MDR', desc: 'Step 3: Value 3456 loaded into CPU Accumulator (AC = 3456). Instruction LOAD complete!', pc: 101, mar: 500, mdr: '3456', ir: 'LOAD 500', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+
+      // Instruction 2: ADD 600 (Addr 101)
+      { id: 'f2_1', instAddr: 101, phase: 'FETCH', stepNum: 1, name: 'MAR ← PC (101)', desc: 'Fetch Step 1: PC (101) loaded into MAR for second instruction.', pc: 101, mar: 101, mdr: '3456', ir: 'LOAD 500', ac: 3456, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f2_2', instAddr: 101, phase: 'FETCH', stepNum: 2, name: 'Memory Read Strobe', desc: 'Fetch Step 2: Read signal issued to Address 101.', pc: 101, mar: 101, mdr: '3456', ir: 'LOAD 500', ac: 3456, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f2_3', instAddr: 101, phase: 'FETCH', stepNum: 3, name: 'MDR ← Memory[101]', desc: 'Fetch Step 3: Opcode "ADD 600" loaded into MDR from RAM.', pc: 101, mar: 101, mdr: 'ADD 600', ir: 'LOAD 500', ac: 3456, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f2_4', instAddr: 101, phase: 'FETCH', stepNum: 4, name: 'IR ← MDR', desc: 'Fetch Step 4: IR receives "ADD 600".', pc: 101, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f2_5', instAddr: 101, phase: 'FETCH', stepNum: 5, name: 'PC ← PC + 1', desc: 'Fetch Step 5: PC auto-increments from 101 to 102.', pc: 102, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      
+      { id: 'd2_1', instAddr: 101, phase: 'DECODE', stepNum: 1, name: 'Opcode Interpretation', desc: 'Decode Step 1: Opcode "ADD" parsed (Accumulator arithmetic addition).', pc: 102, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'ADD' },
+      { id: 'd2_2', instAddr: 101, phase: 'DECODE', stepNum: 2, name: 'Operand Address Extraction', desc: 'Decode Step 2: Operand resolved to memory address 600.', pc: 102, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'ADD' },
+      
+      { id: 'e2_1', instAddr: 101, phase: 'EXECUTE', stepNum: 1, name: 'MAR ← 600 & Read', desc: 'Execute Step 1: Operand address 600 placed in MAR; Read strobe triggered.', pc: 102, mar: 600, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'ADD' },
+      { id: 'e2_2', instAddr: 101, phase: 'EXECUTE', stepNum: 2, name: 'MDR ← Memory[600]', desc: 'Execute Step 2: Value 1200 read from Address 600 into MDR.', pc: 102, mar: 600, mdr: '1200', ir: 'ADD 600', ac: 3456, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'ADD' },
+      { id: 'e2_3', instAddr: 101, phase: 'EXECUTE', stepNum: 3, name: 'ALU ADD Calculation', desc: 'Execute Step 3: ALU performs addition: AC (3456) + MDR (1200) = 4656.', pc: 102, mar: 600, mdr: '1200', ir: 'ADD 600', ac: 3456, bus: 'ALU_BUS', memRead: 0, memWrite: 0, alu: 'ADD (3456+1200)' },
+      { id: 'e2_4', instAddr: 101, phase: 'EXECUTE', stepNum: 4, name: 'Accumulator ← 4656', desc: 'Execute Step 4: Accumulator updated to 4656. Instruction ADD complete!', pc: 102, mar: 600, mdr: '1200', ir: 'ADD 600', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+
+      // Instruction 3: STORE 700 (Addr 102)
+      { id: 'f3_1', instAddr: 102, phase: 'FETCH', stepNum: 1, name: 'MAR ← PC (102)', desc: 'Fetch Step 1: PC (102) loaded into MAR for third instruction.', pc: 102, mar: 102, mdr: '1200', ir: 'ADD 600', ac: 4656, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f3_2', instAddr: 102, phase: 'FETCH', stepNum: 2, name: 'Memory Read Strobe', desc: 'Fetch Step 2: Read signal issued to Address 102.', pc: 102, mar: 102, mdr: '1200', ir: 'ADD 600', ac: 4656, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f3_3', instAddr: 102, phase: 'FETCH', stepNum: 3, name: 'MDR ← Memory[102]', desc: 'Fetch Step 3: Opcode "STORE 700" loaded into MDR.', pc: 102, mar: 102, mdr: 'STORE 700', ir: 'ADD 600', ac: 4656, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f3_4', instAddr: 102, phase: 'FETCH', stepNum: 4, name: 'IR ← MDR', desc: 'Fetch Step 4: IR receives "STORE 700".', pc: 102, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f3_5', instAddr: 102, phase: 'FETCH', stepNum: 5, name: 'PC ← PC + 1', desc: 'Fetch Step 5: PC auto-increments from 102 to 103.', pc: 103, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      
+      { id: 'd3_1', instAddr: 102, phase: 'DECODE', stepNum: 1, name: 'Opcode Interpretation', desc: 'Decode Step 1: Opcode "STORE" parsed (Accumulator to RAM write).', pc: 103, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'd3_2', instAddr: 102, phase: 'DECODE', stepNum: 2, name: 'Operand Target Address', desc: 'Decode Step 2: Target memory address resolved to 700.', pc: 103, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      
+      { id: 'e3_1', instAddr: 102, phase: 'EXECUTE', stepNum: 1, name: 'MAR ← 700', desc: 'Execute Step 1: Target address 700 loaded into MAR.', pc: 103, mar: 700, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'ADDR_LOAD', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'e3_2', instAddr: 102, phase: 'EXECUTE', stepNum: 2, name: 'MDR ← Accumulator', desc: 'Execute Step 2: AC value (4656) loaded into MDR for memory write.', pc: 103, mar: 700, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'AC_TO_MDR', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'e3_3', instAddr: 102, phase: 'EXECUTE', stepNum: 3, name: 'Memory[700] ← MDR', desc: 'Execute Step 3: MEM_WRITE strobe asserted; Memory[700] stored as 4656. Instruction complete!', pc: 103, mar: 700, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'WRITE_STROBE', memRead: 0, memWrite: 1, alu: 'NONE' },
+
+      // Instruction 4: HALT (Addr 103)
+      { id: 'f4_1', instAddr: 103, phase: 'FETCH', stepNum: 1, name: 'MAR ← PC (103)', desc: 'Fetch Step 1: PC (103) loaded into MAR for final instruction.', pc: 103, mar: 103, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f4_2', instAddr: 103, phase: 'FETCH', stepNum: 2, name: 'MDR ← Memory[103]', desc: 'Fetch Step 2: Opcode "HALT" read into MDR from Address 103.', pc: 103, mar: 103, mdr: 'HALT', ir: 'STORE 700', ac: 4656, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f4_3', instAddr: 103, phase: 'FETCH', stepNum: 3, name: 'IR ← MDR', desc: 'Fetch Step 3: IR loaded with "HALT".', pc: 103, mar: 103, mdr: 'HALT', ir: 'HALT', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'd4_1', instAddr: 103, phase: 'DECODE', stepNum: 1, name: 'HALT Decoded', desc: 'Decode Step 1: Opcode "HALT" decoded — CPU clock signals halted.', pc: 103, mar: 103, mdr: 'HALT', ir: 'HALT', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'e4_1', instAddr: 103, phase: 'EXECUTE', stepNum: 1, name: 'CPU Halted (Done)', desc: 'Execute Step 1: Execution completed! AC = 4656, Memory[700] = 4656. All micro-ops verified.', pc: 103, mar: 103, mdr: 'HALT', ir: 'HALT', ac: 4656, bus: 'HALTED', memRead: 0, memWrite: 0, alu: 'NONE' }
+    ];
+
+    let currentInstStepIdx = 0;
+    let instAutoTimer = null;
+    let instClockSpeed = 700;
+
+    function renderInstCurrentStep() {
+      const step = INST_MICRO_OPS[currentInstStepIdx];
+      if (!step) return;
+
+      // Update Phase Badge
+      const phaseBadge = document.getElementById('instPhaseBadge');
+      if (phaseBadge) {
+        phaseBadge.textContent = step.phase + ' PHASE';
+        phaseBadge.className = 'badge-status ' + (step.phase === 'FETCH' ? 'badge-cyan' : (step.phase === 'DECODE' ? 'badge-amber' : 'badge-green'));
+      }
+
+      // Update Step Header
+      const nameEl = document.getElementById('instStepName');
+      if (nameEl) nameEl.textContent = step.name;
+
+      const countEl = document.getElementById('instStepCounter');
+      if (countEl) countEl.textContent = 'Step ' + (currentInstStepIdx + 1) + ' of ' + INST_MICRO_OPS.length + ' • Addr ' + step.instAddr;
+
+      const descEl = document.getElementById('instStepDesc');
+      if (descEl) descEl.textContent = step.desc;
+
+      const progEl = document.getElementById('instProgressBar');
+      if (progEl) {
+        const pct = (((currentInstStepIdx + 1) / INST_MICRO_OPS.length) * 100).toFixed(1);
+        progEl.style.width = pct + '%';
+      }
+
+      // Update Registers
+      const pcEl = document.getElementById('valRegPc');
+      if (pcEl) pcEl.textContent = step.pc;
+
+      const marEl = document.getElementById('valRegMar');
+      if (marEl) marEl.textContent = step.mar;
+
+      const mdrEl = document.getElementById('valRegMdr');
+      if (mdrEl) mdrEl.textContent = step.mdr;
+
+      const irEl = document.getElementById('valRegIr');
+      if (irEl) irEl.textContent = step.ir;
+
+      const acEl = document.getElementById('valRegAc');
+      if (acEl) acEl.textContent = step.ac;
+
+      const acDesc = document.getElementById('valRegAcDesc');
+      if (acDesc) {
+        if (step.ac === 3456) acDesc.textContent = '(Loaded Variable A: 3456)';
+        else if (step.ac === 4656) acDesc.textContent = '(Added Variable B: 3456 + 1200 = 4656)';
+        else acDesc.textContent = '(Initialized to 0)';
+      }
+
+      // Update Bus Badge
+      const busBadge = document.getElementById('instBusStateBadge');
+      if (busBadge) busBadge.textContent = 'BUS: ' + step.bus;
+
+      // Update Signals
+      const sigReadVal = document.getElementById('sigMemReadVal');
+      if (sigReadVal) {
+        sigReadVal.textContent = step.memRead ? '1 (HIGH)' : '0 (LOW)';
+        sigReadVal.style.color = step.memRead ? 'var(--accent-cyan)' : 'var(--text-muted)';
+      }
+      const sigWriteVal = document.getElementById('sigMemWriteVal');
+      if (sigWriteVal) {
+        sigWriteVal.textContent = step.memWrite ? '1 (HIGH)' : '0 (LOW)';
+        sigWriteVal.style.color = step.memWrite ? 'var(--accent-amber)' : 'var(--text-muted)';
+      }
+      const sigAluVal = document.getElementById('sigAluOpVal');
+      if (sigAluVal) {
+        sigAluVal.textContent = step.alu;
+        sigAluVal.style.color = step.alu !== 'NONE' ? 'var(--accent-green)' : 'var(--text-muted)';
+      }
+
+      // Update RAM Table Row Highlights
+      [100, 101, 102, 103].forEach(addr => {
+        const row = document.getElementById('rowInst' + addr);
+        if (row) {
+          if (step.instAddr === addr) row.classList.add('cache-row-target');
+          else row.classList.remove('cache-row-target');
+        }
+      });
+
+      // Update Data Segment Table
+      const val700 = document.getElementById('valData700');
+      const desc700 = document.getElementById('descData700');
+      if (step.memWrite === 1 && step.mar === 700) {
+        if (val700) {
+          val700.textContent = '4656';
+          val700.style.color = 'var(--accent-cyan)';
+        }
+        if (desc700) desc700.textContent = 'Result Target: Written 4656 (STORE complete)';
+      } else if (currentInstStepIdx < 20) {
+        if (val700) {
+          val700.textContent = '0';
+          val700.style.color = 'var(--text-muted)';
+        }
+      }
+
+      // Highlight Data Rows when accessed
+      [500, 600, 700].forEach(dAddr => {
+        const dRow = document.getElementById('rowData' + dAddr);
+        if (dRow) {
+          if (step.mar === dAddr) dRow.classList.add('cache-row-target');
+          else dRow.classList.remove('cache-row-target');
+        }
+      });
+
+      // Highlight Phase Workflow Cards
+      const fCard = document.getElementById('cardPhaseFetch');
+      const dCard = document.getElementById('cardPhaseDecode');
+      const eCard = document.getElementById('cardPhaseExecute');
+      if (fCard) fCard.style.background = step.phase === 'FETCH' ? 'rgba(0, 210, 255, 0.12)' : 'rgba(0,0,0,0.45)';
+      if (dCard) dCard.style.background = step.phase === 'DECODE' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(0,0,0,0.45)';
+      if (eCard) eCard.style.background = step.phase === 'EXECUTE' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(0,0,0,0.45)';
+    }
+
+    function stepInstructionMicroOp() {
+      if (currentInstStepIdx < INST_MICRO_OPS.length - 1) {
+        currentInstStepIdx++;
+      } else {
+        currentInstStepIdx = 0; // Loop or halt
+      }
+      renderInstCurrentStep();
+      try { playClickSound(); } catch (e) {}
+    }
+
+    function toggleInstructionAutoRun() {
+      const btn = document.getElementById('btnAutoInst');
+      if (instAutoTimer) {
+        clearInterval(instAutoTimer);
+        instAutoTimer = null;
+        if (btn) btn.innerHTML = '▶ AUTO RUN';
+      } else {
+        if (btn) btn.innerHTML = '⏸ PAUSE';
+        instAutoTimer = setInterval(() => {
+          if (currentInstStepIdx < INST_MICRO_OPS.length - 1) {
+            currentInstStepIdx++;
+            renderInstCurrentStep();
+          } else {
+            clearInterval(instAutoTimer);
+            instAutoTimer = null;
+            if (btn) btn.innerHTML = '▶ AUTO RUN';
+          }
+        }, instClockSpeed);
+      }
+    }
+
+    function resetInstructionSim() {
+      if (instAutoTimer) {
+        clearInterval(instAutoTimer);
+        instAutoTimer = null;
+        const btn = document.getElementById('btnAutoInst');
+        if (btn) btn.innerHTML = '▶ AUTO RUN';
+      }
+      currentInstStepIdx = 0;
+      renderInstCurrentStep();
+      const val700 = document.getElementById('valData700');
+      if (val700) {
+        val700.textContent = '0';
+        val700.style.color = 'var(--text-muted)';
+      }
+      try { playClickSound(); } catch (e) {}
+    }
+
+    function updateInstSpeed(speedMs) {
+      instClockSpeed = parseInt(speedMs, 10);
+      if (instAutoTimer) {
+        clearInterval(instAutoTimer);
+        instAutoTimer = setInterval(() => {
+          if (currentInstStepIdx < INST_MICRO_OPS.length - 1) {
+            currentInstStepIdx++;
+            renderInstCurrentStep();
+          } else {
+            clearInterval(instAutoTimer);
+            instAutoTimer = null;
+            const btn = document.getElementById('btnAutoInst');
+            if (btn) btn.innerHTML = '▶ AUTO RUN';
+          }
+        }, instClockSpeed);
       }
     }
 

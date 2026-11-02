@@ -725,7 +725,7 @@ export default function MemoryHierarchyLab() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                 <span style={{ fontSize: '0.74rem', fontWeight: 800, color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  MODULE 1 (PAGE 12): CACHE MEMORY — THE SPEED BRIDGE
+                  CACHE MEMORY — THE ARCHITECTURAL SPEED BRIDGE
                 </span>
                 <span className="badge-status badge-blue" style={{ fontSize: '0.65rem' }}>Locality of Reference</span>
               </div>
@@ -1206,7 +1206,7 @@ export default function MemoryHierarchyLab() {
               marginBottom: '1rem'
             }}>
               <div style={{ fontSize: '0.72rem', fontWeight: 800, color: selectedTier.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-                CONTENT FROM MODULE 1 (PAGE 11)
+                OPERATING SYSTEM ARCHITECTURAL SPECIFICATION
               </div>
               <p style={{ fontSize: '0.95rem', color: '#f1f5f9', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
                 "{selectedTier.moduleText}"
@@ -1246,7 +1246,7 @@ export default function MemoryHierarchyLab() {
               padding: '0.75rem 1rem'
             }}>
               <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
-                MODULE PRINCIPLE (PAGE 11)
+                SYSTEM ARCHITECTURAL PRINCIPLE
               </div>
               <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
                 As you move down the pyramid, storage capacity and cost per bit increase, while access speed and cost efficiency decrease.
