@@ -5072,8 +5072,35 @@ body.cinema-mode-active main {
               </div>
             </div>
 
-            <!-- VISUAL CACHE PIPELINE FLOW DIAGRAM -->
-            <div class="cache-pipeline-strip" style="margin-bottom: 1rem;">
+            <!-- CACHE HIERARCHY FLOW CONTROLS & VIEW TOGGLE -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+              <span style="font-size: 0.78rem; fontWeight: 800; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.06em;">
+                Cache Hierarchy Flow
+              </span>
+              <div style="display: inline-flex; background: rgba(0,0,0,0.5); padding: 2px; border-radius: 4px; border: 1px solid var(--border-subtle);">
+                <button
+                  type="button"
+                  id="btnViewPipeline"
+                  class="btn-cyber-kinetic btn-action-primary"
+                  style="padding: 0.2rem 0.6rem; font-size: 0.7rem; cursor: pointer;"
+                  onclick="switchStandaloneCacheView('pipeline')"
+                >
+                  ⚡ Linear Pipeline
+                </button>
+                <button
+                  type="button"
+                  id="btnViewTopology"
+                  class="btn-cyber-kinetic"
+                  style="padding: 0.2rem 0.6rem; font-size: 0.7rem; cursor: pointer;"
+                  onclick="switchStandaloneCacheView('topology')"
+                >
+                  🖧 Multi-Core Topology (L1i/L1d → L2 → L3)
+                </button>
+              </div>
+            </div>
+
+            <!-- LINEAR PIPELINE FLOW -->
+            <div id="standalonePipelineStrip" class="cache-pipeline-strip" style="margin-bottom: 1rem;">
               <!-- STAGE 1: CPU -->
               <div id="pipeNodeCpu" class="pipeline-node">
                 <span style="font-size: 1.1rem;">💻</span>
@@ -5118,6 +5145,102 @@ body.cinema-mode-active main {
               </div>
             </div>
 
+            <!-- MULTI-CORE SPLIT CACHE TOPOLOGY SCHEMATIC (HIDDEN INITIALLY) -->
+            <div id="standaloneTopologySchematic" class="topology-schematic-card" style="display: none; background: rgba(0, 0, 0, 0.55); border: 1px solid rgba(0, 82, 255, 0.35); border-radius: 6px; padding: 0.85rem; margin-bottom: 1rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem;">
+                <!-- CORE 0 -->
+                <div style="background: rgba(0, 210, 255, 0.05); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 6px; padding: 0.6rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.74rem; font-weight: 800; color: var(--accent-cyan);">CPU CORE 0 (ACTIVE)</span>
+                    <span class="badge-status badge-blue" style="font-size: 0.6rem;">On-Core</span>
+                  </div>
+                  <!-- SPLIT L1 CACHE: L1i & L1d -->
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; margin-bottom: 0.45rem;">
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem; text-align: center;">
+                      <div style="font-size: 0.64rem; color: var(--text-muted);">L1-INSTR (L1i)</div>
+                      <div style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">32KB–64KB</div>
+                      <div style="font-size: 0.58rem; color: var(--accent-green);">Code Fetch (1.0ns)</div>
+                    </div>
+                    <div id="topoCore0L1d" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem; text-align: center; transition: all 0.2s ease;">
+                      <div style="font-size: 0.64rem; color: var(--text-muted);">L1-DATA (L1d)</div>
+                      <div style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">32KB–64KB</div>
+                      <div style="font-size: 0.58rem; color: var(--accent-cyan);">Data Operands (1.0ns)</div>
+                    </div>
+                  </div>
+                  <!-- PRIVATE L2 CACHE -->
+                  <div id="topoCore0L2" style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.35rem; text-align: center; transition: all 0.2s ease;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <span style="font-size: 0.66rem; color: var(--text-secondary);">PRIVATE L2 CACHE:</span>
+                      <span style="font-size: 0.72rem; font-weight: 800; color: var(--accent-blue);">256KB–1MB (3.5ns)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CORE 1 -->
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 0.6rem; opacity: 0.85;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.74rem; font-weight: 800; color: var(--text-secondary);">CPU CORE 1</span>
+                    <span class="badge-status badge-purple" style="font-size: 0.6rem;">On-Core</span>
+                  </div>
+                  <!-- SPLIT L1 CACHE: L1i & L1d -->
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; margin-bottom: 0.45rem;">
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem; text-align: center;">
+                      <div style="font-size: 0.64rem; color: var(--text-muted);">L1-INSTR (L1i)</div>
+                      <div style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">32KB–64KB</div>
+                      <div style="font-size: 0.58rem; color: var(--accent-green);">Code Fetch (1.0ns)</div>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem; text-align: center;">
+                      <div style="font-size: 0.64rem; color: var(--text-muted);">L1-DATA (L1d)</div>
+                      <div style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">32KB–64KB</div>
+                      <div style="font-size: 0.58rem; color: var(--text-muted);">Data Operands (1.0ns)</div>
+                    </div>
+                  </div>
+                  <!-- PRIVATE L2 CACHE -->
+                  <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.35rem; text-align: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <span style="font-size: 0.66rem; color: var(--text-muted);">PRIVATE L2 CACHE:</span>
+                      <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-secondary);">256KB–1MB (3.5ns)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CROSSBAR BUS INTERCONNECT -->
+              <div style="text-align: center; margin: -0.2rem 0 0.35rem 0; color: var(--accent-cyan); font-size: 0.72rem; font-family: var(--font-mono);">
+                ▼ Dual-Core Crossbar Interconnect Bus ▼
+              </div>
+
+              <!-- SHARED L3 CACHE -->
+              <div id="topoL3Shared" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 6px; padding: 0.55rem 0.85rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease;">
+                <div>
+                  <div style="font-size: 0.78rem; font-weight: 900; color: #ffffff;">
+                    SHARED L3 CACHE (2MB TO 100MB+)
+                  </div>
+                  <div style="font-size: 0.68rem; color: var(--text-muted);">
+                    Shared Across All Processor Cores • Bridges Gap to Main RAM (12.0 ns)
+                  </div>
+                </div>
+                <span class="badge-status badge-purple" style="font-size: 0.68rem;">
+                  Shared Multi-Core Die
+                </span>
+              </div>
+
+              <!-- SYSTEM BUS TO DRAM -->
+              <div id="topoDram" style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; padding: 0.55rem 0.85rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease;">
+                <div>
+                  <div style="font-size: 0.78rem; font-weight: 900; color: var(--accent-amber);">
+                    OFF-CHIP MAIN MEMORY (DRAM — GIGABYTES)
+                  </div>
+                  <div style="font-size: 0.68rem; color: var(--text-muted);">
+                    External System Bus Memory Access (60.0 – 80.0 ns Miss Penalty)
+                  </div>
+                </div>
+                <span class="badge-status badge-amber" style="font-size: 0.68rem;">
+                  DRAM Bus Fill
+                </span>
+              </div>
+            </div>
+
             <!-- LAST RESULT HIGHLIGHT BANNER -->
             <div id="standaloneResultBanner" class="result-banner result-hit" style="margin-bottom: 1rem;">
               <div style="display: flex; align-items: center; gap: 0.65rem;">
@@ -5134,6 +5257,64 @@ body.cinema-mode-active main {
               <span id="bannerAddrText" class="badge-status badge-blue" style="font-family: var(--font-mono);">
                 0x1004
               </span>
+            </div>
+
+            <!-- FEATURE 1: HUMAN-SCALE TIME TRANSLATOR -->
+            <div class="human-scale-card" style="background: rgba(0, 210, 255, 0.04); border: 1px solid rgba(0, 210, 255, 0.25); border-radius: 6px; padding: 0.75rem; margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <div style="display: flex; align-items: center; gap: 0.45rem;">
+                  <span style="font-size: 0.95rem;">⏱️</span>
+                  <span style="font-size: 0.76rem; font-weight: 800; color: #ffffff; letter-spacing: 0.04em;">
+                    HUMAN-SCALE TIME EQUIVALENCE (1 CLOCK CYCLE = 1 SECOND)
+                  </span>
+                </div>
+                <span class="badge-status badge-amber" style="font-size: 0.65rem;">
+                  Relative Latency Scale
+                </span>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); padding: 0.45rem 0.7rem; border-radius: 4px; margin-bottom: 0.45rem;">
+                <div>
+                  <span style="font-size: 0.72rem; color: var(--text-muted);">OPERATION: </span>
+                  <strong id="humanCardOp" style="font-size: 0.8rem; color: var(--accent-green);">
+                    L1 Cache HIT (1.0 ns)
+                  </strong>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 0.72rem; color: var(--text-muted);">HUMAN TIME: </span>
+                  <strong id="humanCardTime" style="font-size: 0.84rem; color: var(--accent-cyan); font-family: var(--font-mono);">
+                    ⚡ 1.0 Second
+                  </strong>
+                </div>
+              </div>
+
+              <div id="humanCardDesc" style="font-size: 0.74rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.5rem;">
+                🎯 Desk Pen Analogy: Reaching for a pen right on your desk (1.0s). 200× faster than off-chip DRAM!
+              </div>
+
+              <!-- VISUAL LATENCY TICKER STRIP -->
+              <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.35rem; text-align: center;">
+                <div id="pillL1" style="background: rgba(0, 210, 255, 0.25); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: var(--accent-cyan); font-weight: 800;">L1 CACHE</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">1.0s (Desk)</div>
+                </div>
+                <div id="pillL2" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: var(--accent-blue); font-weight: 800;">L2 CACHE</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">3.5s (Shelf)</div>
+                </div>
+                <div id="pillL3" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: #c084fc; font-weight: 800;">L3 SHARED</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">12s (Hall)</div>
+                </div>
+                <div id="pillDram" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: var(--accent-amber); font-weight: 800;">MAIN RAM</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">90s (Street)</div>
+                </div>
+                <div id="pillSsd" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                  <div style="font-size: 0.64rem; color: var(--accent-purple); font-weight: 800;">NVMe SSD</div>
+                  <div style="font-size: 0.62rem; font-family: var(--font-mono); color: #ffffff;">3.5 Hours</div>
+                </div>
+              </div>
             </div>
 
             <!-- LIVE L1 CACHE TABLE (DIRECT-MAPPED SIMULATOR) -->
@@ -6123,6 +6304,68 @@ body.cinema-mode-active main {
       }, 400);
     }
 
+    let standaloneCacheViewMode = 'pipeline';
+
+    function switchStandaloneCacheView(mode) {
+      standaloneCacheViewMode = mode;
+      const btnPipe = document.getElementById('btnViewPipeline');
+      const btnTopo = document.getElementById('btnViewTopology');
+      const pipeStrip = document.getElementById('standalonePipelineStrip');
+      const topoStrip = document.getElementById('standaloneTopologySchematic');
+
+      if (mode === 'pipeline') {
+        if (btnPipe) btnPipe.classList.add('btn-action-primary');
+        if (btnTopo) btnTopo.classList.remove('btn-action-primary');
+        if (pipeStrip) pipeStrip.style.display = 'flex';
+        if (topoStrip) topoStrip.style.display = 'none';
+      } else {
+        if (btnPipe) btnPipe.classList.remove('btn-action-primary');
+        if (btnTopo) btnTopo.classList.add('btn-action-primary');
+        if (pipeStrip) pipeStrip.style.display = 'none';
+        if (topoStrip) topoStrip.style.display = 'block';
+      }
+    }
+
+    function updateHumanScaleCard(isHit, level, latency) {
+      const opEl = document.getElementById('humanCardOp');
+      const timeEl = document.getElementById('humanCardTime');
+      const descEl = document.getElementById('humanCardDesc');
+      const pL1 = document.getElementById('pillL1');
+      const pL2 = document.getElementById('pillL2');
+      const pL3 = document.getElementById('pillL3');
+      const pDram = document.getElementById('pillDram');
+      const pSsd = document.getElementById('pillSsd');
+
+      // Reset pill styles
+      [pL1, pL2, pL3, pDram, pSsd].forEach(p => {
+        if (p) p.style.background = 'rgba(255,255,255,0.03)';
+      });
+
+      if (isHit) {
+        if (level === 'L1 Cache') {
+          if (opEl) { opEl.innerText = 'L1 Cache HIT (1.0 ns)'; opEl.style.color = 'var(--accent-green)'; }
+          if (timeEl) timeEl.innerText = '⚡ 1.0 Second';
+          if (descEl) descEl.innerText = '🎯 Desk Pen Analogy: Reaching for a pen right on your desk (1.0s). 200× faster than off-chip DRAM!';
+          if (pL1) pL1.style.background = 'rgba(0, 210, 255, 0.25)';
+        } else if (level === 'L2 Cache') {
+          if (opEl) { opEl.innerText = 'L2 Cache HIT (3.5 ns)'; opEl.style.color = 'var(--accent-green)'; }
+          if (timeEl) timeEl.innerText = '⚡ 3.5 Seconds';
+          if (descEl) descEl.innerText = '📚 Room Shelf Analogy: Standing up to grab a book from your room bookshelf (3.5s). Serviced on-core!';
+          if (pL2) pL2.style.background = 'rgba(0, 82, 255, 0.25)';
+        } else if (level === 'L3 Cache') {
+          if (opEl) { opEl.innerText = 'L3 Cache HIT (12.0 ns)'; opEl.style.color = 'var(--accent-green)'; }
+          if (timeEl) timeEl.innerText = '⚡ 12.0 Seconds';
+          if (descEl) descEl.innerText = '🚪 Hallway Cabinet Analogy: Walking to the shared hallway cabinet (12.0s). Shared across all CPU cores!';
+          if (pL3) pL3.style.background = 'rgba(168, 85, 247, 0.25)';
+        }
+      } else {
+        if (opEl) { opEl.innerText = 'DRAM MISS Penalty (65.0 ns)'; opEl.style.color = 'var(--accent-red)'; }
+        if (timeEl) timeEl.innerText = '⏳ 1.5 Minutes';
+        if (descEl) descEl.innerText = '🚶 Library Analogy: Walking 1.5 minutes down the street to the library. Suffered DRAM memory bus stall!';
+        if (pDram) pDram.style.background = 'rgba(245, 158, 11, 0.25)';
+      }
+    }
+
     function updateResultBanner(isHit, level, latency, addr) {
       const banner = document.getElementById('standaloneResultBanner');
       const icon = document.getElementById('bannerIcon');
@@ -6140,6 +6383,7 @@ body.cinema-mode-active main {
       }
       if (lat) lat.innerText = `${latency} ns`;
       if (addrEl) addrEl.innerText = addr;
+      updateHumanScaleCard(isHit, level, latency);
     }
 
     function updateStandaloneTelemetry() {

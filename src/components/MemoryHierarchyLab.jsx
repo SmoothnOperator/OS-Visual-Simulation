@@ -129,6 +129,7 @@ export default function MemoryHierarchyLab() {
 
   // Cache Lookup Simulator States
   const [queryAddress, setQueryAddress] = useState('0x1004');
+  const [cacheViewMode, setCacheViewMode] = useState('pipeline'); // 'pipeline' | 'topology'
   const [cacheLines, setCacheLines] = useState(INITIAL_CACHE_LINES);
   const [isSimulating, setIsSimulating] = useState(false);
   const [activeStep, setActiveStep] = useState(null); // 'cpu', 'l1', 'l2', 'l3', 'dram', 'fill'
@@ -793,52 +794,216 @@ export default function MemoryHierarchyLab() {
               );
             })()}
 
-            {/* VISUAL CACHE PIPELINE FLOW DIAGRAM */}
-            <div className="cache-pipeline-strip" style={{ marginBottom: '1rem' }}>
-              
-              {/* STAGE 1: CPU */}
-              <div className={`pipeline-node ${activeStep === 'cpu' ? 'node-active' : ''}`}>
-                <Cpu size={16} color="var(--accent-cyan)" />
-                <div className="pipeline-node-title">CPU ALU</div>
-                <div className="pipeline-node-lat">Core</div>
-              </div>
-
-              <div className="pipeline-wire"></div>
-
-              {/* STAGE 2: L1 CACHE */}
-              <div className={`pipeline-node ${activeStep?.startsWith('l1') ? (activeStep === 'l1-hit' ? 'node-hit' : (activeStep === 'l1-miss' ? 'node-miss' : 'node-active')) : ''}`}>
-                <Zap size={16} color="#00d2ff" />
-                <div className="pipeline-node-title">L1 Cache</div>
-                <div className="pipeline-node-lat">32KB–128KB</div>
-              </div>
-
-              <div className="pipeline-wire"></div>
-
-              {/* STAGE 3: L2 CACHE */}
-              <div className={`pipeline-node ${activeStep?.startsWith('l2') ? (activeStep === 'l2-hit' ? 'node-hit' : (activeStep === 'l2-miss' ? 'node-miss' : 'node-active')) : ''}`}>
-                <Database size={16} color="#0052ff" />
-                <div className="pipeline-node-title">L2 Cache</div>
-                <div className="pipeline-node-lat">256KB–1MB</div>
-              </div>
-
-              <div className="pipeline-wire"></div>
-
-              {/* STAGE 4: L3 CACHE */}
-              <div className={`pipeline-node ${activeStep?.startsWith('l3') ? (activeStep === 'l3-hit' ? 'node-hit' : (activeStep === 'l3-miss' ? 'node-miss' : 'node-active')) : ''}`}>
-                <Server size={16} color="#a78bfa" />
-                <div className="pipeline-node-title">L3 Cache</div>
-                <div className="pipeline-node-lat">2MB–100MB+</div>
-              </div>
-
-              <div className="pipeline-wire"></div>
-
-              {/* STAGE 5: PHYSICAL DRAM */}
-              <div className={`pipeline-node ${activeStep === 'dram' || activeStep === 'fill' ? 'node-dram' : ''}`}>
-                <HardDrive size={16} color="var(--accent-amber)" />
-                <div className="pipeline-node-title">DRAM</div>
-                <div className="pipeline-node-lat">Gigabytes</div>
+            {/* CACHE HIERARCHY FLOW CONTROLS & VIEW TOGGLE */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+              <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                Cache Hierarchy Flow
+              </span>
+              <div style={{ display: 'inline-flex', background: 'rgba(0,0,0,0.5)', padding: '2px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
+                <button
+                  type="button"
+                  className={`btn-cyber-kinetic ${cacheViewMode === 'pipeline' ? 'btn-action-primary' : ''}`}
+                  style={{ padding: '0.2rem 0.6rem', fontSize: '0.7rem', cursor: 'pointer' }}
+                  onClick={() => {
+                    setCacheViewMode('pipeline');
+                    try { soundFx.playClick(); } catch (e) {}
+                  }}
+                >
+                  ⚡ Linear Pipeline
+                </button>
+                <button
+                  type="button"
+                  className={`btn-cyber-kinetic ${cacheViewMode === 'topology' ? 'btn-action-primary' : ''}`}
+                  style={{ padding: '0.2rem 0.6rem', fontSize: '0.7rem', cursor: 'pointer' }}
+                  onClick={() => {
+                    setCacheViewMode('topology');
+                    try { soundFx.playClick(); } catch (e) {}
+                  }}
+                >
+                  🖧 Multi-Core Topology (L1i/L1d → L2 → L3)
+                </button>
               </div>
             </div>
+
+            {/* CONDITIONAL: LINEAR PIPELINE FLOW */}
+            {cacheViewMode === 'pipeline' && (
+              <div className="cache-pipeline-strip" style={{ marginBottom: '1rem' }}>
+                <div className={`pipeline-node ${activeStep === 'cpu' ? 'node-active' : ''}`}>
+                  <Cpu size={16} color="var(--accent-cyan)" />
+                  <div className="pipeline-node-title">CPU ALU</div>
+                  <div className="pipeline-node-lat">Core</div>
+                </div>
+
+                <div className="pipeline-wire"></div>
+
+                <div className={`pipeline-node ${activeStep?.startsWith('l1') ? (activeStep === 'l1-hit' ? 'node-hit' : (activeStep === 'l1-miss' ? 'node-miss' : 'node-active')) : ''}`}>
+                  <Zap size={16} color="#00d2ff" />
+                  <div className="pipeline-node-title">L1 Cache</div>
+                  <div className="pipeline-node-lat">32KB–128KB</div>
+                </div>
+
+                <div className="pipeline-wire"></div>
+
+                <div className={`pipeline-node ${activeStep?.startsWith('l2') ? (activeStep === 'l2-hit' ? 'node-hit' : (activeStep === 'l2-miss' ? 'node-miss' : 'node-active')) : ''}`}>
+                  <Database size={16} color="#0052ff" />
+                  <div className="pipeline-node-title">L2 Cache</div>
+                  <div className="pipeline-node-lat">256KB–1MB</div>
+                </div>
+
+                <div className="pipeline-wire"></div>
+
+                <div className={`pipeline-node ${activeStep?.startsWith('l3') ? (activeStep === 'l3-hit' ? 'node-hit' : (activeStep === 'l3-miss' ? 'node-miss' : 'node-active')) : ''}`}>
+                  <Server size={16} color="#a78bfa" />
+                  <div className="pipeline-node-title">L3 Cache</div>
+                  <div className="pipeline-node-lat">2MB–100MB+</div>
+                </div>
+
+                <div className="pipeline-wire"></div>
+
+                <div className={`pipeline-node ${activeStep === 'dram' || activeStep === 'fill' ? 'node-dram' : ''}`}>
+                  <HardDrive size={16} color="var(--accent-amber)" />
+                  <div className="pipeline-node-title">DRAM</div>
+                  <div className="pipeline-node-lat">Gigabytes</div>
+                </div>
+              </div>
+            )}
+
+            {/* CONDITIONAL: MULTI-CORE SPLIT CACHE TOPOLOGY (L1i/L1d -> L2 -> Shared L3 -> DRAM) */}
+            {cacheViewMode === 'topology' && (
+              <div className="topology-schematic-card" style={{
+                background: 'rgba(0, 0, 0, 0.55)',
+                border: '1px solid rgba(0, 82, 255, 0.35)',
+                borderRadius: '6px',
+                padding: '0.85rem',
+                marginBottom: '1rem'
+              }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginBottom: '0.65rem' }}>
+                  {/* CORE 0 */}
+                  <div style={{ background: 'rgba(0, 210, 255, 0.05)', border: '1px solid rgba(0, 210, 255, 0.3)', borderRadius: '6px', padding: '0.6rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                      <span style={{ fontSize: '0.74rem', fontWeight: 800, color: 'var(--accent-cyan)' }}>CPU CORE 0 (ACTIVE)</span>
+                      <span className="badge-status badge-blue" style={{ fontSize: '0.6rem' }}>On-Core</span>
+                    </div>
+                    {/* SPLIT L1 CACHE: L1i & L1d */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem', marginBottom: '0.45rem' }}>
+                      <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.3rem', textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)' }}>L1-INSTR (L1i)</div>
+                        <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff' }}>32KB–64KB</div>
+                        <div style={{ fontSize: '0.58rem', color: 'var(--accent-green)' }}>Code Fetch (1.0ns)</div>
+                      </div>
+                      <div style={{
+                        background: activeStep?.startsWith('l1') ? 'rgba(0, 210, 255, 0.25)' : 'rgba(0,0,0,0.4)',
+                        border: activeStep?.startsWith('l1') ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+                        borderRadius: '4px',
+                        padding: '0.3rem',
+                        textAlign: 'center',
+                        transition: 'all 0.2s ease'
+                      }}>
+                        <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)' }}>L1-DATA (L1d)</div>
+                        <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff' }}>32KB–64KB</div>
+                        <div style={{ fontSize: '0.58rem', color: 'var(--accent-cyan)' }}>Data Operands (1.0ns)</div>
+                      </div>
+                    </div>
+                    {/* PRIVATE L2 CACHE */}
+                    <div style={{
+                      background: activeStep?.startsWith('l2') ? 'rgba(0, 82, 255, 0.25)' : 'rgba(0,0,0,0.35)',
+                      border: activeStep?.startsWith('l2') ? '1px solid var(--accent-blue)' : '1px solid var(--border-subtle)',
+                      borderRadius: '4px',
+                      padding: '0.35rem',
+                      textAlign: 'center',
+                      transition: 'all 0.2s ease'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.66rem', color: 'var(--text-secondary)' }}>PRIVATE L2 CACHE:</span>
+                        <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--accent-blue)' }}>256KB–1MB (3.5ns)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CORE 1 */}
+                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '6px', padding: '0.6rem', opacity: 0.85 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                      <span style={{ fontSize: '0.74rem', fontWeight: 800, color: 'var(--text-secondary)' }}>CPU CORE 1</span>
+                      <span className="badge-status badge-purple" style={{ fontSize: '0.6rem' }}>On-Core</span>
+                    </div>
+                    {/* SPLIT L1 CACHE: L1i & L1d */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem', marginBottom: '0.45rem' }}>
+                      <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.3rem', textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)' }}>L1-INSTR (L1i)</div>
+                        <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff' }}>32KB–64KB</div>
+                        <div style={{ fontSize: '0.58rem', color: 'var(--accent-green)' }}>Code Fetch (1.0ns)</div>
+                      </div>
+                      <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.3rem', textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)' }}>L1-DATA (L1d)</div>
+                        <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff' }}>32KB–64KB</div>
+                        <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)' }}>Data Operands (1.0ns)</div>
+                      </div>
+                    </div>
+                    {/* PRIVATE L2 CACHE */}
+                    <div style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.35rem', textAlign: 'center' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)' }}>PRIVATE L2 CACHE:</span>
+                        <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-secondary)' }}>256KB–1MB (3.5ns)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CROSSBAR BUS INTERCONNECT */}
+                <div style={{ textAlign: 'center', margin: '-0.2rem 0 0.35rem 0', color: 'var(--accent-cyan)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>
+                  ▼ Dual-Core Crossbar Interconnect Bus ▼
+                </div>
+
+                {/* SHARED L3 CACHE */}
+                <div style={{
+                  background: activeStep?.startsWith('l3') ? 'rgba(168, 85, 247, 0.25)' : 'rgba(168, 85, 247, 0.08)',
+                  border: activeStep?.startsWith('l3') ? '1px solid #c084fc' : '1px solid rgba(168, 85, 247, 0.35)',
+                  borderRadius: '6px',
+                  padding: '0.55rem 0.85rem',
+                  marginBottom: '0.5rem',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  transition: 'all 0.2s ease'
+                }}>
+                  <div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#ffffff' }}>
+                      SHARED L3 CACHE (2MB TO 100MB+)
+                    </div>
+                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                      Shared Across All Processor Cores • Bridges Gap to Main RAM (12.0 ns)
+                    </div>
+                  </div>
+                  <span className="badge-status badge-purple" style={{ fontSize: '0.68rem' }}>
+                    Shared Multi-Core Die
+                  </span>
+                </div>
+
+                {/* SYSTEM BUS TO DRAM */}
+                <div style={{
+                  background: (activeStep === 'dram' || activeStep === 'fill') ? 'rgba(245, 158, 11, 0.25)' : 'rgba(245, 158, 11, 0.06)',
+                  border: (activeStep === 'dram' || activeStep === 'fill') ? '1px solid var(--accent-amber)' : '1px solid rgba(245, 158, 11, 0.3)',
+                  borderRadius: '6px',
+                  padding: '0.55rem 0.85rem',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  transition: 'all 0.2s ease'
+                }}>
+                  <div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 900, color: 'var(--accent-amber)' }}>
+                      OFF-CHIP MAIN MEMORY (DRAM — GIGABYTES)
+                    </div>
+                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                      External System Bus Memory Access (60.0 – 80.0 ns Miss Penalty)
+                    </div>
+                  </div>
+                  <span className="badge-status badge-amber" style={{ fontSize: '0.68rem' }}>
+                    DRAM Bus Fill
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* LAST RESULT HIGHLIGHT BANNER */}
             {lastResult && (
@@ -859,6 +1024,80 @@ export default function MemoryHierarchyLab() {
                 </span>
               </div>
             )}
+
+            {/* FEATURE 1: HUMAN-SCALE TIME TRANSLATOR */}
+            <div className="human-scale-card" style={{
+              background: 'rgba(0, 210, 255, 0.04)',
+              border: '1px solid rgba(0, 210, 255, 0.25)',
+              borderRadius: '6px',
+              padding: '0.75rem',
+              marginBottom: '1rem'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <Clock size={15} color="var(--accent-cyan)" />
+                  <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.04em' }}>
+                    HUMAN-SCALE TIME EQUIVALENCE (1 CLOCK CYCLE = 1 SECOND)
+                  </span>
+                </div>
+                <span className="badge-status badge-amber" style={{ fontSize: '0.65rem' }}>
+                  Relative Latency Scale
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(0,0,0,0.4)', padding: '0.45rem 0.7rem', borderRadius: '4px', marginBottom: '0.45rem' }}>
+                <div>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>OPERATION: </span>
+                  <strong style={{ fontSize: '0.8rem', color: lastResult?.hit ? 'var(--accent-green)' : (lastResult ? 'var(--accent-red)' : 'var(--accent-cyan)') }}>
+                    {lastResult ? (lastResult.hit ? `${lastResult.level} HIT (${lastResult.latency} ns)` : `DRAM MISS (${lastResult.latency} ns)`) : 'REFERENCE (L1 HIT: 1.0 ns)'}
+                  </strong>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>HUMAN TIME: </span>
+                  <strong style={{ fontSize: '0.84rem', color: 'var(--accent-cyan)', fontFamily: 'var(--font-mono)' }}>
+                    {lastResult
+                      ? (lastResult.level === 'L1 Cache' ? '⚡ 1.0 Second' : (lastResult.level === 'L2 Cache' ? '⚡ 3.5 Seconds' : (lastResult.level === 'L3 Cache' ? '⚡ 12.0 Seconds' : '⏳ 1.5 Minutes')))
+                      : '⚡ 1.0 Second'}
+                  </strong>
+                </div>
+              </div>
+
+              <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '0.5rem' }}>
+                {lastResult
+                  ? (lastResult.level === 'L1 Cache'
+                      ? '🎯 Desk Pen Analogy: Reaching for a pen right on your desk (1.0s). 200× faster than off-chip DRAM!'
+                      : (lastResult.level === 'L2 Cache'
+                          ? '📚 Room Shelf Analogy: Standing up to grab a book from your room bookshelf (3.5s). Serviced on-core!'
+                          : (lastResult.level === 'L3 Cache'
+                              ? '🚪 Hallway Cabinet Analogy: Walking to the shared hallway cabinet (12.0s). Shared across all CPU cores!'
+                              : '🚶 Library Analogy: Walking 1.5 minutes down the street to the library. Suffered DRAM memory bus stall!')))
+                  : '💡 Scale Insight: If 1 CPU cycle = 1 sec: L1 Cache takes 1s (desk), L2 takes 3.5s (room), L3 takes 12s (hallway), while Main RAM takes 1.5 minutes (walk to library), and SSD takes 3.5 hours!'}
+              </div>
+
+              {/* VISUAL LATENCY TICKER STRIP */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.35rem', textAlign: 'center' }}>
+                <div style={{ background: (!lastResult || lastResult?.level === 'L1 Cache') ? 'rgba(0, 210, 255, 0.25)' : 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.25rem' }}>
+                  <div style={{ fontSize: '0.64rem', color: 'var(--accent-cyan)', fontWeight: 800 }}>L1 CACHE</div>
+                  <div style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: '#ffffff' }}>1.0s (Desk)</div>
+                </div>
+                <div style={{ background: lastResult?.level === 'L2 Cache' ? 'rgba(0, 82, 255, 0.25)' : 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.25rem' }}>
+                  <div style={{ fontSize: '0.64rem', color: 'var(--accent-blue)', fontWeight: 800 }}>L2 CACHE</div>
+                  <div style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: '#ffffff' }}>3.5s (Shelf)</div>
+                </div>
+                <div style={{ background: lastResult?.level === 'L3 Cache' ? 'rgba(168, 85, 247, 0.25)' : 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.25rem' }}>
+                  <div style={{ fontSize: '0.64rem', color: '#c084fc', fontWeight: 800 }}>L3 SHARED</div>
+                  <div style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: '#ffffff' }}>12s (Hall)</div>
+                </div>
+                <div style={{ background: (lastResult && !lastResult.hit) ? 'rgba(245, 158, 11, 0.25)' : 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.25rem' }}>
+                  <div style={{ fontSize: '0.64rem', color: 'var(--accent-amber)', fontWeight: 800 }}>MAIN RAM</div>
+                  <div style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: '#ffffff' }}>90s (Street)</div>
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.25rem' }}>
+                  <div style={{ fontSize: '0.64rem', color: 'var(--accent-purple)', fontWeight: 800 }}>NVMe SSD</div>
+                  <div style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: '#ffffff' }}>3.5 Hours</div>
+                </div>
+              </div>
+            </div>
 
             {/* LIVE L1 CACHE TABLE (DIRECT-MAPPED SIMULATOR) */}
             <div style={{ marginTop: 'auto' }}>

@@ -264,7 +264,7 @@
     color: #334155;
   }
 
-  /* Visual Hierarchy Diagram Box */
+  /* Visual Hierarchy Pyramid Box */
   .hierarchy-pyramid-box {
     display: flex;
     flex-direction: column;
@@ -312,8 +312,8 @@
     <div class="callout-title">📋 Document Scope & Purpose</div>
     This reference document serves two complementary functions:
     <ol style="margin: 4px 0 0 0; padding-left: 18px;">
-      <li><strong>Operational Guide:</strong> A step-by-step procedure to launch, navigate, and demonstrate every interactive simulator on the OS-ArchLab platform.</li>
-      <li><strong>Academic Theory & Viva Voce:</strong> In-depth, university-curriculum aligned explanations covering DMA bus arbitration, transfer modes, the 5-tier memory pyramid, and cache locality principles.</li>
+      <li><strong>Operational Guide:</strong> A step-by-step procedure to launch, navigate, and demonstrate every interactive simulator on the OS-ArchLab platform (including the Multi-Core Topology and Human-Scale Time Translation).</li>
+      <li><strong>Academic Theory & Viva Voce:</strong> In-depth, university-curriculum aligned explanations covering DMA bus arbitration, transfer modes, the 5-tier memory pyramid, cache levels (L1i/L1d, L2, L3), and locality principles.</li>
     </ol>
   </div>
 
@@ -461,20 +461,33 @@
 
   <div class="step-box">
     <div class="step-header">
-      <span class="step-num">Step 2: Execute Cache Memory Access Queries</span>
+      <span class="step-num">Step 2: Toggle Linear Pipeline vs. Multi-Core Topology</span>
+      <span class="badge badge-purple">New Topology Feature</span>
+    </div>
+    <p>Directly above the cache flow, click the view toggle buttons:</p>
+    <ul>
+      <li><strong>⚡ Linear Pipeline:</strong> Shows sequential address resolution across CPU &rarr; L1 &rarr; L2 &rarr; L3 &rarr; DRAM.</li>
+      <li><strong>🖧 Multi-Core Topology:</strong> Displays modern multi-core architecture: Core 0 and Core 1 each having private split <code>L1i</code> (Instructions) and <code>L1d</code> (Data) caches + private L2 cache, both converging into the <strong>Shared L3 Cache (2MB to 100MB+)</strong> before bridging to off-chip DRAM.</li>
+    </ul>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header">
+      <span class="step-num">Step 3: Execute Cache Memory Access Queries</span>
       <span class="badge badge-amber">Interactive Workbench</span>
     </div>
-    <p>1. In the right panel, type address <code>0x1004</code> and click <strong><code>QUERY ADDRESS</code></strong>.<br>
+    <p>1. In the right panel, type address <code>0x1004</code> and click <strong><code>REQUEST MEMORY READ</code></strong>.<br>
     2. Watch the laser beam pipeline: L1 Cache checks its lines &rarr; <strong>MISS (12.0 ns)</strong> &rarr; Line Fill from DRAM &rarr; Line 0 updates.<br>
     3. Query <code>0x1004</code> a second time: the beam stops at L1 &rarr; <strong>CACHE HIT (1.0 ns)</strong> &rarr; instantaneous return.</p>
   </div>
 
   <div class="step-box">
     <div class="step-header">
-      <span class="step-num">Step 3: Demonstrate Locality Presets & L1 Cache Table</span>
-      <span class="badge badge-green">Locality Experiments</span>
+      <span class="step-num">Step 4: Demonstrate Human-Scale Time Translation & Locality</span>
+      <span class="badge badge-green">Human-Scale & Locality</span>
     </div>
     <ul>
+      <li><strong>⏱️ Human-Scale Time Card:</strong> Point to the time card below the result banner. Show the professor that an L1 Hit takes <strong>1.0 second</strong> (picking a pen from your desk), whereas a DRAM Miss takes <strong>1.5 minutes</strong> (walking down the street to the library)!</li>
       <li>Click <strong><code>⚡ Spatial Locality</code>:</strong> Queries consecutive addresses (<code>0x1000</code>, <code>0x1004</code>, <code>0x1008</code>, <code>0x100C</code>). Initial query misses; subsequent adjacent words hit because an entire 64-byte block was brought in.</li>
       <li>Click <strong><code>🔄 Temporal Locality</code>:</strong> Queries the same address repeatedly, driving the Hit Ratio toward 90%+.</li>
       <li>Click <strong><code>💥 Cache Thrashing</code>:</strong> Queries conflicting addresses mapping to the same line index, demonstrating thrashing and frequent line evictions.</li>
@@ -617,12 +630,77 @@
 
   <!-- SECTION 3 CONT -->
   <div class="page-break"></div>
-  <h2>Topic 3: Cache Memory as the "Speed Bridge"</h2>
+  <h2>Topic 3: Cache Memory as the "Speed Bridge" & Multi-Level Architecture</h2>
 
   <h3>1. The Processor-Memory Performance Gap</h3>
   <p>Over four decades, CPU clock frequencies increased by over 200&times;, while physical DRAM access latency improved by only a factor of 10. If modern CPUs had to wait 60–80 ns for DRAM on every instruction fetch, the execution core would sit idle 95% of the time. <strong>Cache memory</strong> acts as an on-chip hardware buffer that bridges this speed disparity.</p>
 
-  <h3>2. Locality of Reference</h3>
+  <h3>2. The Human-Scale Time Analogy (1 Clock Cycle = 1 Second)</h3>
+  <p>To convey the physical reality of memory access speeds to an audience or evaluator, scale 1 clock cycle (0.5 ns) to 1 human second:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Memory Level</th>
+        <th>Physical Access Latency</th>
+        <th>Human-Scale Equivalent Time</th>
+        <th>Everyday Physical Analogy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>CPU Registers</strong></td>
+        <td>0.5 ns (1 cycle)</td>
+        <td><strong>0.5 Second</strong></td>
+        <td>Holding the paper directly in your hand.</td>
+      </tr>
+      <tr>
+        <td><strong>L1 Cache</strong></td>
+        <td>1.0 ns (2–3 cycles)</td>
+        <td><strong>1.0 Second</strong></td>
+        <td>Reaching for a pen or notepad on your desk.</td>
+      </tr>
+      <tr>
+        <td><strong>L2 Cache</strong></td>
+        <td>3.5 ns (7–10 cycles)</td>
+        <td><strong>3.5 Seconds</strong></td>
+        <td>Standing up to pull a book from your room's bookshelf.</td>
+      </tr>
+      <tr>
+        <td><strong>L3 Cache (Shared)</strong></td>
+        <td>12.0 ns (25–35 cycles)</td>
+        <td><strong>12.0 Seconds</strong></td>
+        <td>Walking out into the hallway to check the shared cabinet.</td>
+      </tr>
+      <tr>
+        <td><strong>Main Memory (DRAM)</strong></td>
+        <td>65.0 ns (150–200 cycles)</td>
+        <td><strong>1.5 Minutes</strong></td>
+        <td>Walking down the street to the corner store / local library.</td>
+      </tr>
+      <tr>
+        <td><strong>Secondary Storage (SSD)</strong></td>
+        <td>10 µs (20,000 cycles)</td>
+        <td><strong>3.5 Hours</strong></td>
+        <td>Driving to a library in another city.</td>
+      </tr>
+      <tr>
+        <td><strong>Tertiary Storage (Tape)</strong></td>
+        <td>10 s (20,000,000,000 cycles)</td>
+        <td><strong>300 Years</strong></td>
+        <td>Excavating an ancient archaeological archive.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3. Levels of Cache: Multi-Core Shared Topology</h3>
+  <p>Modern processors feature three distinct tiers of cache memory:</p>
+  <ul>
+    <li><strong>L1 Cache (Private, On-Core, 32KB to 128KB):</strong> Located directly on the CPU core. Extremely fast (1.0 ns). Crucially, modern cores feature a <em>Harvard Architecture split</em> into <strong>L1i (Instruction Cache)</strong> and <strong>L1d (Data Cache)</strong> so that instruction fetch and data operand access can occur simultaneously without bus stalls.</li>
+    <li><strong>L2 Cache (Private/Shared, 256KB to 1MB):</strong> Larger and slightly slower (3.5 ns). Services L1 misses and buffers working sets.</li>
+    <li><strong>L3 Cache (Shared Across All Cores, 2MB to 100MB+):</strong> Sits on the processor die but is shared across all CPU cores. Bridges the gap to external DRAM (12.0 ns), allowing cores to share data without accessing the external memory bus.</li>
+  </ul>
+
+  <h3>4. Locality of Reference & 64-Byte Block Transfer</h3>
   <p>Cache memory achieves hit rates exceeding 90% because real-world programs exhibit predictable memory access patterns known as <strong>Locality of Reference</strong>:</p>
 
   <div class="callout">
@@ -632,18 +710,12 @@
   </div>
 
   <div class="callout">
-    <div class="callout-title">⚡ Spatial Locality (Locality in Space)</div>
+    <div class="callout-title">⚡ Spatial Locality (Locality in Space) & 64-Byte Block Fetch</div>
     <strong>Definition:</strong> If a memory location is referenced, nearby memory locations will likely be referenced soon.<br>
-    <strong>Examples:</strong> Sequential instruction execution (Program Counter incrementing), linear array traversals (<code>array[i]</code>, <code>array[i+1]</code>), structure fields stored contiguously.
+    <strong>Hardware Mechanism:</strong> When a miss occurs on address <code>0x1004</code> (4 bytes), the memory controller fetches an entire <strong>64-byte block (cache line)</strong> containing addresses <code>0x1000</code> through <code>0x103F</code>. This preloads the next 15 words into cache for free, ensuring subsequent sequential accesses hit with 100% efficiency.
   </div>
 
-  <h3>3. Cache Hit vs. Cache Miss & Block Replacement</h3>
-  <ul>
-    <li><strong>Cache Hit:</strong> The requested address is found in one of the cache lines. Data is supplied to the CPU execution core in 1–3 clock cycles without touching the external memory bus.</li>
-    <li><strong>Cache Miss:</strong> The address is absent. The CPU pipeline stalls while an entire <strong>Cache Line / Block</strong> (typically 64 bytes) is fetched from DRAM into the cache. This block transfer automatically exploits spatial locality, ensuring subsequent consecutive addresses hit.</li>
-  </ul>
-
-  <h3>4. Average Memory Access Time (AMAT) Formula</h3>
+  <h3>5. Average Memory Access Time (AMAT) Formula</h3>
   <p>The effectiveness of a cache subsystem is measured mathematically using AMAT:</p>
   <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 16px; margin: 10px 0; font-family: 'Fira Code', monospace; font-size: 10pt; color: #0052ff; font-weight: 700;">
     AMAT = Hit Time + (Miss Rate &times; Miss Penalty)
@@ -705,14 +777,28 @@
   </div>
 
   <div class="viva-card">
-    <div class="viva-q">Q7: What happens during a Cache Miss in hardware?</div>
+    <div class="viva-q">Q7: Why is L1 Cache split into separate Instruction (L1i) and Data (L1d) caches?</div>
     <div class="viva-a">
-      <strong>Answer:</strong> On a cache miss, the CPU pipeline stalls. The cache controller initiates an external bus transaction to fetch an entire 64-byte block (cache line) from Main Memory into the designated cache set. The Tag, Valid bit, and Data fields are updated in SRAM, and the requested word is simultaneously forwarded to the CPU core.
+      <strong>Answer:</strong> Splitting L1 into L1i and L1d allows the CPU to fetch a machine instruction (via the Instruction Fetch unit) and load or store data operands (via the ALU Load/Store unit) simultaneously on the exact same clock cycle. It eliminates structural hazards between instruction fetch and data memory access without doubling system bus complexity.
     </div>
   </div>
 
   <div class="viva-card">
-    <div class="viva-q">Q8: What is Cache Thrashing and how does it happen?</div>
+    <div class="viva-q">Q8: Why is L3 Cache shared across all CPU cores while L1 and L2 are private?</div>
+    <div class="viva-a">
+      <strong>Answer:</strong> L1 and L2 caches must be small and physically close to their individual ALU cores to achieve 1.0–3.5 ns latencies without signal propagation delays. L3 is larger (2MB–100MB+) and shared across all cores so that threads running on different cores can share cached data and synchronize with low latency (12 ns) without generating expensive external bus traffic to off-chip DRAM (65 ns).
+    </div>
+  </div>
+
+  <div class="viva-card">
+    <div class="viva-q">Q9: What is the "Human-Scale" time analogy for memory access?</div>
+    <div class="viva-a">
+      <strong>Answer:</strong> If one CPU clock cycle is scaled to 1 second: L1 cache access takes <strong>1.0 second</strong> (picking a pen from your desk), L2 takes <strong>3.5 seconds</strong> (grabbing a book from your room shelf), L3 takes <strong>12.0 seconds</strong> (walking to the hallway cabinet), while Main Memory DRAM takes <strong>1.5 minutes</strong> (walking down the street to the library), and SSD takes <strong>3.5 hours</strong> (driving to another city).
+    </div>
+  </div>
+
+  <div class="viva-card">
+    <div class="viva-q">Q10: What is Cache Thrashing and how does it happen?</div>
     <div class="viva-a">
       <strong>Answer:</strong> Cache thrashing occurs when multiple distinct memory addresses map to the exact same cache line index. As the program alternates between these addresses, each access evicts the previous block, causing a continuous cascade of cache misses and eliminating the speed benefit of the cache.
     </div>
