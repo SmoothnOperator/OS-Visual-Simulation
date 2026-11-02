@@ -693,7 +693,7 @@ export default function DmaSimulator() {
             <span
               className="stat-value"
               style={{
-                color: cpuUtilization < 50 ? 'var(--accent-red)' : (cpuUtilization < 85 ? 'var(--accent-amber)' : 'var(--accent-green)')
+                color: cpuUtilization <= 15 ? 'var(--accent-red)' : (cpuUtilization < 85 ? 'var(--accent-amber)' : 'var(--accent-green)')
               }}
             >
               {cpuUtilization}%

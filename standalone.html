@@ -5506,7 +5506,7 @@ body.cinema-mode-active main {
       const util = totalCycles > 0 ? Math.round((cpuWorkCycles / totalCycles) * 100) : 100;
       document.getElementById('statCpuUtil').innerText = `${util}%`;
 
-      if (util < 50) {
+      if (util <= 15) {
         document.getElementById('statCpuUtil').style.color = 'var(--accent-red)';
       } else if (util < 85) {
         document.getElementById('statCpuUtil').style.color = 'var(--accent-amber)';
