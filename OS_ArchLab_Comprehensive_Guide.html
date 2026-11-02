@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OS-ArchLab: Complete Architecture & Hardware Visualizer Guide</title>
+<title>OS-ArchLab: DMA Transfer Modes & CPU Instruction Cycle Guide</title>
 <style>
   @page {
     size: A4 portrait;
@@ -121,8 +121,6 @@
   .badge-blue { background: #e0e7ff; color: #1e40af; border: 1px solid #c7d2fe; }
   .badge-green { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
   .badge-amber { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-  .badge-purple { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
-  .badge-red { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
   /* Callout Boxes */
   .callout {
@@ -204,10 +202,10 @@
     <div>
       <div class="doc-brand">
         <span class="brand-badge">OS-ArchLab</span>
-        <span style="font-weight: 700; color: #0052ff; font-size: 11pt;">ACADEMIC WORKSHOP & VIVA VOCE GUIDE</span>
+        <span style="font-weight: 700; color: #0052ff; font-size: 11pt;">ACADEMIC WORKSHOP & VIVA VOCE MANUAL</span>
       </div>
       <h1 class="doc-title" style="border: none; margin: 4px 0 2px 0; padding: 0;">Operating Systems Hardware Architecture Lab</h1>
-      <p class="doc-subtitle">DMA Transfer Modes • CPU Instruction Execution Cycle • Memory Hierarchy & Cache Memory</p>
+      <p class="doc-subtitle">Direct Memory Access (DMA) Modes & CPU Instruction Execution Cycle</p>
     </div>
     <div class="doc-meta">
       <strong>Course:</strong> Operating System Concepts<br>
@@ -219,18 +217,17 @@
   <!-- PART 1: OVERVIEW -->
   <h1>Part 1: Quickstart & Interface Tour</h1>
   <p>
-    <strong>OS-ArchLab</strong> is an interactive computer architecture and operating system hardware simulation platform. It bridges abstract low-level concepts into visible physical silicon events through three dedicated simulation engines:
+    <strong>OS-ArchLab</strong> is an interactive computer architecture and operating system hardware simulation platform. It bridges abstract low-level concepts into visible physical silicon events through two dedicated simulation engines:
   </p>
   <ul>
     <li><strong>Tab 1: DMA Modes Simulator:</strong> Simulates Direct Memory Access controller (Intel 8237 style) cycle-by-cycle bus arbitration across Burst, Cycle Stealing, and Demand modes.</li>
     <li><strong>Tab 2: Instruction Cycle Lab:</strong> Simulates the 3-phase machine cycle (Fetch, Decode, Execute) through an interactive clock pulse stepper across CPU registers (PC, MAR, MDR, IR, AC) and RAM.</li>
-    <li><strong>Tab 3: Memory Hierarchy & Cache Lab:</strong> Simulates the Speed Bridge, Multi-Level Cache (L1i/L1d, L2, L3, DRAM), Locality of Reference (Temporal & Spatial), and interactive Hit vs Miss block fills.</li>
   </ul>
 
   <div class="callout">
     <div class="callout-title">Launching & Running the Application</div>
     <strong>React Web App:</strong> Run <code>npm run dev</code> and open <code>http://localhost:5173</code> in Google Chrome or Edge.<br>
-    <strong>Standalone Distribution:</strong> Double-click <code>standalone.html</code> in any web browser with zero node/npm dependencies. Use the top navigation bar or URL hashes (<code>#dma</code>, <code>#instruction</code>, <code>#memory</code>) to switch labs. Press <strong>F</strong> or click <strong>CINEMA MODE</strong> for presentation view.
+    <strong>Standalone Offline Distribution:</strong> Double-click <code>standalone.html</code> in any web browser with zero node/npm dependencies. Use the top navigation bar or URL hashes (<code>#dma</code>, <code>#instruction</code>) to switch labs. Press <strong>F</strong> or click <strong>CINEMA MODE</strong> for presentation view.
   </div>
 
   <!-- PART 2: TOPIC 1 - DMA -->
@@ -383,66 +380,8 @@
     </div>
   </div>
 
-  <!-- PART 4: TOPIC 3 - MEMORY HIERARCHY & CACHE -->
-  <h1>Part 4: Memory Hierarchy & Cache Memory (The Speed Bridge)</h1>
-  <p>
-    CPU clock frequencies have outpaced physical DRAM access times by over 200&times;. Cache memory acts as an ultra-fast hardware buffer (Static RAM / SRAM) between CPU registers and DRAM, eliminating bus wait states.
-  </p>
-
-  <h2>Locality of Reference: The Core Operating System Principle</h2>
-  <ul>
-    <li><strong>Temporal Locality:</strong> If a memory location is accessed once, it is highly likely to be accessed again soon (e.g. loop index counters, stack frame variables, frequently called subroutines).</li>
-    <li><strong>Spatial Locality:</strong> When a memory location is accessed, nearby addresses will likely be accessed soon (e.g. linear array iteration, sequential instruction stream execution).</li>
-  </ul>
-
-  <h2>Multi-Level Cache Hierarchy (L1, L2, L3)</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Cache Level</th>
-        <th>Physical Location</th>
-        <th>Typical Capacity</th>
-        <th>Latency & Architecture Role</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>L1 Cache</strong></td>
-        <td>On-Core (Directly on CPU die)</td>
-        <td>32 KB &ndash; 128 KB</td>
-        <td><strong>1.0 ns (1&ndash;3 cycles):</strong> Split into separate L1i (instruction) and L1d (data) caches to prevent fetch contention.</td>
-      </tr>
-      <tr>
-        <td><strong>L2 Cache</strong></td>
-        <td>On-Core / Dedicated Private</td>
-        <td>256 KB &ndash; 1 MB</td>
-        <td><strong>3.5 ns (10&ndash;14 cycles):</strong> Services L1 cache misses; larger capacity buffer.</td>
-      </tr>
-      <tr>
-        <td><strong>L3 Cache</strong></td>
-        <td>Shared Processor Die</td>
-        <td>2 MB &ndash; 100 MB+</td>
-        <td><strong>12.0 ns (30&ndash;40 cycles):</strong> Shared across all CPU cores; bridges on-chip caches to off-chip system bus.</td>
-      </tr>
-      <tr>
-        <td><strong>Main Memory (RAM)</strong></td>
-        <td>Motherboard System Bus</td>
-        <td>Gigabytes (8&ndash;64 GB)</td>
-        <td><strong>60.0 &ndash; 80.0 ns (150&ndash;200 cycles):</strong> Slower Dynamic RAM (DRAM) working memory.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h2>How Cache Works: Hits vs. Misses</h2>
-  <ul>
-    <li><strong>Cache Hit:</strong> When CPU references address, Tag matches line in SRAM. Data is delivered immediately in 1.0 ns with <strong>zero DRAM bus traffic</strong>.</li>
-    <li><strong>Cache Miss:</strong> If Tag mismatches (or Valid bit V=0), CPU suffers miss penalty. The memory controller fetches an entire <strong>64-byte block</strong> from DRAM into the cache line, populating data and setting Valid V=1.</li>
-  </ul>
-
-  <div class="page-break"></div>
-
-  <!-- PART 5: VIVA VOCE CHEAT SHEET -->
-  <h1>Part 5: Evaluator Viva Voce Questions & High-Scoring Answers</h1>
+  <!-- PART 4: VIVA VOCE CHEAT SHEET -->
+  <h1>Part 4: Evaluator Viva Voce Questions & High-Scoring Answers</h1>
 
   <div class="callout">
     <div class="callout-title">Q1: Why is DMA faster than Interrupt-driven I/O or Programmed I/O?</div>
@@ -460,18 +399,18 @@
   </div>
 
   <div class="callout">
-    <div class="callout-title">Q4: Why is L1 cache split into separate L1i (Instruction) and L1d (Data) caches?</div>
-    <strong>Answer:</strong> To support a Harvard microarchitecture on the core. Having separate instruction and data caches allows the CPU to fetch the next instruction (from L1i) at the exact same clock cycle that an executing instruction reads or writes an operand (to L1d), eliminating structural pipeline stalls.
+    <div class="callout-title">Q4: What happens on the bus when the CPU grants DMA access (HLDA=1)?</div>
+    <strong>Answer:</strong> The CPU sets its Address, Data, and Control bus output drivers into high-impedance (tri-state) mode. This electrically disconnects the CPU from the bus wires, allowing the DMA Controller to drive memory addresses and control strobe lines without electrical collision.
   </div>
 
   <div class="callout">
-    <div class="callout-title">Q5: What is Average Memory Access Time (AMAT) and how does cache improve it?</div>
-    <strong>Answer:</strong> $\text{AMAT} = \text{Hit Time} + (\text{Miss Rate} \times \text{Miss Penalty})$. Because modern L1/L2/L3 caches achieve a 90%&ndash;95% hit rate via Locality of Reference, the effective access time drops from 65.0 ns (pure DRAM) down to ~1.6&ndash;7.0 ns, providing a ~9&times; to 40&times; system speedup!
+    <div class="callout-title">Q5: In Cycle Stealing mode, why doesn't the CPU crash when the bus is stolen?</div>
+    <strong>Answer:</strong> The DMA Controller only requests the bus for a single machine clock cycle (or when the CPU is performing internal register operations that don't need the memory bus). The CPU temporarily inserts an idle wait-state if it needs memory, and resumes immediately on the next clock pulse.
   </div>
 
   <!-- FOOTER -->
   <div style="margin-top: 25px; border-top: 1px solid #cbd5e1; padding-top: 8px; text-align: center; font-size: 8pt; color: #94a3b8;">
-    OS-ArchLab • Operating System Overview Academic Visualizer • Designed for Module 1 Demonstrations & Viva Examinations
+    OS-ArchLab • Operating System Overview Academic Visualizer • DMA Transfer Modes & CPU Instruction Cycle
   </div>
 
 </body>

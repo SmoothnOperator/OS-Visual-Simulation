@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Zap, Cpu, Layers, Volume2, VolumeX, Maximize2, Minimize2, RotateCcw } from 'lucide-react';
+import { Zap, Cpu, Volume2, VolumeX, Maximize2, Minimize2 } from 'lucide-react';
 import { soundFx } from '../utils/audioSynthesizer';
 
 export default function Navbar({ activeTab, setActiveTab, onReboot }) {
@@ -18,7 +18,6 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
     };
 
     const handleKeyDown = (e) => {
-      // Toggle on 'f' or 'F' if not typing in an input
       if ((e.key === 'f' || e.key === 'F') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') {
         toggleCinemaMode();
       }
@@ -83,7 +82,7 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
               <span className="telemetry-dot"></span> BUS: 3.2 GHz
             </span>
             <span className="telemetry-item">
-              <span className="telemetry-dot"></span> ARCH: 64-BIT MULTI-TIER
+              <span className="telemetry-dot"></span> DMA 8237: ARMED
             </span>
           </div>
 
@@ -117,7 +116,7 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
           </button>
         </div>
         <div className="brand-subtitle">
-          Operating System Overview: DMA Transfer Modes • CPU Instruction Cycle • Cache & Memory Hierarchy
+          Operating System Overview: DMA Transfer Modes & CPU Instruction Execution Cycle
         </div>
       </div>
 
@@ -145,18 +144,6 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
             }}
           >
             <Cpu size={17} /> Instruction Cycle
-          </button>
-
-          <button
-            id="tabBtnMemory"
-            className={`tab-btn btn-cyber-kinetic ${activeTab === 'memory' ? 'active' : ''}`}
-            onClick={() => {
-              try { soundFx.playClick(); } catch (e) {}
-              setActiveTab('memory');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          >
-            <Layers size={17} /> Memory & Cache
           </button>
         </nav>
 
@@ -195,17 +182,6 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
             }}
           >
             Instruction Cycle
-          </button>
-
-          <button
-            className={`tab-btn ${activeTab === 'memory' ? 'active' : ''}`}
-            style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', borderRadius: '9999px' }}
-            onClick={() => {
-              setActiveTab('memory');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          >
-            Memory & Cache
           </button>
 
           <button className="cinema-exit-btn" onClick={toggleCinemaMode} title="Exit Cinema Mode (ESC)">
