@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Script to generate the comprehensive OS-ArchLab Operation & Topics Guide PDF.
-Builds a high-resolution, print-optimized HTML document and renders it using Headless Chrome.
+Script to generate the comprehensive OS-ArchLab Direct Memory Access (DMA) Guide PDF.
+Builds a high-resolution, print-optimized HTML document focused entirely on DMA modes,
+bus arbitration, hardware registers, and viva questions.
 """
 import os
 import subprocess
@@ -15,7 +16,7 @@ html_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OS-ArchLab: Complete Operation Guide & Operating System Topic Notes</title>
+<title>OS-ArchLab: Direct Memory Access (DMA) Simulator Guide & Academic Notes</title>
 <style>
   @page {
     size: A4 portrait;
@@ -276,29 +277,6 @@ html_content = """<!DOCTYPE html>
     margin-bottom: 4px;
     color: #334155;
   }
-
-  /* Visual Hierarchy Pyramid Box */
-  .hierarchy-pyramid-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    margin: 12px 0 16px 0;
-    page-break-inside: avoid;
-  }
-  .tier-row {
-    text-align: center;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 8.8pt;
-    border: 1px solid #cbd5e1;
-  }
-  .tier-1 { width: 45%; background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
-  .tier-2 { width: 58%; background: #e0e7ff; color: #3730a3; border-color: #a5b4fc; }
-  .tier-3 { width: 72%; background: #fef3c7; color: #92400e; border-color: #fde68a; }
-  .tier-4 { width: 85%; background: #f3e8ff; color: #6b21a8; border-color: #d8b4fe; }
-  .tier-5 { width: 98%; background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
 </style>
 </head>
 <body>
@@ -310,8 +288,8 @@ html_content = """<!DOCTYPE html>
         <span class="brand-badge">OS-ArchLab</span>
         <span style="font-size: 11pt; font-weight: 700; color: #0052ff;">HARDWARE & OS SIMULATOR</span>
       </div>
-      <h1 class="doc-title" style="border: none; margin: 4px 0 2px 0; padding: 0;">Comprehensive Operation Guide & Academic Notes</h1>
-      <p class="doc-subtitle">Direct Memory Access (DMA) Modes & Memory Hierarchy / Cache Speed Bridge</p>
+      <h1 class="doc-title" style="border: none; margin: 4px 0 2px 0; padding: 0;">Direct Memory Access (DMA) Simulator Guide</h1>
+      <p class="doc-subtitle">Bus Arbitration Handshake, Transfer Modes & CPU Pipeline Contention</p>
     </div>
     <div class="doc-meta">
       <strong>Course:</strong> Operating Systems (Module 1)<br>
@@ -325,15 +303,15 @@ html_content = """<!DOCTYPE html>
     <div class="callout-title">📋 Document Scope & Purpose</div>
     This reference document serves two complementary functions:
     <ol style="margin: 4px 0 0 0; padding-left: 18px;">
-      <li><strong>Operational Guide:</strong> A step-by-step procedure to launch, navigate, and demonstrate every interactive simulator on the OS-ArchLab platform (including the Multi-Core Topology and Human-Scale Time Translation).</li>
-      <li><strong>Academic Theory & Viva Voce:</strong> In-depth, university-curriculum aligned explanations covering DMA bus arbitration, transfer modes, the 5-tier memory pyramid, cache levels (L1i/L1d, L2, L3), and locality principles.</li>
+      <li><strong>Operational Guide:</strong> A step-by-step procedure to launch, configure, and demonstrate the interactive DMA simulator, arbitration signals, and CPU microarchitecture X-ray.</li>
+      <li><strong>Academic Theory & Viva Voce:</strong> In-depth, university-curriculum aligned explanations covering DMA controller architecture (Intel 8237), HOLD/HLDA bus arbitration, the three transfer modes (Burst, Cycle Stealing, Transparent), and high-scoring viva answers.</li>
     </ol>
   </div>
 
   <!-- SECTION 1 -->
   <h1>Part 1: How to Launch & Navigate the Platform</h1>
   
-  <p>The OS-ArchLab application is engineered for zero-latency presentation environments and can be launched in two modes:</p>
+  <p>The OS-ArchLab DMA simulation platform is engineered for zero-latency presentation environments and can be launched in two ways:</p>
 
   <div class="step-box">
     <div class="step-header">
@@ -375,7 +353,7 @@ html_content = """<!DOCTYPE html>
       <tr>
         <td><strong>SFX Toggle Button</strong></td>
         <td>Click <code>SFX: OFF</code> / <code>SFX: ON</code></td>
-        <td>Toggles synthesized Web Audio sound FX for bus clocks, hits, and misses.</td>
+        <td>Toggles synthesized Web Audio sound FX for bus clock ticks and transfer pulses.</td>
       </tr>
       <tr>
         <td><strong>Cinema Mode (F Key)</strong></td>
@@ -383,24 +361,23 @@ html_content = """<!DOCTYPE html>
         <td>Expands canvas to borderless fullscreen with floating minimalist HUD for projectors.</td>
       </tr>
       <tr>
-        <td><strong>Tab Navigation</strong></td>
-        <td>Click <code>DMA Modes</code> / <code>Memory Lab</code></td>
-        <td>Smoothly switches between the DMA bus engine and the Cache workbench.</td>
+        <td><strong>Start / Pause Transfer</strong></td>
+        <td>Click <code>START TRANSFER</code></td>
+        <td>Begins cycle-accurate DMA memory movement and pipeline execution.</td>
       </tr>
       <tr>
         <td><strong>Escape Key (ESC)</strong></td>
         <td>Press <code>ESC</code></td>
-        <td>Closes any open modal (CPU Microarchitecture X-Ray or Memory Tier Modal).</td>
+        <td>Closes the CPU Microarchitecture X-Ray modal or exits Presentation Cinema Mode.</td>
       </tr>
     </tbody>
   </table>
 
   <!-- SECTION 2 -->
   <div class="page-break"></div>
-  <h1>Part 2: Step-by-Step Interactive Demonstration Guide</h1>
+  <h1>Part 2: Step-by-Step Interactive DMA Demonstration Guide</h1>
 
-  <h2>Demonstration 1: Direct Memory Access (DMA) Modes Simulator</h2>
-  <p>The DMA simulator allows you to visually prove how the DMA controller offloads data movement from the CPU and how bus contention alters system performance.</p>
+  <p>The DMA simulator allows you to visually demonstrate how the DMA controller offloads bulk data movement from the CPU and how bus contention alters system throughput.</p>
 
   <div class="step-box">
     <div class="step-header">
@@ -426,7 +403,7 @@ html_content = """<!DOCTYPE html>
 
   <div class="step-box">
     <div class="step-header">
-      <span class="step-num">Step 3: Point Out the Hardware Bus Arbitration Signals</span>
+      <span class="step-num">Step 3: Showcase the Hardware Bus Arbitration Signals</span>
       <span class="badge badge-green">Faculty Showcase</span>
     </div>
     <p>Direct the faculty's attention to the active hardware registers and telemetry:</p>
@@ -451,61 +428,6 @@ html_content = """<!DOCTYPE html>
       <span class="badge badge-purple">Deep Dive</span>
     </div>
     <p>Click <strong><code>🔬 CPU Microarchitecture X-Ray</code></strong> to inspect the internal silicon core: ALU operand registers (<code>AX</code>, <code>BX</code>), Program Counter (<code>PC</code>), Instruction Register (<code>IR</code>), and Flag Register during active bus cycles.</p>
-  </div>
-
-  <h2>Demonstration 2: Memory Hierarchy & Cache Memory Lab</h2>
-  <p>This tab features a responsive side-by-side workbench: the <strong>5-Tier Memory Pyramid</strong> on the left and the <strong>Cache Speed Bridge</strong> on the right.</p>
-
-  <div class="step-box">
-    <div class="step-header">
-      <span class="step-num">Step 1: Inspect the 5-Tier Memory Pyramid</span>
-      <span class="badge badge-blue">Curriculum Popups</span>
-    </div>
-    <p>Click on each horizontal tier of the pyramid to open the descriptive pop-up modal:</p>
-    <ul>
-      <li><strong>Tier 1 (CPU Registers):</strong> Internal operand storage, zero wait states, direct ALU feed.</li>
-      <li><strong>Tier 2 (Cache Memory):</strong> Static RAM (SRAM) speed bridge, L1–L3 hierarchy, fast latency.</li>
-      <li><strong>Tier 3 (Main Memory / RAM):</strong> Dynamic RAM (DRAM), gigabyte storage, active OS and application state.</li>
-      <li><strong>Tier 4 (Secondary Storage):</strong> Non-volatile NVMe/SSD, long-term persistence, file system backing.</li>
-      <li><strong>Tier 5 (Tertiary / Offline Storage):</strong> Magnetic tape, optical discs, deep archival backup.</li>
-      <li>Click <strong><code>✕ CLOSE</code></strong> (or press <code>ESC</code>) to dismiss the modal.</li>
-    </ul>
-  </div>
-
-  <div class="step-box">
-    <div class="step-header">
-      <span class="step-num">Step 2: Toggle Linear Pipeline vs. Multi-Core Topology</span>
-      <span class="badge badge-purple">New Topology Feature</span>
-    </div>
-    <p>Directly above the cache flow, click the view toggle buttons:</p>
-    <ul>
-      <li><strong>⚡ Linear Pipeline:</strong> Shows sequential address resolution across CPU &rarr; L1 &rarr; L2 &rarr; L3 &rarr; DRAM.</li>
-      <li><strong>🖧 Multi-Core Topology:</strong> Displays modern multi-core architecture: Core 0 and Core 1 each having private split <code>L1i</code> (Instructions) and <code>L1d</code> (Data) caches + private L2 cache, both converging into the <strong>Shared L3 Cache (2MB to 100MB+)</strong> before bridging to off-chip DRAM.</li>
-    </ul>
-  </div>
-
-  <div class="step-box">
-    <div class="step-header">
-      <span class="step-num">Step 3: Execute Cache Memory Access Queries</span>
-      <span class="badge badge-amber">Interactive Workbench</span>
-    </div>
-    <p>1. In the right panel, type address <code>0x1004</code> and click <strong><code>REQUEST MEMORY READ</code></strong>.<br>
-    2. Watch the laser beam pipeline: L1 Cache checks its lines &rarr; <strong>MISS (12.0 ns)</strong> &rarr; Line Fill from DRAM &rarr; Line 0 updates.<br>
-    3. Query <code>0x1004</code> a second time: the beam stops at L1 &rarr; <strong>CACHE HIT (1.0 ns)</strong> &rarr; instantaneous return.</p>
-  </div>
-
-  <div class="step-box">
-    <div class="step-header">
-      <span class="step-num">Step 4: Demonstrate Human-Scale Time Translation & Locality</span>
-      <span class="badge badge-green">Human-Scale & Locality</span>
-    </div>
-    <ul>
-      <li><strong>⏱️ Human-Scale Time Card:</strong> Point to the time card below the result banner. Show the professor that an L1 Hit takes <strong>1.0 second</strong> (picking a pen from your desk), whereas a DRAM Miss takes <strong>1.5 minutes</strong> (walking down the street to the library)!</li>
-      <li>Click <strong><code>⚡ Spatial Locality</code>:</strong> Queries consecutive addresses (<code>0x1000</code>, <code>0x1004</code>, <code>0x1008</code>, <code>0x100C</code>). Initial query misses; subsequent adjacent words hit because an entire 64-byte block was brought in.</li>
-      <li>Click <strong><code>🔄 Temporal Locality</code>:</strong> Queries the same address repeatedly, driving the Hit Ratio toward 90%+.</li>
-      <li>Click <strong><code>💥 Cache Thrashing</code>:</strong> Queries conflicting addresses mapping to the same line index, demonstrating thrashing and frequent line evictions.</li>
-      <li>Point out the <strong>L1 Cache Lines Table</strong> showing <code>LINE</code>, <code>VALID</code>, <code>TAG</code>, <code>STORED DATA (HEX)</code>, and <code>HITS</code> updating live.</li>
-    </ul>
   </div>
 
   <!-- SECTION 3 -->
@@ -561,182 +483,13 @@ html_content = """<!DOCTYPE html>
     </tbody>
   </table>
 
-  <!-- SECTION 3 CONT -->
-  <div class="page-break"></div>
-  <h2>Topic 2: Memory Hierarchy</h2>
-
-  <h3>1. The Fundamental Design Trade-Off</h3>
-  <p>Computer architects face three conflicting physical and economic laws:</p>
+  <h3>4. Key Internal Registers of the DMA Controller (Intel 8237)</h3>
   <ul>
-    <li><strong>Speed:</strong> Ultra-fast memory requires complex silicon gates (e.g., 6-transistor SRAM flip-flops) that consume significant power and silicon die area.</li>
-    <li><strong>Capacity:</strong> High-density memory requires simplified single-transistor/single-capacitor cells (DRAM) that are physically slower to charge and refresh.</li>
-    <li><strong>Cost per Bit:</strong> On-die fast silicon is orders of magnitude more expensive per gigabyte than magnetic or optical media.</li>
+    <li><strong>Memory Address Register (MAR):</strong> Holds the physical memory address in RAM where the next byte/word will be read or written. Automatically increments after every transfer.</li>
+    <li><strong>Word / Byte Count Register (WCR):</strong> Initialized with the number of bytes to transfer. Automatically decrements after each transfer. When it hits zero, a terminal count pulse is triggered.</li>
+    <li><strong>Control / Command Register (CR):</strong> Specifies the transfer mode (Burst, Cycle Stealing, Transparent), transfer direction (Memory-to-I/O or I/O-to-Memory), and priority level.</li>
+    <li><strong>Status Register (SR):</strong> Reflects current channel activity, terminal count flags, and pending transfer requests.</li>
   </ul>
-  <p>The <strong>Memory Hierarchy</strong> resolves this dilemma by arranging storage in a multi-level pyramid: placing a small, ultra-fast memory closest to the CPU core and cascading down to larger, inexpensive, non-volatile storage tiers.</p>
-
-  <div class="hierarchy-pyramid-box">
-    <div class="tier-row tier-1">Tier 1: CPU Registers (Immediate ALU Operands | Bytes to KB | Fastest | Highest Cost)</div>
-    <div class="tier-row tier-2">Tier 2: Cache Memory - L1, L2, L3 (Static RAM Speed Bridge | KB to MB | Very Fast)</div>
-    <div class="tier-row tier-3">Tier 3: Main Memory / RAM (Dynamic RAM | Gigabytes | Moderate Speed & Cost)</div>
-    <div class="tier-row tier-4">Tier 4: Secondary Storage (NVMe SSD / HDD | Terabytes | Non-Volatile Persistence)</div>
-    <div class="tier-row tier-5">Tier 5: Tertiary / Offline Storage (Magnetic Tape / Optical | Petabytes | Deep Archival Backup)</div>
-  </div>
-
-  <h3>2. Detailed Tier Specifications (Module 1 Aligned)</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Tier Level & Name</th>
-        <th>Storage Classification</th>
-        <th>Typical Capacity</th>
-        <th>Physical Technology</th>
-        <th>Volatility</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Tier 1: CPU Registers</strong></td>
-        <td>Internal Storage</td>
-        <td>Bytes to 2 KB</td>
-        <td>D-Type Flip-Flops (Bistable Multivibrators)</td>
-        <td>Volatile</td>
-      </tr>
-      <tr>
-        <td><strong>Tier 2: Cache Memory</strong></td>
-        <td>Internal Storage</td>
-        <td>32 KB to 64 MB</td>
-        <td>Static RAM (6T SRAM Cells)</td>
-        <td>Volatile</td>
-      </tr>
-      <tr>
-        <td><strong>Tier 3: Main Memory (RAM)</strong></td>
-        <td>Primary Storage</td>
-        <td>8 GB to 128 GB</td>
-        <td>Dynamic RAM (1T-1C DRAM Cells)</td>
-        <td>Volatile</td>
-      </tr>
-      <tr>
-        <td><strong>Tier 4: Secondary Storage</strong></td>
-        <td>Secondary Storage</td>
-        <td>512 GB to 8 TB</td>
-        <td>NAND Flash (SSD) / Magnetic Platters</td>
-        <td>Non-Volatile</td>
-      </tr>
-      <tr>
-        <td><strong>Tier 5: Tertiary Storage</strong></td>
-        <td>Tertiary / Offline</td>
-        <td>Terabytes to Petabytes</td>
-        <td>Magnetic Tape / Optical Media (Blu-ray/WORM)</td>
-        <td>Non-Volatile</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>3. Principles Governing the Hierarchy</h3>
-  <p>As you progress from the apex (Registers) to the base (Tertiary Storage):</p>
-  <ol>
-    <li><strong>Access Time Increases:</strong> From sub-nanosecond register speeds up to seconds or minutes for offline tape mounting.</li>
-    <li><strong>Capacity Increases:</strong> From a few kilobytes in the CPU core to petabytes in archival vaults.</li>
-    <li><strong>Cost per Bit Decreases:</strong> From expensive on-chip silicon to fractions of a cent per gigabyte for tape.</li>
-    <li><strong>CPU Access Frequency Decreases:</strong> The CPU references registers on virtually every clock cycle, but references secondary storage only on page faults or explicit file I/O.</li>
-  </ol>
-
-  <!-- SECTION 3 CONT -->
-  <div class="page-break"></div>
-  <h2>Topic 3: Cache Memory as the "Speed Bridge" & Multi-Level Architecture</h2>
-
-  <h3>1. The Processor-Memory Performance Gap</h3>
-  <p>Over four decades, CPU clock frequencies increased by over 200&times;, while physical DRAM access latency improved by only a factor of 10. If modern CPUs had to wait 60–80 ns for DRAM on every instruction fetch, the execution core would sit idle 95% of the time. <strong>Cache memory</strong> acts as an on-chip hardware buffer that bridges this speed disparity.</p>
-
-  <h3>2. The Human-Scale Time Analogy (1 Clock Cycle = 1 Second)</h3>
-  <p>To convey the physical reality of memory access speeds to an audience or evaluator, scale 1 clock cycle (0.5 ns) to 1 human second:</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Memory Level</th>
-        <th>Physical Access Latency</th>
-        <th>Human-Scale Equivalent Time</th>
-        <th>Everyday Physical Analogy</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>CPU Registers</strong></td>
-        <td>0.5 ns (1 cycle)</td>
-        <td><strong>0.5 Second</strong></td>
-        <td>Holding the paper directly in your hand.</td>
-      </tr>
-      <tr>
-        <td><strong>L1 Cache</strong></td>
-        <td>1.0 ns (2–3 cycles)</td>
-        <td><strong>1.0 Second</strong></td>
-        <td>Reaching for a pen or notepad on your desk.</td>
-      </tr>
-      <tr>
-        <td><strong>L2 Cache</strong></td>
-        <td>3.5 ns (7–10 cycles)</td>
-        <td><strong>3.5 Seconds</strong></td>
-        <td>Standing up to pull a book from your room's bookshelf.</td>
-      </tr>
-      <tr>
-        <td><strong>L3 Cache (Shared)</strong></td>
-        <td>12.0 ns (25–35 cycles)</td>
-        <td><strong>12.0 Seconds</strong></td>
-        <td>Walking out into the hallway to check the shared cabinet.</td>
-      </tr>
-      <tr>
-        <td><strong>Main Memory (DRAM)</strong></td>
-        <td>65.0 ns (150–200 cycles)</td>
-        <td><strong>1.5 Minutes</strong></td>
-        <td>Walking down the street to the corner store / local library.</td>
-      </tr>
-      <tr>
-        <td><strong>Secondary Storage (SSD)</strong></td>
-        <td>10 µs (20,000 cycles)</td>
-        <td><strong>3.5 Hours</strong></td>
-        <td>Driving to a library in another city.</td>
-      </tr>
-      <tr>
-        <td><strong>Tertiary Storage (Tape)</strong></td>
-        <td>10 s (20,000,000,000 cycles)</td>
-        <td><strong>300 Years</strong></td>
-        <td>Excavating an ancient archaeological archive.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>3. Levels of Cache: Multi-Core Shared Topology</h3>
-  <p>Modern processors feature three distinct tiers of cache memory:</p>
-  <ul>
-    <li><strong>L1 Cache (Private, On-Core, 32KB to 128KB):</strong> Located directly on the CPU core. Extremely fast (1.0 ns). Crucially, modern cores feature a <em>Harvard Architecture split</em> into <strong>L1i (Instruction Cache)</strong> and <strong>L1d (Data Cache)</strong> so that instruction fetch and data operand access can occur simultaneously without bus stalls.</li>
-    <li><strong>L2 Cache (Private/Shared, 256KB to 1MB):</strong> Larger and slightly slower (3.5 ns). Services L1 misses and buffers working sets.</li>
-    <li><strong>L3 Cache (Shared Across All Cores, 2MB to 100MB+):</strong> Sits on the processor die but is shared across all CPU cores. Bridges the gap to external DRAM (12.0 ns), allowing cores to share data without accessing the external memory bus.</li>
-  </ul>
-
-  <h3>4. Locality of Reference & 64-Byte Block Transfer</h3>
-  <p>Cache memory achieves hit rates exceeding 90% because real-world programs exhibit predictable memory access patterns known as <strong>Locality of Reference</strong>:</p>
-
-  <div class="callout">
-    <div class="callout-title">🔄 Temporal Locality (Locality in Time)</div>
-    <strong>Definition:</strong> If a memory location is referenced once, it will tend to be referenced again in the near future.<br>
-    <strong>Examples:</strong> Loop control variables (<code>for i = 0; i &lt; 1000; i++</code>), function stack frames, accumulator variables.
-  </div>
-
-  <div class="callout">
-    <div class="callout-title">⚡ Spatial Locality (Locality in Space) & 64-Byte Block Fetch</div>
-    <strong>Definition:</strong> If a memory location is referenced, nearby memory locations will likely be referenced soon.<br>
-    <strong>Hardware Mechanism:</strong> When a miss occurs on address <code>0x1004</code> (4 bytes), the memory controller fetches an entire <strong>64-byte block (cache line)</strong> containing addresses <code>0x1000</code> through <code>0x103F</code>. This preloads the next 15 words into cache for free, ensuring subsequent sequential accesses hit with 100% efficiency.
-  </div>
-
-  <h3>5. Average Memory Access Time (AMAT) Formula</h3>
-  <p>The effectiveness of a cache subsystem is measured mathematically using AMAT:</p>
-  <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 16px; margin: 10px 0; font-family: 'Fira Code', monospace; font-size: 10pt; color: #0052ff; font-weight: 700;">
-    AMAT = Hit Time + (Miss Rate &times; Miss Penalty)
-  </div>
-  <p><strong>Example Calculation:</strong> If L1 Hit Time = 1.0 ns, Miss Rate = 5% (0.05), and DRAM Miss Penalty = 60.0 ns:</p>
-  <p style="font-family: 'Fira Code', monospace; font-size: 9.5pt; color: #334155;">
-    AMAT = 1.0 ns + (0.05 &times; 60.0 ns) = 1.0 ns + 3.0 ns = <strong>4.0 ns</strong> (versus 60 ns without cache).
-  </p>
 
   <!-- SECTION 4 -->
   <div class="page-break"></div>
@@ -764,56 +517,23 @@ html_content = """<!DOCTYPE html>
   </div>
 
   <div class="viva-card">
-    <div class="viva-q">Q4: Name the 5 tiers of the Memory Hierarchy from fastest to slowest.</div>
+    <div class="viva-q">Q4: Why does Programmed I/O fail for high-speed peripherals like NVMe SSDs or Gigabit Ethernet?</div>
     <div class="viva-a">
-      <strong>Answer:</strong>
-      1. Tier 1: CPU Registers (Internal Storage, fastest, bytes to KB)<br>
-      2. Tier 2: Cache Memory L1–L3 (Internal Storage / SRAM speed bridge, KB to MB)<br>
-      3. Tier 3: Main Memory / RAM (Primary Storage / DRAM, gigabytes)<br>
-      4. Tier 4: Secondary Storage (Non-volatile SSD / HDD, terabytes)<br>
-      5. Tier 5: Tertiary / Offline Storage (Magnetic tape / optical archives, petabytes)
+      <strong>Answer:</strong> Under Programmed I/O, the CPU must execute an explicit polling loop and read/write every single byte into its own accumulator register before storing it to RAM. For gigabyte-per-second peripherals, this consumes 100% of CPU processing capacity, starving user applications. DMA solves this by transferring data directly between the peripheral and RAM over the system bus without passing through CPU registers.
     </div>
   </div>
 
   <div class="viva-card">
-    <div class="viva-q">Q5: Why is Cache Memory described as a "Speed Bridge"?</div>
+    <div class="viva-q">Q5: What is "Bus Tri-Stating" and why is it necessary during DMA?</div>
     <div class="viva-a">
-      <strong>Answer:</strong> Modern CPU execution units operate at clock cycle times below 0.5 ns, whereas physical Dynamic RAM (DRAM) requires 60–80 ns to complete an access cycle. Cache memory bridges this 200&times; performance disparity by staging frequently used instructions and data on high-speed Static RAM (SRAM) integrated directly on the processor die.
+      <strong>Answer:</strong> In digital logic, bus lines cannot be driven by two masters simultaneously without causing short circuits and signal corruption. When the CPU acknowledges DMA via <code>HLDA = 1</code>, it places its bus drivers into a high-impedance ("tri-state" or floating) state, effectively disconnecting the CPU electrically from the Address, Data, and Control buses so the DMA controller can drive them cleanly.
     </div>
   </div>
 
   <div class="viva-card">
-    <div class="viva-q">Q6: Differentiate between Temporal Locality and Spatial Locality with code examples.</div>
+    <div class="viva-q">Q6: What are the DREQ and DACK control lines?</div>
     <div class="viva-a">
-      <strong>Answer:</strong> <strong>Temporal Locality</strong> states that a memory location referenced recently is likely to be referenced again soon (e.g., loop counter <code>for(int i=0; i&lt;N; i++)</code> or repeated variable reads). <strong>Spatial Locality</strong> states that locations adjacent to recently referenced memory will likely be referenced next (e.g., sequentially traversing an array <code>a[0], a[1], a[2]</code> or linear instruction execution via the Program Counter).
-    </div>
-  </div>
-
-  <div class="viva-card">
-    <div class="viva-q">Q7: Why is L1 Cache split into separate Instruction (L1i) and Data (L1d) caches?</div>
-    <div class="viva-a">
-      <strong>Answer:</strong> Splitting L1 into L1i and L1d allows the CPU to fetch a machine instruction (via the Instruction Fetch unit) and load or store data operands (via the ALU Load/Store unit) simultaneously on the exact same clock cycle. It eliminates structural hazards between instruction fetch and data memory access without doubling system bus complexity.
-    </div>
-  </div>
-
-  <div class="viva-card">
-    <div class="viva-q">Q8: Why is L3 Cache shared across all CPU cores while L1 and L2 are private?</div>
-    <div class="viva-a">
-      <strong>Answer:</strong> L1 and L2 caches must be small and physically close to their individual ALU cores to achieve 1.0–3.5 ns latencies without signal propagation delays. L3 is larger (2MB–100MB+) and shared across all cores so that threads running on different cores can share cached data and synchronize with low latency (12 ns) without generating expensive external bus traffic to off-chip DRAM (65 ns).
-    </div>
-  </div>
-
-  <div class="viva-card">
-    <div class="viva-q">Q9: What is the "Human-Scale" time analogy for memory access?</div>
-    <div class="viva-a">
-      <strong>Answer:</strong> If one CPU clock cycle is scaled to 1 second: L1 cache access takes <strong>1.0 second</strong> (picking a pen from your desk), L2 takes <strong>3.5 seconds</strong> (grabbing a book from your room shelf), L3 takes <strong>12.0 seconds</strong> (walking to the hallway cabinet), while Main Memory DRAM takes <strong>1.5 minutes</strong> (walking down the street to the library), and SSD takes <strong>3.5 hours</strong> (driving to another city).
-    </div>
-  </div>
-
-  <div class="viva-card">
-    <div class="viva-q">Q10: What is Cache Thrashing and how does it happen?</div>
-    <div class="viva-a">
-      <strong>Answer:</strong> Cache thrashing occurs when multiple distinct memory addresses map to the exact same cache line index. As the program alternates between these addresses, each access evicts the previous block, causing a continuous cascade of cache misses and eliminating the speed benefit of the cache.
+      <strong>Answer:</strong> <code>DREQ</code> (DMA Request) is asserted by the I/O peripheral to inform the DMA controller that its FIFO buffer has data ready to transfer. <code>DACK</code> (DMA Acknowledge) is asserted by the DMA controller back to the peripheral when bus mastership is secured, notifying the peripheral to place data on the bus.
     </div>
   </div>
 

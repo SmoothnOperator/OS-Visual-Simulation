@@ -85,9 +85,6 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
             <span className="telemetry-item">
               <span className="telemetry-dot"></span> DMA 8237: ARMED
             </span>
-            <span className="telemetry-item">
-              <span className="telemetry-dot amber"></span> CACHE: SYNCED
-            </span>
           </div>
 
           {/* FEATURE 2: LIVE CLOCK HARMONIC FFT SPECTRUM ANALYZER */}
@@ -120,7 +117,7 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
           </button>
         </div>
         <div className="brand-subtitle">
-          Operating System Overview: Direct Memory Access (DMA) & Memory Hierarchy / Cache Memory Lab
+          Operating System Overview: Direct Memory Access (DMA) Simulator & Bus Architecture
         </div>
       </div>
 
@@ -137,17 +134,7 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
           >
             <Cpu size={18} /> DMA Modes
           </button>
-          <button
-            id="tabBtnMemory"
-            className={`tab-btn btn-cyber-kinetic ${activeTab === 'memory' ? 'active' : ''}`}
-            onClick={() => {
-              try { soundFx.playClick(); } catch (e) {}
-              setActiveTab('memory');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          >
-            <Layers size={18} /> Memory Hierarchy & Cache Lab
-          </button>
+
         </nav>
 
         {/* FEATURE 4: FULLSCREEN CINEMA / PRESENTATION MODE TOGGLE */}
@@ -175,16 +162,7 @@ export default function Navbar({ activeTab, setActiveTab, onReboot }) {
           >
             DMA
           </button>
-          <button
-            className={`tab-btn ${activeTab === 'memory' ? 'active' : ''}`}
-            style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', borderRadius: '9999px' }}
-            onClick={() => {
-              setActiveTab('memory');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          >
-            MEMORY & CACHE
-          </button>
+          
 
           <button className="cinema-exit-btn" onClick={toggleCinemaMode} title="Exit Cinema Mode (ESC)">
             ✕ EXIT
