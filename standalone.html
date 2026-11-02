@@ -4241,7 +4241,66 @@ body.cinema-mode-active main {
       }
     }
 
-  </style>
+  
+    /* --- INSTRUCTION CYCLE LAB & TELEMETRY CARD STYLING --- */
+    .telemetry-card {
+      background: rgba(6, 13, 31, 0.85);
+      border: 1px solid rgba(0, 82, 255, 0.3);
+      border-radius: 6px;
+      padding: 0.75rem 0.95rem;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+    .telemetry-card:hover {
+      border-color: rgba(0, 210, 255, 0.45);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 82, 255, 0.2);
+    }
+    .telemetry-card-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .telemetry-card-val {
+      font-size: 1.35rem;
+      font-weight: 900;
+      font-family: var(--font-mono);
+      line-height: 1.25;
+      margin: 0.2rem 0;
+    }
+    .telemetry-card-sub {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      line-height: 1.3;
+    }
+
+    .inst-hero-ctrl-bar {
+      background: rgba(6, 13, 31, 0.92);
+      border: 1px solid rgba(0, 82, 255, 0.4);
+      border-radius: 8px;
+      padding: 0.75rem 1.15rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 82, 255, 0.15);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+    .inst-status-pill-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .inst-wire-glow {
+      box-shadow: 0 0 14px rgba(0, 210, 255, 0.35);
+    }
+
+</style>
 </head>
 <body>
 
@@ -4729,325 +4788,321 @@ body.cinema-mode-active main {
     </section>
 
         
-    <!-- ==================== TAB 2: INSTRUCTION EXECUTION CYCLE LAB ==================== -->
-    <section id="pane-instruction" class="tab-pane" style="display: none;">
+        <!-- ==================== TAB 2: INSTRUCTION EXECUTION CYCLE LAB ==================== -->
+    <section id="pane-instruction" class="tab-pane" style="display: none; scroll-margin-top: 90px;">
       
-      <!-- SECTION 1: LAB HEADER & INTERACTIVE CLOCK STEPPER -->
-      <div class="controls-card" style="margin-bottom: 1.25rem;">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
-          <div>
-            <div style="display: flex; align-items: center; gap: 0.65rem;">
-              <span class="badge-status badge-blue">CPU MACHINE CYCLE</span>
-              <h2 style="font-size: 1.35rem; font-weight: 900; color: #ffffff; letter-spacing: -0.02em; margin: 0;">
-                Instruction Execution Cycle & Hardware Registers
-              </h2>
-            </div>
-            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem;">
-              Interactive Step-by-Step Micro-Op Conveyor: Fetch → Decode → Execute across PC, MAR, MDR, IR & Accumulator
-            </div>
+      <!-- SECTION 1: COMPACT PERSISTENT CONTROL BAR -->
+      <div class="inst-hero-ctrl-bar">
+        <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="badge-status badge-blue" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">CPU MACHINE CYCLE</span>
+            <span style="font-size: 1.05rem; font-weight: 900; color: #ffffff; letter-spacing: -0.01em;">
+              Instruction Cycle & Registers
+            </span>
           </div>
 
-          <!-- STEPPER & CLOCK CONTROL BUTTONS -->
-          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
-            <button
-              id="btnStepInst"
-              class="btn-cyber-kinetic btn-action-primary"
-              style="font-size: 0.85rem; padding: 0.5rem 1.15rem; font-weight: 800;"
-              onclick="stepInstructionMicroOp()"
-              title="Pulse next micro-operation clock signal"
-            >
-              ⚡ NEXT CLOCK PULSE (STEP)
-            </button>
+          <div style="height: 20px; width: 1px; background: rgba(255, 255, 255, 0.15);"></div>
 
-            <button
-              id="btnAutoInst"
-              class="btn-cyber-kinetic"
-              style="font-size: 0.82rem; padding: 0.5rem 0.95rem; background: rgba(0, 82, 255, 0.2); border: 1px solid var(--accent-blue);"
-              onclick="toggleInstructionAutoRun()"
-            >
-              ▶ AUTO RUN
-            </button>
-
-            <button
-              class="btn-cyber-kinetic"
-              style="font-size: 0.82rem; padding: 0.5rem 0.85rem; background: rgba(255, 255, 255, 0.05);"
-              onclick="resetInstructionSim()"
-              title="Reset registers and program memory"
-            >
-              🔄 RESET
-            </button>
-
-            <div style="display: flex; align-items: center; gap: 0.35rem; margin-left: 0.5rem;">
-              <span style="font-size: 0.72rem; color: var(--text-muted);">SPEED:</span>
-              <select
-                id="instClockSpeed"
-                class="speed-select"
-                style="padding: 0.35rem 0.6rem; font-size: 0.75rem;"
-                onchange="updateInstSpeed(this.value)"
-              >
-                <option value="1200">Slow (0.8 Hz)</option>
-                <option value="700" selected>Normal (1.4 Hz)</option>
-                <option value="350">Fast (2.8 Hz)</option>
-              </select>
-            </div>
+          <!-- ACTIVE STEP BADGE & PROGRESS DISPLAY -->
+          <div class="inst-status-pill-strip">
+            <span id="instPhaseBadge" class="badge-status badge-cyan" style="font-weight: 800; font-size: 0.75rem; padding: 0.2rem 0.6rem;">
+              FETCH PHASE
+            </span>
+            <span id="instStepName" style="font-size: 0.88rem; font-weight: 800; color: #ffffff; font-family: var(--font-mono);">
+              MAR &larr; PC
+            </span>
+            <span id="instStepCounter" style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">
+              Step 1 of 31 &bull; Addr 100
+            </span>
           </div>
         </div>
 
-        <!-- ACTIVE MICRO-OP BANNER & PROGRESS -->
-        <div style="margin-top: 1rem; padding: 0.85rem 1rem; background: rgba(0, 0, 0, 0.55); border: 1px solid var(--border-subtle); border-radius: 6px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <div style="display: flex; align-items: center; gap: 0.6rem;">
-              <span id="instPhaseBadge" class="badge-status badge-cyan" style="font-weight: 800; font-size: 0.75rem;">FETCH PHASE</span>
-              <span id="instStepName" style="font-size: 0.88rem; font-weight: 800; color: #ffffff; font-family: var(--font-mono);">
-                MAR ← PC
-              </span>
-            </div>
-            <span id="instStepCounter" style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">
-              Step 1 of 31 • Addr 100
+        <!-- INTERACTIVE STEPPER BUTTONS CLUSTER -->
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+          <button
+            id="btnStepInst"
+            class="btn-cyber-kinetic btn-action-primary"
+            style="font-size: 0.82rem; padding: 0.45rem 1.1rem; font-weight: 800; letter-spacing: 0.03em;"
+            onclick="stepInstructionMicroOp()"
+            title="Advance exactly one micro-operation clock pulse"
+          >
+            &#9889; NEXT CLOCK PULSE (STEP)
+          </button>
+
+          <button
+            id="btnAutoInst"
+            class="btn-cyber-kinetic"
+            style="font-size: 0.78rem; padding: 0.45rem 0.9rem; background: rgba(0, 82, 255, 0.2); border: 1px solid var(--accent-blue);"
+            onclick="toggleInstructionAutoRun()"
+            title="Automatically pulse clock at selected frequency"
+          >
+            &#9654; AUTO RUN
+          </button>
+
+          <button
+            class="btn-cyber-kinetic"
+            style="font-size: 0.78rem; padding: 0.45rem 0.75rem; background: rgba(255, 255, 255, 0.05);"
+            onclick="resetInstructionSim()"
+            title="Reset registers and memory back to instruction 100"
+          >
+            &#8634; RESET
+          </button>
+
+          <div style="display: flex; align-items: center; gap: 0.3rem; margin-left: 0.35rem;">
+            <span style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">CLOCK:</span>
+            <select
+              id="instClockSpeed"
+              class="speed-select"
+              style="padding: 0.25rem 0.5rem; font-size: 0.72rem; border-radius: 4px;"
+              onchange="updateInstSpeed(this.value)"
+            >
+              <option value="1200">Slow (0.8 Hz)</option>
+              <option value="700" selected>Normal (1.4 Hz)</option>
+              <option value="350">Fast (2.8 Hz)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PROGRESS BAR SPANNING FULL WIDTH -->
+        <div style="width: 100%; margin-top: 0.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
+            <span id="instStepDesc" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.35;">
+              Step 1: Address in Program Counter (100) is transferred to Memory Address Register (MAR).
             </span>
           </div>
-          <div id="instStepDesc" style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45; margin-bottom: 0.6rem;">
-            Step 1: Address in Program Counter (100) is transferred to Memory Address Register (MAR).
-          </div>
-          <div class="progress-bar-track">
+          <div class="progress-bar-track" style="height: 4px;">
             <div id="instProgressBar" class="progress-bar-fill animated-bar-cyan" style="width: 3.2%;"></div>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 2: LIVE CPU REGISTERS & SYSTEM RAM WORKBENCH -->
-      <div style="display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.25rem; margin-bottom: 1.25rem;">
+      <!-- SECTION 2: LIVE CPU REGISTERS & MAIN MEMORY WORKBENCH -->
+      <div style="display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr); gap: 1rem; margin-bottom: 1rem;">
 
-        <!-- COLUMN A: CPU CORE REGISTERS & BUS INTERCONNECT -->
-        <div class="cyber-panel" style="display: flex; flex-direction: column;">
-          <div class="cyber-panel-header">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <span style="font-size: 1.1rem;">🔲</span>
-              <span style="font-weight: 800; fontSize: 0.92rem; color: #ffffff;">
+        <!-- COLUMN A: CPU CORE REGISTERS & BUS MONITOR -->
+        <div class="cyber-panel" style="display: flex; flex-direction: column; padding: 0.85rem;">
+          <div class="cyber-panel-header" style="margin-bottom: 0.75rem; padding-bottom: 0.45rem; border-bottom: 1px solid rgba(0, 82, 255, 0.25);">
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <span style="font-size: 1rem;">&#128187;</span>
+              <span style="font-weight: 800; font-size: 0.88rem; color: #ffffff;">
                 CPU Internal Registers & Control Unit (CU)
               </span>
             </div>
-            <span id="instBusStateBadge" class="badge-status badge-cyan">BUS: ADDR_LOAD</span>
+            <span id="instBusStateBadge" class="badge-status badge-cyan" style="font-size: 0.66rem;">BUS: ADDR_LOAD</span>
           </div>
 
-          <div style="padding: 1rem; flex: 1;">
+          <!-- 4 CORE CPU REGISTERS GRID -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.75rem;">
             
-            <!-- 5 DEDICATED CPU REGISTERS GRID -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
-              
-              <!-- 1. PROGRAM COUNTER (PC) -->
-              <div id="cardRegPc" class="telemetry-card" style="border-left: 3px solid var(--accent-cyan);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span class="telemetry-card-label">PROGRAM COUNTER (PC)</span>
-                  <span class="badge-status badge-blue" style="font-size: 0.6rem;">Address Pointer</span>
-                </div>
-                <div id="valRegPc" class="telemetry-card-val" style="color: var(--accent-cyan); font-family: var(--font-mono); font-size: 1.4rem;">
-                  100
-                </div>
-                <div class="telemetry-card-sub">Points to next instruction address</div>
-              </div>
-
-              <!-- 2. MEMORY ADDRESS REGISTER (MAR) -->
-              <div id="cardRegMar" class="telemetry-card" style="border-left: 3px solid var(--accent-amber);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span class="telemetry-card-label">MEMORY ADDR REG (MAR)</span>
-                  <span class="badge-status badge-amber" style="font-size: 0.6rem;">Address Bus</span>
-                </div>
-                <div id="valRegMar" class="telemetry-card-val" style="color: var(--accent-amber); font-family: var(--font-mono); font-size: 1.4rem;">
-                  100
-                </div>
-                <div class="telemetry-card-sub">Holds memory location being accessed</div>
-              </div>
-
-              <!-- 3. MEMORY DATA REGISTER (MDR) -->
-              <div id="cardRegMdr" class="telemetry-card" style="border-left: 3px solid #c084fc;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span class="telemetry-card-label">MEMORY DATA REG (MDR)</span>
-                  <span class="badge-status badge-purple" style="font-size: 0.6rem;">Data Buffer</span>
-                </div>
-                <div id="valRegMdr" class="telemetry-card-val" style="color: #c084fc; font-family: var(--font-mono); font-size: 1.25rem;">
-                  ---
-                </div>
-                <div class="telemetry-card-sub">Holds data/opcode read from or written to RAM</div>
-              </div>
-
-              <!-- 4. INSTRUCTION REGISTER (IR) -->
-              <div id="cardRegIr" class="telemetry-card" style="border-left: 3px solid var(--accent-green);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span class="telemetry-card-label">INSTRUCTION REG (IR)</span>
-                  <span class="badge-status badge-green" style="font-size: 0.6rem;">Active Opcode</span>
-                </div>
-                <div id="valRegIr" class="telemetry-card-val" style="color: var(--accent-green); font-family: var(--font-mono); font-size: 1.25rem;">
-                  ---
-                </div>
-                <div class="telemetry-card-sub">Holds current opcode being decoded</div>
-              </div>
-
-            </div>
-
-            <!-- 5. ACCUMULATOR (AC) & ALU HERO CARD -->
-            <div id="cardRegAc" class="telemetry-card" style="border-left: 4px solid var(--accent-cyan); background: rgba(0, 210, 255, 0.05); margin-bottom: 1rem;">
+            <!-- 1. PROGRAM COUNTER (PC) -->
+            <div id="cardRegPc" class="telemetry-card" style="border-left: 3px solid var(--accent-cyan); background: rgba(0, 210, 255, 0.06);">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span class="telemetry-card-label" style="font-size: 0.8rem; font-weight: 800;">
-                  ACCUMULATOR REGISTER (AC) & ALU RESULT
-                </span>
-                <span class="badge-status badge-blue">Math Result</span>
+                <span class="telemetry-card-label" style="color: var(--accent-cyan);">PROGRAM COUNTER (PC)</span>
+                <span class="badge-status badge-blue" style="font-size: 0.58rem; padding: 0.1rem 0.35rem;">Pointer</span>
               </div>
-              <div style="display: flex; align-items: baseline; gap: 0.75rem; margin: 0.35rem 0;">
-                <span id="valRegAc" style="font-size: 2rem; font-weight: 900; color: #ffffff; font-family: var(--font-mono);">
-                  0
-                </span>
-                <span id="valRegAcDesc" style="font-size: 0.8rem; color: var(--accent-cyan);">
-                  (Initialized to 0)
-                </span>
+              <div id="valRegPc" class="telemetry-card-val" style="color: var(--accent-cyan); font-size: 1.35rem;">
+                100
               </div>
-              <div style="font-size: 0.75rem; color: var(--text-secondary);">
-                Holds intermediate arithmetic & logic calculation results. Updates to 3456 after LOAD 500, and 4656 after ADD 600.
-              </div>
+              <div class="telemetry-card-sub">Points to next instruction address</div>
             </div>
 
-            <!-- CONTROL SIGNALS BUS MONITOR -->
-            <div style="background: rgba(0, 0, 0, 0.45); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.75rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
-                <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">
-                  Control Unit Bus Signals
-                </span>
-                <span id="instSignalBusStatus" style="font-size: 0.72rem; font-family: var(--font-mono); color: var(--accent-cyan);">
-                  STROBE: ACTIVE
-                </span>
+            <!-- 2. MEMORY ADDRESS REGISTER (MAR) -->
+            <div id="cardRegMar" class="telemetry-card" style="border-left: 3px solid var(--accent-amber); background: rgba(245, 158, 11, 0.06);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="telemetry-card-label" style="color: var(--accent-amber);">MEMORY ADDR REG (MAR)</span>
+                <span class="badge-status badge-amber" style="font-size: 0.58rem; padding: 0.1rem 0.35rem;">Address Bus</span>
               </div>
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center;">
-                <div id="sigMemRead" style="background: rgba(0, 210, 255, 0.1); border: 1px solid var(--accent-cyan); border-radius: 4px; padding: 0.3rem;">
-                  <div style="font-size: 0.65rem; color: var(--text-muted);">MEM_READ</div>
-                  <div id="sigMemReadVal" style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan);">1 (HIGH)</div>
-                </div>
-                <div id="sigMemWrite" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem;">
-                  <div style="font-size: 0.65rem; color: var(--text-muted);">MEM_WRITE</div>
-                  <div id="sigMemWriteVal" style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted);">0 (LOW)</div>
-                </div>
-                <div id="sigAluOp" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.3rem;">
-                  <div style="font-size: 0.65rem; color: var(--text-muted);">ALU_OP</div>
-                  <div id="sigAluOpVal" style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted);">NONE</div>
-                </div>
+              <div id="valRegMar" class="telemetry-card-val" style="color: var(--accent-amber); font-size: 1.35rem;">
+                100
               </div>
+              <div class="telemetry-card-sub">Holds RAM address currently accessed</div>
+            </div>
+
+            <!-- 3. MEMORY DATA REGISTER (MDR) -->
+            <div id="cardRegMdr" class="telemetry-card" style="border-left: 3px solid #c084fc; background: rgba(192, 132, 252, 0.06);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="telemetry-card-label" style="color: #c084fc;">MEMORY DATA REG (MDR)</span>
+                <span class="badge-status badge-purple" style="font-size: 0.58rem; padding: 0.1rem 0.35rem;">Data Buffer</span>
+              </div>
+              <div id="valRegMdr" class="telemetry-card-val" style="color: #c084fc; font-size: 1.2rem;">
+                ---
+              </div>
+              <div class="telemetry-card-sub">Holds opcode / data from Data Bus</div>
+            </div>
+
+            <!-- 4. INSTRUCTION REGISTER (IR) -->
+            <div id="cardRegIr" class="telemetry-card" style="border-left: 3px solid var(--accent-green); background: rgba(16, 185, 129, 0.06);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="telemetry-card-label" style="color: var(--accent-green);">INSTRUCTION REG (IR)</span>
+                <span class="badge-status badge-green" style="font-size: 0.58rem; padding: 0.1rem 0.35rem;">Opcode</span>
+              </div>
+              <div id="valRegIr" class="telemetry-card-val" style="color: var(--accent-green); font-size: 1.2rem;">
+                ---
+              </div>
+              <div class="telemetry-card-sub">Holds current opcode being decoded</div>
             </div>
 
           </div>
+
+          <!-- 5. ACCUMULATOR (AC) HERO CARD -->
+          <div id="cardRegAc" class="telemetry-card" style="border-left: 4px solid var(--accent-cyan); background: rgba(0, 210, 255, 0.08); margin-bottom: 0.75rem; padding: 0.65rem 0.95rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="telemetry-card-label" style="font-size: 0.72rem; font-weight: 800; color: #ffffff;">
+                ACCUMULATOR REGISTER (AC) & ALU RESULT
+              </span>
+              <span class="badge-status badge-blue" style="font-size: 0.6rem;">Math Register</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 0.75rem; margin: 0.2rem 0;">
+              <span id="valRegAc" style="font-size: 1.75rem; font-weight: 900; color: #ffffff; font-family: var(--font-mono);">
+                0
+              </span>
+              <span id="valRegAcDesc" style="font-size: 0.75rem; color: var(--accent-cyan);">
+                (Initialized to 0)
+              </span>
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-secondary); line-height: 1.35;">
+              Holds intermediate ALU results. Updates to <strong>3456</strong> after LOAD 500, and <strong>4656</strong> after ADD 600.
+            </div>
+          </div>
+
+          <!-- CONTROL SIGNALS BUS MONITOR -->
+          <div style="background: rgba(0, 0, 0, 0.55); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.6rem 0.85rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">
+                Control Unit Bus Strobe Signals
+              </span>
+              <span id="instSignalBusStatus" style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--accent-cyan);">
+                STROBE: ACTIVE
+              </span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.45rem; text-align: center;">
+              <div id="sigMemRead" style="background: rgba(0, 210, 255, 0.12); border: 1px solid var(--accent-cyan); border-radius: 4px; padding: 0.25rem;">
+                <div style="font-size: 0.6rem; color: var(--text-muted);">MEM_READ</div>
+                <div id="sigMemReadVal" style="font-size: 0.75rem; font-weight: 800; color: var(--accent-cyan);">1 (HIGH)</div>
+              </div>
+              <div id="sigMemWrite" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                <div style="font-size: 0.6rem; color: var(--text-muted);">MEM_WRITE</div>
+                <div id="sigMemWriteVal" style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">0 (LOW)</div>
+              </div>
+              <div id="sigAluOp" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.25rem;">
+                <div style="font-size: 0.6rem; color: var(--text-muted);">ALU_OP</div>
+                <div id="sigAluOpVal" style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">NONE</div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <!-- COLUMN B: MAIN MEMORY (RAM) TABLES -->
-        <div class="cyber-panel" style="display: flex; flex-direction: column;">
-          <div class="cyber-panel-header">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <span style="font-size: 1.1rem;">💾</span>
-              <span style="font-weight: 800; fontSize: 0.92rem; color: #ffffff;">
+        <div class="cyber-panel" style="display: flex; flex-direction: column; padding: 0.85rem;">
+          <div class="cyber-panel-header" style="margin-bottom: 0.75rem; padding-bottom: 0.45rem; border-bottom: 1px solid rgba(0, 82, 255, 0.25);">
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <span style="font-size: 1rem;">&#128190;</span>
+              <span style="font-weight: 800; font-size: 0.88rem; color: #ffffff;">
                 Main Memory (RAM) Organization
               </span>
             </div>
-            <span class="badge-status badge-amber">Instructions & Data</span>
+            <span class="badge-status badge-amber" style="font-size: 0.66rem;">Instructions & Data</span>
           </div>
 
-          <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: 1rem;">
-            
-            <!-- INSTRUCTION SEGMENT TABLE -->
-            <div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
-                <span style="font-size: 0.78rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase;">
-                  Instruction Segment (Addrs 100–103)
-                </span>
-                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">
-                  Opcode + Operand Format
-                </span>
-              </div>
-              <table class="cache-table">
-                <thead>
-                  <tr>
-                    <th>Address</th>
-                    <th>Instruction Mnemonic</th>
-                    <th>Action Summary</th>
-                  </tr>
-                </thead>
-                <tbody id="instMemoryTableBody">
-                  <tr id="rowInst100" class="cache-row-target">
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan);">100</td>
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff;">LOAD 500</td>
-                    <td style="font-size: 0.75rem; color: var(--text-secondary);">AC ← Memory[500] (Load 3456)</td>
-                  </tr>
-                  <tr id="rowInst101">
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan);">101</td>
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff;">ADD 600</td>
-                    <td style="font-size: 0.75rem; color: var(--text-secondary);">AC ← AC + Memory[600] (+ 1200)</td>
-                  </tr>
-                  <tr id="rowInst102">
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan);">102</td>
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff;">STORE 700</td>
-                    <td style="font-size: 0.75rem; color: var(--text-secondary);">Memory[700] ← AC (Write 4656)</td>
-                  </tr>
-                  <tr id="rowInst103">
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan);">103</td>
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff;">HALT</td>
-                    <td style="font-size: 0.75rem; color: var(--text-secondary);">Terminates Execution Cycle</td>
-                  </tr>
-                </tbody>
-              </table>
+          <!-- INSTRUCTION SEGMENT TABLE -->
+          <div style="margin-bottom: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span style="font-size: 0.72rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase;">
+                Instruction Segment (Addrs 100&ndash;103)
+              </span>
+              <span style="font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono);">
+                Opcode + Operand Format
+              </span>
             </div>
-
-            <!-- DATA SEGMENT TABLE -->
-            <div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
-                <span style="font-size: 0.78rem; font-weight: 800; color: var(--accent-amber); text-transform: uppercase;">
-                  Data Segment (Addrs 500–700)
-                </span>
-                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">
-                  Dynamic RAM Variables
-                </span>
-              </div>
-              <table class="cache-table">
-                <thead>
-                  <tr>
-                    <th>Address</th>
-                    <th>Value (Decimal)</th>
-                    <th>Role / Variable Name</th>
-                  </tr>
-                </thead>
-                <tbody id="dataMemoryTableBody">
-                  <tr id="rowData500">
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">500</td>
-                    <td id="valData500" style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-green);">3456</td>
-                    <td style="font-size: 0.75rem; color: var(--text-secondary);">Input Variable A</td>
-                  </tr>
-                  <tr id="rowData600">
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">600</td>
-                    <td id="valData600" style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-green);">1200</td>
-                    <td style="font-size: 0.75rem; color: var(--text-secondary);">Input Variable B</td>
-                  </tr>
-                  <tr id="rowData700">
-                    <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">700</td>
-                    <td id="valData700" style="font-family: var(--font-mono); font-weight: 800; color: var(--text-muted);">0</td>
-                    <td id="descData700" style="font-size: 0.75rem; color: var(--text-muted);">Target Output Result (Memory[700])</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
+            <table class="cache-table" style="font-size: 0.76rem;">
+              <thead>
+                <tr>
+                  <th style="padding: 0.3rem 0.5rem;">Address</th>
+                  <th style="padding: 0.3rem 0.5rem;">Mnemonic</th>
+                  <th style="padding: 0.3rem 0.5rem;">Action Summary</th>
+                </tr>
+              </thead>
+              <tbody id="instMemoryTableBody">
+                <tr id="rowInst100" class="cache-row-target">
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan); padding: 0.3rem 0.5rem;">100</td>
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff; padding: 0.3rem 0.5rem;">LOAD 500</td>
+                  <td style="font-size: 0.72rem; color: var(--text-secondary); padding: 0.3rem 0.5rem;">AC &larr; Memory[500] (Load 3456)</td>
+                </tr>
+                <tr id="rowInst101">
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan); padding: 0.3rem 0.5rem;">101</td>
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff; padding: 0.3rem 0.5rem;">ADD 600</td>
+                  <td style="font-size: 0.72rem; color: var(--text-secondary); padding: 0.3rem 0.5rem;">AC &larr; AC + Memory[600] (+ 1200)</td>
+                </tr>
+                <tr id="rowInst102">
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan); padding: 0.3rem 0.5rem;">102</td>
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff; padding: 0.3rem 0.5rem;">STORE 700</td>
+                  <td style="font-size: 0.72rem; color: var(--text-secondary); padding: 0.3rem 0.5rem;">Memory[700] &larr; AC (Write 4656)</td>
+                </tr>
+                <tr id="rowInst103">
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-cyan); padding: 0.3rem 0.5rem;">103</td>
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: #ffffff; padding: 0.3rem 0.5rem;">HALT</td>
+                  <td style="font-size: 0.72rem; color: var(--text-secondary); padding: 0.3rem 0.5rem;">Terminates Execution Cycle</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+
+          <!-- DATA SEGMENT TABLE -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span style="font-size: 0.72rem; font-weight: 800; color: var(--accent-amber); text-transform: uppercase;">
+                Data Segment (Addrs 500&ndash;700)
+              </span>
+              <span style="font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono);">
+                Dynamic RAM Variables
+              </span>
+            </div>
+            <table class="cache-table" style="font-size: 0.76rem;">
+              <thead>
+                <tr>
+                  <th style="padding: 0.3rem 0.5rem;">Address</th>
+                  <th style="padding: 0.3rem 0.5rem;">Value (Dec)</th>
+                  <th style="padding: 0.3rem 0.5rem;">Role / Variable Name</th>
+                </tr>
+              </thead>
+              <tbody id="dataMemoryTableBody">
+                <tr id="rowData500">
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber); padding: 0.3rem 0.5rem;">500</td>
+                  <td id="valData500" style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-green); padding: 0.3rem 0.5rem;">3456</td>
+                  <td style="font-size: 0.72rem; color: var(--text-secondary); padding: 0.3rem 0.5rem;">Input Variable A</td>
+                </tr>
+                <tr id="rowData600">
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber); padding: 0.3rem 0.5rem;">600</td>
+                  <td id="valData600" style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-green); padding: 0.3rem 0.5rem;">1200</td>
+                  <td style="font-size: 0.72rem; color: var(--text-secondary); padding: 0.3rem 0.5rem;">Input Variable B</td>
+                </tr>
+                <tr id="rowData700">
+                  <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber); padding: 0.3rem 0.5rem;">700</td>
+                  <td id="valData700" style="font-family: var(--font-mono); font-weight: 800; color: var(--text-muted); padding: 0.3rem 0.5rem;">0</td>
+                  <td id="descData700" style="font-size: 0.72rem; color: var(--text-muted); padding: 0.3rem 0.5rem;">Target Result (Memory[700])</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
 
       </div>
 
-      <!-- SECTION 3: 3-PHASE INTERACTIVE WORKFLOW CARDS -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+      <!-- SECTION 3: 3-PHASE INTERACTIVE WORKFLOW CARDS (CLEAN ARROWS) -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem;">
         
-        <div id="cardPhaseFetch" class="cyber-panel" style="padding: 0.95rem; border-left: 3px solid var(--accent-cyan); background: rgba(0, 210, 255, 0.08);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <span class="badge-status badge-cyan">1. FETCH CYCLE</span>
-            <span style="font-size: 0.68rem; color: var(--text-muted);">Phase 1 Specification</span>
+        <div id="cardPhaseFetch" class="cyber-panel" style="padding: 0.75rem 0.95rem; border-left: 3px solid var(--accent-cyan); background: rgba(0, 210, 255, 0.08);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+            <span class="badge-status badge-cyan" style="font-size: 0.65rem;">1. FETCH CYCLE</span>
+            <span style="font-size: 0.62rem; color: var(--text-muted);">Phase 1 Specification</span>
           </div>
-          <div style="font-size: 0.88rem; font-weight: 800; color: #ffffff; margin-bottom: 0.4rem;">
-            MAR ← PC, MDR ← Mem[MAR], IR ← MDR, PC ← PC + 1
+          <div style="font-size: 0.8rem; font-weight: 800; color: #ffffff; margin-bottom: 0.35rem; font-family: var(--font-mono);">
+            MAR &larr; PC, MDR &larr; Mem[MAR], IR &larr; MDR, PC &larr; PC + 1
           </div>
-          <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
-            <li>1. PC copied to MAR</li>
+          <ul style="margin: 0; padding-left: 1rem; font-size: 0.72rem; color: var(--text-secondary); line-height: 1.45;">
+            <li>1. PC address copied to MAR</li>
             <li>2. Memory Read strobe pulses</li>
             <li>3. Opcode fetched into MDR</li>
             <li>4. MDR transferred to IR</li>
@@ -5055,33 +5110,33 @@ body.cinema-mode-active main {
           </ul>
         </div>
 
-        <div id="cardPhaseDecode" class="cyber-panel" style="padding: 0.95rem; border-left: 3px solid var(--accent-amber);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <span class="badge-status badge-amber">2. DECODE CYCLE</span>
-            <span style="font-size: 0.68rem; color: var(--text-muted);">Phase 2 Specification</span>
+        <div id="cardPhaseDecode" class="cyber-panel" style="padding: 0.75rem 0.95rem; border-left: 3px solid var(--accent-amber); background: rgba(0, 0, 0, 0.5);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+            <span class="badge-status badge-amber" style="font-size: 0.65rem;">2. DECODE CYCLE</span>
+            <span style="font-size: 0.62rem; color: var(--text-muted);">Phase 2 Specification</span>
           </div>
-          <div style="font-size: 0.88rem; font-weight: 800; color: #ffffff; margin-bottom: 0.4rem;">
+          <div style="font-size: 0.8rem; font-weight: 800; color: #ffffff; margin-bottom: 0.35rem;">
             Control Unit interprets fetched opcode
           </div>
-          <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+          <ul style="margin: 0; padding-left: 1rem; font-size: 0.72rem; color: var(--text-secondary); line-height: 1.45;">
             <li>1. CU inspects opcode part of IR</li>
-            <li>2. Determines operation to perform</li>
-            <li>3. Decodes operand memory address (500, 600, 700)</li>
+            <li>2. Identifies operation (LOAD / ADD / STORE)</li>
+            <li>3. Decodes operand address (500, 600, 700)</li>
           </ul>
         </div>
 
-        <div id="cardPhaseExecute" class="cyber-panel" style="padding: 0.95rem; border-left: 3px solid var(--accent-green);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <span class="badge-status badge-green">3. EXECUTE CYCLE</span>
-            <span style="font-size: 0.68rem; color: var(--text-muted);">Phase 3 Specification</span>
+        <div id="cardPhaseExecute" class="cyber-panel" style="padding: 0.75rem 0.95rem; border-left: 3px solid var(--accent-green); background: rgba(0, 0, 0, 0.5);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+            <span class="badge-status badge-green" style="font-size: 0.65rem;">3. EXECUTE CYCLE</span>
+            <span style="font-size: 0.62rem; color: var(--text-muted);">Phase 3 Specification</span>
           </div>
-          <div style="font-size: 0.88rem; font-weight: 800; color: #ffffff; margin-bottom: 0.4rem;">
+          <div style="font-size: 0.8rem; font-weight: 800; color: #ffffff; margin-bottom: 0.35rem;">
             ALU arithmetic & RAM read/write execution
           </div>
-          <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+          <ul style="margin: 0; padding-left: 1rem; font-size: 0.72rem; color: var(--text-secondary); line-height: 1.45;">
             <li>1. MAR loaded with operand address</li>
             <li>2. Data transferred via MDR (3456, 1200)</li>
-            <li>3. Accumulator updated or target written (4656)</li>
+            <li>3. AC updated or target memory written (4656)</li>
           </ul>
         </div>
 
@@ -5089,7 +5144,7 @@ body.cinema-mode-active main {
 
     </section>
 
-        <!-- ==================== TAB 2: MEMORY HIERARCHY & CACHE SIMULATOR ==================== -->
+    <!-- ==================== TAB 2: MEMORY HIERARCHY & CACHE SIMULATOR ==================== -->
     <section id="pane-memory" class="tab-pane" style="display: none;">
       <!-- SECTION 1: LAB CONTROL HEADER -->
       <div class="controls-card" style="margin-bottom: 1.25rem;">
@@ -5855,7 +5910,7 @@ body.cinema-mode-active main {
           renderInstCurrentStep();
         }
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
     }
 
     // --- RAM GRID INITIALIZER ---
@@ -7298,56 +7353,58 @@ body.cinema-mode-active main {
 
     // ========================================================
     // TAB 2: INSTRUCTION EXECUTION CYCLE SIMULATOR STATE & LOGIC
+        // ========================================================
+    // TAB 2: INSTRUCTION EXECUTION CYCLE SIMULATOR STATE & LOGIC
     // ========================================================
     const INST_MICRO_OPS = [
       // Instruction 1: LOAD 500 (Addr 100)
-      { id: 'f1_1', instAddr: 100, phase: 'FETCH', stepNum: 1, name: 'MAR ← PC', desc: 'Step 1: Address in Program Counter (100) is transferred to Memory Address Register (MAR).', pc: 100, mar: 100, mdr: '---', ir: '---', ac: 0, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f1_1', instAddr: 100, phase: 'FETCH', stepNum: 1, name: 'MAR &larr; PC', desc: 'Step 1: Address in Program Counter (100) is transferred to Memory Address Register (MAR).', pc: 100, mar: 100, mdr: '---', ir: '---', ac: 0, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
       { id: 'f1_2', instAddr: 100, phase: 'FETCH', stepNum: 2, name: 'Memory Read Strobe', desc: 'Step 2: Control Unit asserts MEM_READ line to fetch instruction at Address 100.', pc: 100, mar: 100, mdr: '---', ir: '---', ac: 0, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'f1_3', instAddr: 100, phase: 'FETCH', stepNum: 3, name: 'MDR ← Memory[MAR]', desc: 'Step 3: Opcode "LOAD 500" from Address 100 is placed on the Data Bus into MDR.', pc: 100, mar: 100, mdr: 'LOAD 500', ir: '---', ac: 0, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'f1_4', instAddr: 100, phase: 'FETCH', stepNum: 4, name: 'IR ← MDR', desc: 'Step 4: Instruction contents in MDR transfer into Instruction Register (IR).', pc: 100, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
-      { id: 'f1_5', instAddr: 100, phase: 'FETCH', stepNum: 5, name: 'PC ← PC + 1', desc: 'Step 5: Program Counter auto-increments from 100 to 101 to point to next instruction.', pc: 101, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f1_3', instAddr: 100, phase: 'FETCH', stepNum: 3, name: 'MDR &larr; Memory[MAR]', desc: 'Step 3: Opcode "LOAD 500" from Address 100 is placed on the Data Bus into MDR.', pc: 100, mar: 100, mdr: 'LOAD 500', ir: '---', ac: 0, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f1_4', instAddr: 100, phase: 'FETCH', stepNum: 4, name: 'IR &larr; MDR', desc: 'Step 4: Instruction contents in MDR transfer into Instruction Register (IR).', pc: 100, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f1_5', instAddr: 100, phase: 'FETCH', stepNum: 5, name: 'PC &larr; PC + 1', desc: 'Step 5: Program Counter auto-increments from 100 to 101 to point to next instruction.', pc: 101, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
       
       { id: 'd1_1', instAddr: 100, phase: 'DECODE', stepNum: 1, name: 'Opcode Interpretation', desc: 'Step 1: Control Unit parses Opcode: "LOAD" identified (Memory to Accumulator copy).', pc: 101, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
       { id: 'd1_2', instAddr: 100, phase: 'DECODE', stepNum: 2, name: 'Operand Address Extraction', desc: 'Step 2: Operand resolved to memory address 500.', pc: 101, mar: 100, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
       
-      { id: 'e1_1', instAddr: 100, phase: 'EXECUTE', stepNum: 1, name: 'MAR ← 500 & Read', desc: 'Step 1: Operand address 500 loaded into MAR; Read strobe issued to RAM.', pc: 101, mar: 500, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'e1_2', instAddr: 100, phase: 'EXECUTE', stepNum: 2, name: 'MDR ← Memory[500]', desc: 'Step 2: Value 3456 from Address 500 transferred into MDR.', pc: 101, mar: 500, mdr: '3456', ir: 'LOAD 500', ac: 0, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'e1_3', instAddr: 100, phase: 'EXECUTE', stepNum: 3, name: 'Accumulator ← MDR', desc: 'Step 3: Value 3456 loaded into CPU Accumulator (AC = 3456). Instruction LOAD complete!', pc: 101, mar: 500, mdr: '3456', ir: 'LOAD 500', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'e1_1', instAddr: 100, phase: 'EXECUTE', stepNum: 1, name: 'MAR &larr; 500 & Read', desc: 'Step 1: Operand address 500 loaded into MAR; Read strobe issued to RAM.', pc: 101, mar: 500, mdr: 'LOAD 500', ir: 'LOAD 500', ac: 0, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'e1_2', instAddr: 100, phase: 'EXECUTE', stepNum: 2, name: 'MDR &larr; Memory[500]', desc: 'Step 2: Value 3456 from Address 500 transferred into MDR.', pc: 101, mar: 500, mdr: '3456', ir: 'LOAD 500', ac: 0, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'e1_3', instAddr: 100, phase: 'EXECUTE', stepNum: 3, name: 'Accumulator &larr; MDR', desc: 'Step 3: Value 3456 loaded into CPU Accumulator (AC = 3456). Instruction LOAD complete!', pc: 101, mar: 500, mdr: '3456', ir: 'LOAD 500', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
 
       // Instruction 2: ADD 600 (Addr 101)
-      { id: 'f2_1', instAddr: 101, phase: 'FETCH', stepNum: 1, name: 'MAR ← PC (101)', desc: 'Fetch Step 1: PC (101) loaded into MAR for second instruction.', pc: 101, mar: 101, mdr: '3456', ir: 'LOAD 500', ac: 3456, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f2_1', instAddr: 101, phase: 'FETCH', stepNum: 1, name: 'MAR &larr; PC (101)', desc: 'Fetch Step 1: PC (101) loaded into MAR for second instruction.', pc: 101, mar: 101, mdr: '3456', ir: 'LOAD 500', ac: 3456, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
       { id: 'f2_2', instAddr: 101, phase: 'FETCH', stepNum: 2, name: 'Memory Read Strobe', desc: 'Fetch Step 2: Read signal issued to Address 101.', pc: 101, mar: 101, mdr: '3456', ir: 'LOAD 500', ac: 3456, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'f2_3', instAddr: 101, phase: 'FETCH', stepNum: 3, name: 'MDR ← Memory[101]', desc: 'Fetch Step 3: Opcode "ADD 600" loaded into MDR from RAM.', pc: 101, mar: 101, mdr: 'ADD 600', ir: 'LOAD 500', ac: 3456, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'f2_4', instAddr: 101, phase: 'FETCH', stepNum: 4, name: 'IR ← MDR', desc: 'Fetch Step 4: IR receives "ADD 600".', pc: 101, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
-      { id: 'f2_5', instAddr: 101, phase: 'FETCH', stepNum: 5, name: 'PC ← PC + 1', desc: 'Fetch Step 5: PC auto-increments from 101 to 102.', pc: 102, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f2_3', instAddr: 101, phase: 'FETCH', stepNum: 3, name: 'MDR &larr; Memory[101]', desc: 'Fetch Step 3: Opcode "ADD 600" loaded into MDR from RAM.', pc: 101, mar: 101, mdr: 'ADD 600', ir: 'LOAD 500', ac: 3456, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f2_4', instAddr: 101, phase: 'FETCH', stepNum: 4, name: 'IR &larr; MDR', desc: 'Fetch Step 4: IR receives "ADD 600".', pc: 101, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f2_5', instAddr: 101, phase: 'FETCH', stepNum: 5, name: 'PC &larr; PC + 1', desc: 'Fetch Step 5: PC auto-increments from 101 to 102.', pc: 102, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
       
       { id: 'd2_1', instAddr: 101, phase: 'DECODE', stepNum: 1, name: 'Opcode Interpretation', desc: 'Decode Step 1: Opcode "ADD" parsed (Accumulator arithmetic addition).', pc: 102, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'ADD' },
       { id: 'd2_2', instAddr: 101, phase: 'DECODE', stepNum: 2, name: 'Operand Address Extraction', desc: 'Decode Step 2: Operand resolved to memory address 600.', pc: 102, mar: 101, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'ADD' },
       
-      { id: 'e2_1', instAddr: 101, phase: 'EXECUTE', stepNum: 1, name: 'MAR ← 600 & Read', desc: 'Execute Step 1: Operand address 600 placed in MAR; Read strobe triggered.', pc: 102, mar: 600, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'ADD' },
-      { id: 'e2_2', instAddr: 101, phase: 'EXECUTE', stepNum: 2, name: 'MDR ← Memory[600]', desc: 'Execute Step 2: Value 1200 read from Address 600 into MDR.', pc: 102, mar: 600, mdr: '1200', ir: 'ADD 600', ac: 3456, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'ADD' },
+      { id: 'e2_1', instAddr: 101, phase: 'EXECUTE', stepNum: 1, name: 'MAR &larr; 600 & Read', desc: 'Execute Step 1: Operand address 600 placed in MAR; Read strobe triggered.', pc: 102, mar: 600, mdr: 'ADD 600', ir: 'ADD 600', ac: 3456, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'ADD' },
+      { id: 'e2_2', instAddr: 101, phase: 'EXECUTE', stepNum: 2, name: 'MDR &larr; Memory[600]', desc: 'Execute Step 2: Value 1200 read from Address 600 into MDR.', pc: 102, mar: 600, mdr: '1200', ir: 'ADD 600', ac: 3456, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'ADD' },
       { id: 'e2_3', instAddr: 101, phase: 'EXECUTE', stepNum: 3, name: 'ALU ADD Calculation', desc: 'Execute Step 3: ALU performs addition: AC (3456) + MDR (1200) = 4656.', pc: 102, mar: 600, mdr: '1200', ir: 'ADD 600', ac: 3456, bus: 'ALU_BUS', memRead: 0, memWrite: 0, alu: 'ADD (3456+1200)' },
-      { id: 'e2_4', instAddr: 101, phase: 'EXECUTE', stepNum: 4, name: 'Accumulator ← 4656', desc: 'Execute Step 4: Accumulator updated to 4656. Instruction ADD complete!', pc: 102, mar: 600, mdr: '1200', ir: 'ADD 600', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'e2_4', instAddr: 101, phase: 'EXECUTE', stepNum: 4, name: 'Accumulator &larr; 4656', desc: 'Execute Step 4: Accumulator updated to 4656. Instruction ADD complete!', pc: 102, mar: 600, mdr: '1200', ir: 'ADD 600', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
 
       // Instruction 3: STORE 700 (Addr 102)
-      { id: 'f3_1', instAddr: 102, phase: 'FETCH', stepNum: 1, name: 'MAR ← PC (102)', desc: 'Fetch Step 1: PC (102) loaded into MAR for third instruction.', pc: 102, mar: 102, mdr: '1200', ir: 'ADD 600', ac: 4656, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f3_1', instAddr: 102, phase: 'FETCH', stepNum: 1, name: 'MAR &larr; PC (102)', desc: 'Fetch Step 1: PC (102) loaded into MAR for third instruction.', pc: 102, mar: 102, mdr: '1200', ir: 'ADD 600', ac: 4656, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
       { id: 'f3_2', instAddr: 102, phase: 'FETCH', stepNum: 2, name: 'Memory Read Strobe', desc: 'Fetch Step 2: Read signal issued to Address 102.', pc: 102, mar: 102, mdr: '1200', ir: 'ADD 600', ac: 4656, bus: 'READ_STROBE', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'f3_3', instAddr: 102, phase: 'FETCH', stepNum: 3, name: 'MDR ← Memory[102]', desc: 'Fetch Step 3: Opcode "STORE 700" loaded into MDR.', pc: 102, mar: 102, mdr: 'STORE 700', ir: 'ADD 600', ac: 4656, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'f3_4', instAddr: 102, phase: 'FETCH', stepNum: 4, name: 'IR ← MDR', desc: 'Fetch Step 4: IR receives "STORE 700".', pc: 102, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
-      { id: 'f3_5', instAddr: 102, phase: 'FETCH', stepNum: 5, name: 'PC ← PC + 1', desc: 'Fetch Step 5: PC auto-increments from 102 to 103.', pc: 103, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f3_3', instAddr: 102, phase: 'FETCH', stepNum: 3, name: 'MDR &larr; Memory[102]', desc: 'Fetch Step 3: Opcode "STORE 700" loaded into MDR.', pc: 102, mar: 102, mdr: 'STORE 700', ir: 'ADD 600', ac: 4656, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f3_4', instAddr: 102, phase: 'FETCH', stepNum: 4, name: 'IR &larr; MDR', desc: 'Fetch Step 4: IR receives "STORE 700".', pc: 102, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f3_5', instAddr: 102, phase: 'FETCH', stepNum: 5, name: 'PC &larr; PC + 1', desc: 'Fetch Step 5: PC auto-increments from 102 to 103.', pc: 103, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
       
       { id: 'd3_1', instAddr: 102, phase: 'DECODE', stepNum: 1, name: 'Opcode Interpretation', desc: 'Decode Step 1: Opcode "STORE" parsed (Accumulator to RAM write).', pc: 103, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
       { id: 'd3_2', instAddr: 102, phase: 'DECODE', stepNum: 2, name: 'Operand Target Address', desc: 'Decode Step 2: Target memory address resolved to 700.', pc: 103, mar: 102, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
       
-      { id: 'e3_1', instAddr: 102, phase: 'EXECUTE', stepNum: 1, name: 'MAR ← 700', desc: 'Execute Step 1: Target address 700 loaded into MAR.', pc: 103, mar: 700, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'ADDR_LOAD', memRead: 0, memWrite: 0, alu: 'NONE' },
-      { id: 'e3_2', instAddr: 102, phase: 'EXECUTE', stepNum: 2, name: 'MDR ← Accumulator', desc: 'Execute Step 2: AC value (4656) loaded into MDR for memory write.', pc: 103, mar: 700, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'AC_TO_MDR', memRead: 0, memWrite: 0, alu: 'NONE' },
-      { id: 'e3_3', instAddr: 102, phase: 'EXECUTE', stepNum: 3, name: 'Memory[700] ← MDR', desc: 'Execute Step 3: MEM_WRITE strobe asserted; Memory[700] stored as 4656. Instruction complete!', pc: 103, mar: 700, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'WRITE_STROBE', memRead: 0, memWrite: 1, alu: 'NONE' },
+      { id: 'e3_1', instAddr: 102, phase: 'EXECUTE', stepNum: 1, name: 'MAR &larr; 700', desc: 'Execute Step 1: Target address 700 loaded into MAR.', pc: 103, mar: 700, mdr: 'STORE 700', ir: 'STORE 700', ac: 4656, bus: 'ADDR_LOAD', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'e3_2', instAddr: 102, phase: 'EXECUTE', stepNum: 2, name: 'MDR &larr; Accumulator', desc: 'Execute Step 2: AC value (4656) loaded into MDR for memory write.', pc: 103, mar: 700, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'AC_TO_MDR', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'e3_3', instAddr: 102, phase: 'EXECUTE', stepNum: 3, name: 'Memory[700] &larr; MDR', desc: 'Execute Step 3: MEM_WRITE strobe asserted; Memory[700] stored as 4656. Instruction complete!', pc: 103, mar: 700, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'WRITE_STROBE', memRead: 0, memWrite: 1, alu: 'NONE' },
 
       // Instruction 4: HALT (Addr 103)
-      { id: 'f4_1', instAddr: 103, phase: 'FETCH', stepNum: 1, name: 'MAR ← PC (103)', desc: 'Fetch Step 1: PC (103) loaded into MAR for final instruction.', pc: 103, mar: 103, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'f4_2', instAddr: 103, phase: 'FETCH', stepNum: 2, name: 'MDR ← Memory[103]', desc: 'Fetch Step 2: Opcode "HALT" read into MDR from Address 103.', pc: 103, mar: 103, mdr: 'HALT', ir: 'STORE 700', ac: 4656, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
-      { id: 'f4_3', instAddr: 103, phase: 'FETCH', stepNum: 3, name: 'IR ← MDR', desc: 'Fetch Step 3: IR loaded with "HALT".', pc: 103, mar: 103, mdr: 'HALT', ir: 'HALT', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
-      { id: 'd4_1', instAddr: 103, phase: 'DECODE', stepNum: 1, name: 'HALT Decoded', desc: 'Decode Step 1: Opcode "HALT" decoded — CPU clock signals halted.', pc: 103, mar: 103, mdr: 'HALT', ir: 'HALT', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'f4_1', instAddr: 103, phase: 'FETCH', stepNum: 1, name: 'MAR &larr; PC (103)', desc: 'Fetch Step 1: PC (103) loaded into MAR for final instruction.', pc: 103, mar: 103, mdr: '4656', ir: 'STORE 700', ac: 4656, bus: 'ADDR_LOAD', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f4_2', instAddr: 103, phase: 'FETCH', stepNum: 2, name: 'MDR &larr; Memory[103]', desc: 'Fetch Step 2: Opcode "HALT" read into MDR from Address 103.', pc: 103, mar: 103, mdr: 'HALT', ir: 'STORE 700', ac: 4656, bus: 'DATA_TRANSFER', memRead: 1, memWrite: 0, alu: 'NONE' },
+      { id: 'f4_3', instAddr: 103, phase: 'FETCH', stepNum: 3, name: 'IR &larr; MDR', desc: 'Fetch Step 3: IR loaded with "HALT".', pc: 103, mar: 103, mdr: 'HALT', ir: 'HALT', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
+      { id: 'd4_1', instAddr: 103, phase: 'DECODE', stepNum: 1, name: 'HALT Decoded', desc: 'Decode Step 1: Opcode "HALT" decoded &mdash; CPU clock signals halted.', pc: 103, mar: 103, mdr: 'HALT', ir: 'HALT', ac: 4656, bus: 'IDLE', memRead: 0, memWrite: 0, alu: 'NONE' },
       { id: 'e4_1', instAddr: 103, phase: 'EXECUTE', stepNum: 1, name: 'CPU Halted (Done)', desc: 'Execute Step 1: Execution completed! AC = 4656, Memory[700] = 4656. All micro-ops verified.', pc: 103, mar: 103, mdr: 'HALT', ir: 'HALT', ac: 4656, bus: 'HALTED', memRead: 0, memWrite: 0, alu: 'NONE' }
     ];
 
@@ -7366,15 +7423,15 @@ body.cinema-mode-active main {
         phaseBadge.className = 'badge-status ' + (step.phase === 'FETCH' ? 'badge-cyan' : (step.phase === 'DECODE' ? 'badge-amber' : 'badge-green'));
       }
 
-      // Update Step Header
+      // Update Step Header with innerHTML to render &larr;
       const nameEl = document.getElementById('instStepName');
-      if (nameEl) nameEl.textContent = step.name;
+      if (nameEl) nameEl.innerHTML = step.name;
 
       const countEl = document.getElementById('instStepCounter');
-      if (countEl) countEl.textContent = 'Step ' + (currentInstStepIdx + 1) + ' of ' + INST_MICRO_OPS.length + ' • Addr ' + step.instAddr;
+      if (countEl) countEl.innerHTML = 'Step ' + (currentInstStepIdx + 1) + ' of ' + INST_MICRO_OPS.length + ' &bull; Addr ' + step.instAddr;
 
       const descEl = document.getElementById('instStepDesc');
-      if (descEl) descEl.textContent = step.desc;
+      if (descEl) descEl.innerHTML = step.desc;
 
       const progEl = document.getElementById('instProgressBar');
       if (progEl) {
@@ -7464,9 +7521,9 @@ body.cinema-mode-active main {
       const fCard = document.getElementById('cardPhaseFetch');
       const dCard = document.getElementById('cardPhaseDecode');
       const eCard = document.getElementById('cardPhaseExecute');
-      if (fCard) fCard.style.background = step.phase === 'FETCH' ? 'rgba(0, 210, 255, 0.12)' : 'rgba(0,0,0,0.45)';
-      if (dCard) dCard.style.background = step.phase === 'DECODE' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(0,0,0,0.45)';
-      if (eCard) eCard.style.background = step.phase === 'EXECUTE' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(0,0,0,0.45)';
+      if (fCard) fCard.style.background = step.phase === 'FETCH' ? 'rgba(0, 210, 255, 0.12)' : 'rgba(0,0,0,0.5)';
+      if (dCard) dCard.style.background = step.phase === 'DECODE' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(0,0,0,0.5)';
+      if (eCard) eCard.style.background = step.phase === 'EXECUTE' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(0,0,0,0.5)';
     }
 
     function stepInstructionMicroOp() {
@@ -7484,9 +7541,9 @@ body.cinema-mode-active main {
       if (instAutoTimer) {
         clearInterval(instAutoTimer);
         instAutoTimer = null;
-        if (btn) btn.innerHTML = '▶ AUTO RUN';
+        if (btn) btn.innerHTML = '&#9654; AUTO RUN';
       } else {
-        if (btn) btn.innerHTML = '⏸ PAUSE';
+        if (btn) btn.innerHTML = '&#10074;&#10074; PAUSE';
         instAutoTimer = setInterval(() => {
           if (currentInstStepIdx < INST_MICRO_OPS.length - 1) {
             currentInstStepIdx++;
@@ -7494,7 +7551,7 @@ body.cinema-mode-active main {
           } else {
             clearInterval(instAutoTimer);
             instAutoTimer = null;
-            if (btn) btn.innerHTML = '▶ AUTO RUN';
+            if (btn) btn.innerHTML = '&#9654; AUTO RUN';
           }
         }, instClockSpeed);
       }
@@ -7505,7 +7562,7 @@ body.cinema-mode-active main {
         clearInterval(instAutoTimer);
         instAutoTimer = null;
         const btn = document.getElementById('btnAutoInst');
-        if (btn) btn.innerHTML = '▶ AUTO RUN';
+        if (btn) btn.innerHTML = '&#9654; AUTO RUN';
       }
       currentInstStepIdx = 0;
       renderInstCurrentStep();
@@ -7529,12 +7586,11 @@ body.cinema-mode-active main {
             clearInterval(instAutoTimer);
             instAutoTimer = null;
             const btn = document.getElementById('btnAutoInst');
-            if (btn) btn.innerHTML = '▶ AUTO RUN';
+            if (btn) btn.innerHTML = '&#9654; AUTO RUN';
           }
         }, instClockSpeed);
       }
     }
-
 </script>
 
   <!-- FEATURE 3: CPU MICROARCHITECTURE X-RAY POPOVER MODAL -->
